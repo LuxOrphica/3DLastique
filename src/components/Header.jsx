@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const NAV_KEYS = ["services", "howItWorks", "forWhom", "products", "contact"];
 const NAV_HREFS = { services: "#services", howItWorks: "#how", forWhom: "#for-whom", products: "#products", contact: "#contact" };
+const TECHPACK_HREF = "/tools/techpack";
 
 export default function Header({ t, lang, setLang, theme, toggleTheme }) {
   const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
 
   return (
     <header style={{
@@ -20,9 +23,13 @@ export default function Header({ t, lang, setLang, theme, toggleTheme }) {
 
         {/* Desktop nav */}
         <nav style={{ display: "flex", gap: 24, alignItems: "center" }} className="desktop-nav">
-          {NAV_KEYS.slice(0, -1).map(k => (
+          {pathname === "/" && NAV_KEYS.slice(0, -1).map(k => (
             <a key={k} href={NAV_HREFS[k]} className="nav-link">{t.nav[k]}</a>
           ))}
+          <a href="/tools/pom" className={`nav-link${pathname === "/tools/pom" ? " nav-link-active" : ""}`}>Табель мер</a>
+          <a href="/tools/nodes" className={`nav-link${pathname === "/tools/nodes" ? " nav-link-active" : ""}`}>Узлы</a>
+          <a href="/tools/vse" className={`nav-link${pathname === "/tools/vse" ? " nav-link-active" : ""}`}>VSE</a>
+          <a href={TECHPACK_HREF} className={`nav-link nav-link-techpack${pathname === "/tools/techpack" ? " nav-link-techpack-active" : ""}`}>Техпак</a>
         </nav>
 
         {/* Right controls */}
@@ -45,8 +52,8 @@ export default function Header({ t, lang, setLang, theme, toggleTheme }) {
             {lang === "ru" ? "EN" : "RU"}
           </button>
 
-          {/* CTA */}
-          <a href="#contact" className="header-cta">{t.nav.contact}</a>
+          {/* CTA — only on landing */}
+          {pathname === "/" && <a href="#contact" className="header-cta">{t.nav.contact}</a>}
 
           {/* Burger */}
           <button onClick={() => setOpen(o => !o)} className="burger" style={{
@@ -59,23 +66,39 @@ export default function Header({ t, lang, setLang, theme, toggleTheme }) {
       {/* Mobile menu */}
       {open && (
         <div style={{ background: "var(--bg)", borderTop: "1px solid var(--border)", padding: "16px 24px" }}>
-          {NAV_KEYS.map(k => (
+          {pathname === "/" && NAV_KEYS.map(k => (
             <a key={k} href={NAV_HREFS[k]} onClick={() => setOpen(false)} style={{
               display: "block", padding: "10px 0", fontSize: 13, color: "var(--text2)",
               borderBottom: "1px solid var(--border)",
             }}>{t.nav[k]}</a>
           ))}
+          <a href="/tools/pom" onClick={() => setOpen(false)} style={{
+            display: "block", padding: "10px 0", fontSize: 13, color: "var(--text2)",
+            borderBottom: "1px solid var(--border)",
+          }}>Табель мер</a>
+          <a href="/tools/nodes" onClick={() => setOpen(false)} style={{
+            display: "block", padding: "10px 0", fontSize: 13, color: "var(--text2)",
+            borderBottom: "1px solid var(--border)",
+          }}>Узлы</a>
+          <a href={TECHPACK_HREF} onClick={() => setOpen(false)} style={{
+            display: "block", padding: "10px 0", fontSize: 13, color: "var(--accent)",
+            borderBottom: "1px solid var(--border)", fontWeight: 600,
+          }}>Техпак</a>
         </div>
       )}
 
       <style>{`
         .nav-link {
-          font-size: 13px;
+          font-size: 15px;
           color: var(--text3);
           transition: color 0.15s;
           font-family: var(--font);
         }
         .nav-link:hover { color: var(--accent); }
+        .nav-link-active { color: var(--accent) !important; border-bottom: 2px solid var(--accent); padding-bottom: 2px; }
+        .nav-link-techpack { color: var(--accent); font-weight: 600; border: 1px solid var(--accent); border-radius: 4px; padding: 5px 12px; }
+        .nav-link-techpack:hover { opacity: 0.8; }
+        .nav-link-techpack-active { background: var(--accent); color: var(--accent-text) !important; }
         .header-cta {
           background: var(--accent);
           color: var(--accent-text);

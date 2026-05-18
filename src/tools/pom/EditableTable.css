@@ -1,0 +1,158 @@
+.et-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.et-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: auto;
+}
+
+.et-th {
+  background: var(--bg3);
+  color: var(--text3);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  padding: 8px 12px;
+  text-align: left;
+  white-space: nowrap;
+  border-right: 1px solid var(--border2);
+}
+
+.et-th:last-child { border-right: none; }
+.et-num { width: 32px; text-align: center; }
+.et-actions-head { width: 96px; }
+
+.et-td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--border2);
+  border-right: 1px solid var(--border2);
+  vertical-align: middle;
+  color: var(--text2);
+  cursor: pointer;
+  min-width: 60px;
+  line-height: 1.4;
+}
+
+.et-td:last-child { border-right: none; cursor: default; }
+.et-td.et-mono { font-family: monospace; font-weight: 600; }
+
+.et-row:hover .et-td { background: var(--bg3); }
+.et-row-alt .et-td { background: var(--bg4); }
+.et-row-alt:hover .et-td { background: var(--bg3); }
+.et-row-editing .et-td { background: color-mix(in srgb, var(--accent) 8%, var(--bg) 92%) !important; }
+
+.et-placeholder { color: var(--text3); opacity: 0.4; }
+
+.et-empty {
+  text-align: center;
+  padding: 24px;
+  color: var(--text3);
+  font-size: 14px;
+  border-bottom: 1px solid var(--border2);
+}
+
+.et-input {
+  width: 100%;
+  padding: 5px 8px;
+  border: 1px solid #C8A84B;
+  border-radius: 3px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--bg, #141414);
+  color: var(--text2);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.et-input:focus { border-color: #a08030; box-shadow: 0 0 0 2px rgba(200,168,75,0.15); }
+.et-textarea { resize: vertical; min-height: 44px; }
+
+select.et-input { cursor: pointer; }
+
+.et-actions {
+  white-space: nowrap;
+  padding: 3px 6px;
+  width: 96px;
+}
+
+.et-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-size: 14px;
+  transition: background 0.15s;
+  color: var(--text3);
+}
+
+.et-btn:disabled { opacity: 0.25; cursor: default; }
+.et-btn:not(:disabled):hover { background: var(--bg2, #1e1e1e); }
+.et-save  { color: #4caf70; font-weight: 700; }
+.et-save:hover  { background: rgba(76,175,112,0.12) !important; }
+.et-cancel { color: var(--text3); }
+.et-del   { color: #e05a4a; }
+.et-del:hover   { background: rgba(224,90,74,0.12) !important; }
+.et-edit  { color: #C8A84B; }
+.et-up, .et-down { color: var(--text3); font-size: 13px; }
+
+.et-add-btn {
+  margin-top: 10px;
+  padding: 7px 18px;
+  background: transparent;
+  border: 1px dashed var(--accent);
+  color: var(--accent);
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.et-add-btn:hover {
+  background: var(--accent);
+  color: var(--accent-text, #fff);
+}
+
+/* File upload cell */
+.et-file-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 4px 10px;
+  border: 1px dashed var(--accent);
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--accent);
+  transition: background 0.15s;
+}
+
+.et-file-btn:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+
+.et-file-name {
+  color: var(--text2);
+  font-size: 13px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.et-file-placeholder { opacity: 0.7; }
+
+.et-file-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 13px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.et-file-link:hover { text-decoration: underline; }
