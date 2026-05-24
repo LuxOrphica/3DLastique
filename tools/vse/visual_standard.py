@@ -1,0 +1,332 @@
+"""
+Visual Standard — ISO 128 / ISO 129 / ISO 4915 inspired style rules.
+Maps semantic role → SVG presentation attributes.
+
+Role taxonomy (updated):
+  Contours:    contour_outer, construction_line, contour_fold, contour_cut
+  Seams:       seam_line, seam_allowance
+  Stitches:    stitch_edge, stitch_thru, stitch_L, stitch_C, stitch_O, stitch_F, stitch_zigzag, stitch_Bt
+  Boundaries:  boundary_fragment, boundary_zone, boundary_lining, boundary_interlining
+  Fills:       fill_interlining, fill_fabric, fill_shape, construction_aux
+  Hardware:    hw_zipper, hw_zipper_tape, hw_button, hw_buttonhole, hw_snap, hw_other
+  Annotations: callout_line, dim_line, arrow, label
+  Other:       unknown
+"""
+
+ROLE_STYLES = {
+    # ── Контуры ──────────────────────────────────────────────────────────────
+    "contour_outer": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "1.5",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "square",
+        "stroke-linejoin":  "miter",
+        "opacity":          "1",
+        "_label": "Контур детали (ISO 128-20 type B)",
+    },
+    "contour_fold": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "0.75",
+        "stroke-dasharray": "8 3 2 3",
+        "fill":             "none",
+        "stroke-linecap":   "butt",
+        "opacity":          "1",
+        "_label": "Линия сгиба (ISO 128-20 type G)",
+    },
+    "contour_cut": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "1.0",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "square",
+        "opacity":          "1",
+        "_label": "Линия разреза / вырезки",
+    },
+    # ── Швы ──────────────────────────────────────────────────────────────────
+    "seam_line": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "2.5",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "square",
+        "opacity":          "1",
+        "_label": "Линия шва (ISO 128 type A)",
+    },
+    "seam_allowance": {
+        "stroke":           "#555555",
+        "stroke-width":     "0.5",
+        "stroke-dasharray": "4 2",
+        "fill":             "none",
+        "stroke-linecap":   "butt",
+        "opacity":          "0.8",
+        "_label": "Припуск на шов",
+    },
+    # ── Строчки (ISO 4915 / Sportmaster AW24) ────────────────────────────────
+    "stitch_edge": {
+        "stroke":           "#C8102E",
+        "stroke-width":     "0.75",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "round",
+        "opacity":          "1",
+        "_label": "Строчка по краю / торцу (видимая)",
+    },
+    "stitch_thru": {
+        "stroke":           "#C8102E",
+        "stroke-width":     "0.75",
+        "stroke-dasharray": "3 1.5",
+        "fill":             "none",
+        "stroke-linecap":   "round",
+        "opacity":          "1",
+        "_label": "Строчка сквозная (через все слои)",
+    },
+    "stitch_L": {
+        "stroke":           "#C8102E",
+        "stroke-width":     "0.75",
+        "stroke-dasharray": "3 1.5",
+        "fill":             "none",
+        "stroke-linecap":   "round",
+        "opacity":          "1",
+        "_label": "Строчка челночная L (ISO 301 / Sportmaster L1-L3)",
+    },
+    "stitch_C": {
+        "stroke":           "#C8102E",
+        "stroke-width":     "0.75",
+        "stroke-dasharray": "1 1.5",
+        "fill":             "none",
+        "stroke-linecap":   "round",
+        "opacity":          "1",
+        "_label": "Строчка цепная C (ISO 401 / Sportmaster C1-C3)",
+    },
+    "stitch_O": {
+        "stroke":           "#C8102E",
+        "stroke-width":     "1.0",
+        "stroke-dasharray": "2 1 2 1",
+        "fill":             "none",
+        "stroke-linecap":   "round",
+        "opacity":          "1",
+        "_label": "Оверлок O (ISO 504/514 / Sportmaster O3+/O4+)",
+    },
+    "stitch_F": {
+        "stroke":           "#C8102E",
+        "stroke-width":     "1.2",
+        "stroke-dasharray": "4 1 1 1 4 1",
+        "fill":             "none",
+        "stroke-linecap":   "round",
+        "opacity":          "1",
+        "_label": "Плоская цепная / распошивалка F (ISO 602/605 / Sportmaster F2-F4)",
+    },
+    "stitch_zigzag": {
+        "stroke":           "#C8102E",
+        "stroke-width":     "0.75",
+        "stroke-dasharray": "2 0.5",
+        "fill":             "none",
+        "stroke-linecap":   "round",
+        "opacity":          "1",
+        "_label": "Зигзаг-строчка (Условные обозначения РФ)",
+    },
+    "stitch_Bt": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "2.0",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "square",
+        "opacity":          "1",
+        "_label": "Закрепка Bt (Sportmaster Bt)",
+    },
+    # ── Границы ──────────────────────────────────────────────────────────────
+    "boundary_fragment": {
+        "stroke":           "#27A6DE",
+        "stroke-width":     "1.5",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "butt",
+        "opacity":          "1",
+        "_label": "Граница фрагмента",
+    },
+    "boundary_zone": {
+        "stroke":           "#1B4FA8",
+        "stroke-width":     "0.75",
+        "stroke-dasharray": "6 3",
+        "fill":             "none",
+        "stroke-linecap":   "butt",
+        "opacity":          "0.8",
+        "_label": "Граница зоны / конструктивной области",
+    },
+    "boundary_lining": {
+        "stroke":           "#C8102E",
+        "stroke-width":     "0.75",
+        "stroke-dasharray": "12 4",
+        "fill":             "none",
+        "stroke-linecap":   "butt",
+        "opacity":          "1",
+        "_label": "Граница подкладки (Условные обозначения РФ)",
+    },
+    "boundary_interlining": {
+        "stroke":           "#29B473",
+        "stroke-width":     "1.0",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "butt",
+        "opacity":          "1",
+        "_label": "Граница прокладки / флизелина (Условные обозначения РФ)",
+    },
+    # ── Заливки и материалы ───────────────────────────────────────────────────
+    "fill_interlining": {
+        "stroke":           "#888888",
+        "stroke-width":     "0.5",
+        "stroke-dasharray": "none",
+        "fill":             "#DDDDDD",
+        "opacity":          "0.5",
+        "_label": "Штриховка прокладки (Условные обозначения РФ)",
+    },
+    "fill_fabric": {
+        "stroke":           "#AAAAAA",
+        "stroke-width":     "0.5",
+        "stroke-dasharray": "none",
+        "fill":             "#F0EDE8",
+        "opacity":          "0.6",
+        "_label": "Штриховка ткани (Условные обозначения РФ)",
+    },
+    "construction_aux": {
+        "stroke":           "#555555",
+        "stroke-width":     "0.5",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "butt",
+        "opacity":          "1",
+        "_label": "Вспомогательная конструктивная линия",
+    },
+    "fill_shape": {
+        "stroke":           "#CCCCCC",
+        "stroke-width":     "0.5",
+        "stroke-dasharray": "none",
+        "fill":             "#E8E8E8",
+        "opacity":          "0.7",
+        "_label": "Заливка конструктивного элемента",
+    },
+    # ── Фурнитура ─────────────────────────────────────────────────────────────
+    "hw_zipper": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "1.2",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "square",
+        "opacity":          "1",
+        "_label": "Молния",
+    },
+    "hw_zipper_tape": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "1.0",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "square",
+        "opacity":          "1",
+        "_label": "Молния",
+    },
+    "hw_button": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "1.0",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "round",
+        "opacity":          "1",
+        "_label": "Пуговица",
+    },
+    "hw_buttonhole": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "1.0",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "round",
+        "opacity":          "1",
+        "_label": "Петля (Bh)",
+    },
+    "hw_snap": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "1.0",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "round",
+        "opacity":          "1",
+        "_label": "Кнопка / люверс",
+    },
+    "hw_other": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "1.0",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "butt",
+        "opacity":          "1",
+        "_label": "Фурнитура (прочее)",
+    },
+    # ── Аннотации ─────────────────────────────────────────────────────────────
+    "break_line": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "0.5",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "round",
+        "opacity":          "1",
+        "_label": "Линия обрыва (ГОСТ 2.303)",
+    },
+    "callout_line": {
+        "stroke":           "#333333",
+        "stroke-width":     "0.6",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "butt",
+        "opacity":          "0.9",
+        "_label": "Линия-выноска (ISO 129-1)",
+    },
+    "dim_line": {
+        "stroke":           "#333333",
+        "stroke-width":     "0.5",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "butt",
+        "opacity":          "0.9",
+        "_label": "Размерная линия (ISO 129-1)",
+    },
+    "arrow": {
+        "stroke":           "none",
+        "stroke-width":     "0",
+        "stroke-dasharray": "none",
+        "fill":             "#1A1A1A",
+        "opacity":          "1",
+        "_label": "Стрелка (ISO 129-1 type B)",
+    },
+    "label": {
+        "font-family":      "Arial, sans-serif",
+        "font-size":        "8",
+        "fill":             "#1A1A1A",
+        "opacity":          "1",
+        "_label": "Текстовая подпись (ISO 3098-2)",
+    },
+    "unknown": {
+        "stroke":           "#AAAAAA",
+        "stroke-width":     "0.5",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "opacity":          "0.5",
+        "_label": "Не классифицировано",
+    },
+}
+
+
+def get_style(role):
+    """Return presentation attrs dict for a role (without private _label key)."""
+    raw = ROLE_STYLES.get(role, ROLE_STYLES["unknown"])
+    return {k: v for k, v in raw.items() if not k.startswith("_")}
+
+
+def style_attr(role):
+    """Return SVG style string for inline use."""
+    attrs = get_style(role)
+    parts = []
+    for k, v in attrs.items():
+        if k in ("font-family", "font-size"):
+            continue  # handled separately for text
+        parts.append(f"{k}:{v}")
+    return ";".join(parts)

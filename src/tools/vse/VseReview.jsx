@@ -2,39 +2,114 @@ import { useState, useEffect, useRef } from "react";
 import "./VseReview.css";
 
 const ROLE_STYLES = {
-  base_outer_contour:  { stroke: "#1A1A1A", "stroke-width": "1.5",  "stroke-dasharray": "none" },
-  structure_line:      { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
-  stitch_line:         { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "3 1.5" },
-  zone_frame:          { stroke: "#1B4FA8", "stroke-width": "0.75", "stroke-dasharray": "6 3" },
-  secondary_structure: { stroke: "#555555", "stroke-width": "0.5",  "stroke-dasharray": "none" },
-  heavy_seam:          { stroke: "#1A1A1A", "stroke-width": "2.5",  "stroke-dasharray": "none" },
+  // Контуры
+  contour_outer:       { stroke: "#1A1A1A", "stroke-width": "1.5",  "stroke-dasharray": "none" },
+  contour_fold:        { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "8 3 2 3" },
+  contour_cut:         { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
+  // Швы
+  seam_line:           { stroke: "#1A1A1A", "stroke-width": "2.5",  "stroke-dasharray": "none" },
+  seam_allowance:      { stroke: "#555555", "stroke-width": "0.5",  "stroke-dasharray": "4 2" },
+  // Строчки (ISO 4915 / Sportmaster AW24)
+  stitch_edge:         { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "none" },
+  stitch_thru:         { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "3 1.5" },
+  stitch_L:            { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "3 1.5" },
+  stitch_C:            { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "1 1.5" },
+  stitch_O:            { stroke: "#C8102E", "stroke-width": "1.0",  "stroke-dasharray": "2 1 2 1" },
+  stitch_F:            { stroke: "#C8102E", "stroke-width": "1.2",  "stroke-dasharray": "4 1 1 1 4 1" },
+  stitch_zigzag:       { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "2 0.5" },
+  stitch_Bt:           { stroke: "#1A1A1A", "stroke-width": "2.0",  "stroke-dasharray": "none" },
+  // Границы
+  boundary_fragment:   { stroke: "#27A6DE", "stroke-width": "1.5",  "stroke-dasharray": "none" },
+  boundary_zone:       { stroke: "#1B4FA8", "stroke-width": "0.75", "stroke-dasharray": "6 3" },
+  boundary_lining:     { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "6 2" },
+  boundary_interlining:{ stroke: "#29B473", "stroke-width": "1.0",  "stroke-dasharray": "none" },
+  // Заливки и материалы
+  fill_interlining:    { stroke: "#888888", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  fill_fabric:         { stroke: "#AAAAAA", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  construction_aux:    { stroke: "#555555", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  fill_shape:          { stroke: "#CCCCCC", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  // Фурнитура
+  hw_zipper:           { stroke: "#1A1A1A", "stroke-width": "1.2",  "stroke-dasharray": "none" },
+  hw_zipper_tape:      { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
+  hw_button:           { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
+  hw_snap:             { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
+  hw_other:            { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
+  // Аннотации
   callout_line:        { stroke: "#333333", "stroke-width": "0.6",  "stroke-dasharray": "none" },
+  break_line:          { stroke: "#999999", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  dim_line:            { stroke: "#333333", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   arrow:               { stroke: "#333333", "stroke-width": "0.6",  "stroke-dasharray": "none" },
-  filled_shape:        { stroke: "#CCCCCC", "stroke-width": "0.5",  "stroke-dasharray": "none" },
-  hardware_symbol:     { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
+  // Прочее
   unknown:             { stroke: "#999999", "stroke-width": "0.5",  "stroke-dasharray": "none" },
 };
 
-const ROLES = [
-  "?", "base_outer_contour", "structure_line", "stitch_line",
-  "zone_frame", "secondary_structure", "heavy_seam",
-  "callout_line", "arrow", "filled_shape", "hardware_symbol", "unknown",
+const ROLE_GROUPS = [
+  { label: "— не назначено —", roles: ["?"] },
+  { label: "Контуры",          roles: ["contour_outer", "contour_fold", "contour_cut"] },
+  { label: "Швы",              roles: ["seam_line", "seam_allowance"] },
+  { label: "Строчки",          roles: ["stitch_edge", "stitch_thru", "stitch_L", "stitch_C", "stitch_O", "stitch_F", "stitch_zigzag", "stitch_Bt"] },
+  { label: "Слои и зоны",           roles: ["boundary_fragment", "boundary_zone", "boundary_lining", "boundary_interlining"] },
+  { label: "Заливки",          roles: ["fill_interlining", "fill_fabric", "construction_aux", "fill_shape"] },
+  { label: "Фурнитура",        roles: ["hw_zipper", "hw_zipper_tape", "hw_button", "hw_buttonhole", "hw_snap", "hw_other"] },
+  { label: "Аннотации",        roles: ["callout_line", "break_line", "dim_line", "arrow", "stitch_symbol"] },
+  { label: "Прочее",           roles: ["unknown", "_skip"] },
 ];
 
+const ROLES = ROLE_GROUPS.flatMap(g => g.roles);
+
 const ROLE_LABELS = {
-  "base_outer_contour": "Внешний контур",
-  "structure_line":     "Конструктивная линия",
-  "stitch_line":        "Строчка / шов",
-  "zone_frame":         "Граница зоны",
-  "secondary_structure":"Вторичная структура",
-  "heavy_seam":         "Шов (толстый)",
-  "callout_line":       "Выноска",
-  "arrow":              "Стрелка",
-  "filled_shape":       "Заливка",
-  "hardware_symbol":    "Фурнитура / символ",
-  "unknown":            "Неизвестно",
-  "?":                  "— не назначено —",
+  "?":                   "— не назначено —",
+  // Контуры
+  "contour_outer":       "Контур детали",
+  "contour_fold":        "Линия сгиба",
+  "contour_cut":         "Линия разреза",
+  // Швы
+  "seam_line":           "Линия шва",
+  "seam_allowance":      "Припуск на шов",
+  // Строчки
+  "stitch_edge":         "Строчка по краю",
+  "stitch_thru":         "Строчка сквозная",
+  "stitch_L":            "Челночная L (ISO 301)",
+  "stitch_C":            "Цепная C (ISO 401)",
+  "stitch_O":            "Оверлок O (ISO 504/514)",
+  "stitch_F":            "Распошивалка F (ISO 602/605)",
+  "stitch_zigzag":       "Зигзаг",
+  "stitch_Bt":           "Закрепка Bt",
+  // Границы
+  "boundary_fragment":   "Прокладка (Padding)",
+  "boundary_zone":       "Конструктивная зона",
+  "boundary_lining":     "Подкладка (Lining)",
+  "boundary_interlining":"Флизелин (Interlining)",
+  // Заливки
+  "fill_interlining":    "Штриховка прокладки",
+  "fill_fabric":         "Штриховка ткани",
+  "construction_aux":    "Вспомогательная линия",
+  "fill_shape":          "Заливка (прочее)",
+  // Фурнитура
+  "hw_zipper":           "Молния",
+  "hw_zipper_tape":      "Молния",
+  "hw_button":           "Пуговица (Button, Bs)",
+  "hw_buttonhole":       "Петля (Buttonhole, Bh)",
+  "hw_snap":             "Кнопка / люверс",
+  "hw_other":            "Фурнитура (прочее)",
+  // Аннотации
+  "callout_line":        "Выноска",
+  "break_line":          "Линия обрыва",
+  "dim_line":            "Размерная линия",
+  "arrow":               "Стрелка",
+  "stitch_symbol":       "Символ строчки (vvvv)",
+  // Прочее
+  "unknown":             "Неизвестно",
+  "_skip":               "— не выводить —",
 };
+
+function RoleOptions() {
+  return ROLE_GROUPS.map(g => (
+    <optgroup key={g.label} label={g.label}>
+      {g.roles.map(r => <option key={r} value={r}>{ROLE_LABELS[r] || r}</option>)}
+    </optgroup>
+  ));
+}
 
 function LineSwatch({ color, width, dashed }) {
   if (!color || color === "none") return <span className="vse-swatch-empty" />;
@@ -91,21 +166,22 @@ function hexDistance(a, b) {
   } catch { return 999; }
 }
 
-function applyHighlight(container, targetColor, targetWidth, mode, targetRole) {
-  // Exclude elements inside <defs> (font glyphs etc.)
+function applyHighlight(container, targetColor, targetWidth, mode, targetRole, keyStrs) {
   const els = [...container.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
     .filter(el => !el.closest("defs"));
   els.forEach(el => {
     let match = false;
     if (mode === "std") {
       match = !!el.closest(`[data-role="${targetRole}"]`);
+    } else if (keyStrs && keyStrs.length > 0) {
+      const sk = el.getAttribute("data-sk");
+      match = sk != null && keyStrs.includes(sk);
     } else {
       const elColor = normalizeHex(resolveAttr(el, "stroke"));
       const elWidthRaw = resolveAttr(el, "stroke-width");
       const elWidth = elWidthRaw ? parseFloat(elWidthRaw) : 1;
-      const colorOk = hexDistance(elColor, normalizeHex(targetColor)) < 30;
-      const widthOk = Math.abs(elWidth - targetWidth) < 0.5;
-      match = colorOk && widthOk;
+      match = hexDistance(elColor, normalizeHex(targetColor)) < 30
+           && Math.abs(elWidth - targetWidth) < 0.5;
     }
     el.style.opacity = match ? "1" : "0.06";
     el.style.filter  = match ? "drop-shadow(0 0 4px #C8A84B)" : "";
@@ -134,13 +210,14 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix 
   const [ready, setReady]     = useState(false);
   const [scale, setScale]     = useState(1);
   const [pan,   setPan]       = useState({ x: 0, y: 0 });
-  const [hlStyles, setHlStyles] = useState([]); // [{selector, dim}]
+  // Set of path indices that should be highlighted (index into `els` query)
+  const [matchedIndices, setMatchedIndices] = useState(null); // null = no hover
   const dragging = useRef(null);
 
   // Load SVG text into hidden div for DOM queries
   useEffect(() => {
     if (!url) return;
-    setScale(1); setPan({ x: 0, y: 0 }); setReady(false); setHlStyles([]);
+    setScale(1); setPan({ x: 0, y: 0 }); setReady(false); setMatchedIndices(null);
     fetch(url + "?t=" + Date.now())
       .then(r => r.text())
       .then(text => {
@@ -149,29 +226,36 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix 
       });
   }, [url]);
 
-  // Compute which paths match — store as data, render as SVG overlay
+  // Compute which paths match — store indices in state for reliable re-render
   useEffect(() => {
     const hidden = hlRef.current;
-    if (!hidden || !ready) return;
-    if (hoveredEntry === null) { setHlStyles([]); return; }
+    if (!hidden || !ready) { setMatchedIndices(null); return; }
+    if (hoveredEntry === null) { setMatchedIndices(null); return; }
 
     const els = [...hidden.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
       .filter(el => !el.closest("defs"));
 
-    const matched = [];
-    els.forEach(el => {
+    const indices = new Set();
+    els.forEach((el, idx) => {
       let match = false;
-      if (mode === "std") {
+      const dataRole = el.getAttribute("data-role");
+      if (dataRole) {
+        match = dataRole === hoveredEntry.role;
+      } else if (mode === "std") {
         match = !!el.closest(`[data-role="${hoveredEntry.role}"]`);
       } else {
-        const elColor = normalizeHex(resolveAttr(el, "stroke"));
-        const elW     = parseFloat(resolveAttr(el, "stroke-width") || "1");
-        match = hexDistance(elColor, normalizeHex(hoveredEntry.stroke)) < 30
-             && Math.abs(elW - hoveredEntry.width) < 0.5;
+        const elColor  = normalizeHex(resolveAttr(el, "stroke"));
+        const elW      = parseFloat(resolveAttr(el, "stroke-width") || "1");
+        const elDash   = resolveAttr(el, "stroke-dasharray") || "";
+        const elDashed = elDash !== "" && elDash !== "none" && elDash !== "0" && elDash !== "[] 0";
+        const colorOk  = hexDistance(elColor, normalizeHex(hoveredEntry.stroke)) < 30;
+        const widthOk  = Math.abs(elW - hoveredEntry.width) < 0.5;
+        const dashOk   = elDashed === Boolean(hoveredEntry.dashed);
+        match = colorOk && widthOk && dashOk;
       }
-      el._hlMatch = match;
+      if (match) indices.add(idx);
     });
-    setHlStyles(els.map(el => ({ match: el._hlMatch })));
+    setMatchedIndices(indices);
   }, [hoveredEntry, ready, mode]);
 
   // Native wheel
@@ -188,7 +272,7 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix 
   const onMouseUp   = () => { dragging.current = null; };
   const reset       = () => { setScale(1); setPan({ x: 0, y: 0 }); };
 
-  const dimmed = hoveredEntry !== null;
+  const dimmed = matchedIndices !== null;
 
   return (
     <div className="vse-zoom-panel">
@@ -211,7 +295,7 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix 
             draggable={false}
             style={{ opacity: dimmed ? 0.15 : 1, transition: "opacity .15s" }}
           />
-          {dimmed && ready && (() => {
+          {dimmed && ready && matchedIndices && (() => {
             const hidden = hlRef.current;
             if (!hidden) return null;
             const svgEl = hidden.querySelector("svg");
@@ -219,7 +303,7 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix 
             const vb = svgEl.getAttribute("viewBox");
             const els = [...hidden.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
               .filter(el => !el.closest("defs"));
-            const matched = els.filter(el => el._hlMatch);
+            const matched = els.filter((_, idx) => matchedIndices.has(idx));
             return (
               <svg viewBox={vb} className="vse-zoom-overlay" xmlns="http://www.w3.org/2000/svg">
                 {matched.map((el, i) => {
@@ -237,131 +321,165 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix 
   );
 }
 
-// ── Tab 1: Before / After + Inspector ────────────────────────────────────────
-function TabCompare({ manifest, registry, setRegistry }) {
-  const [activeId, setActiveId] = useState(manifest[0]?.id);
-  const [hovered, setHovered] = useState({ idx: null, side: null });
+// Group registry entries by visual appearance (stroke+fill+width+dashed)
+function groupNodeStyles(nodeStyles) {
+  const map = new Map();
+  for (const { entry, i } of nodeStyles) {
+    const role = entry.role ?? "?";
+    if (!map.has(role)) {
+      map.set(role, { entry: { ...entry }, indices: [i], key_strs: entry.key_str ? [entry.key_str] : [] });
+    } else {
+      const g = map.get(role);
+      g.indices.push(i);
+      if (entry.key_str && !g.key_strs.includes(entry.key_str)) g.key_strs.push(entry.key_str);
+    }
+  }
+  return [...map.values()];
+}
 
-  useEffect(() => { setHovered({ idx: null, side: null }); }, [activeId]);
+// ── Tab 1: Annotate originals ─────────────────────────────────────────────────
+function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, saving, buildTs }) {
+  const [activeId, setActiveId] = useState(manifest[0]?.id);
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+
+  useEffect(() => { setHoveredIdx(null); }, [activeId]);
   const node = manifest.find(n => n.id === activeId);
 
   const nodeStyles = registry
     .map((entry, i) => ({ entry, i }))
     .filter(({ entry }) => entry.files?.includes(activeId));
 
-  // Guard: idx may be stale after node switch
-  const safeIdx = hovered.idx !== null && hovered.idx < nodeStyles.length ? hovered.idx : null;
-  const hoveredEntry = safeIdx !== null ? nodeStyles[safeIdx]?.entry ?? null : null;
-  // Pass null to panel if that side isn't hovered
-  const origEntry = hoveredEntry && (hovered.side === "orig" || hovered.side === "both") ? hoveredEntry : null;
-  const stdEntry  = hoveredEntry && (hovered.side === "std"  || hovered.side === "both") ? hoveredEntry : null;
+  const groups = groupNodeStyles(nodeStyles);
+
+  const safeIdx = hoveredIdx !== null && hoveredIdx < groups.length ? hoveredIdx : null;
+  const hoveredGroup = safeIdx !== null ? groups[safeIdx] ?? null : null;
+  // hoveredGroup passed to ZoomableSvgPanel — contains key_strs[] and role
+  const hoveredEntry = hoveredGroup ? { ...hoveredGroup.entry, key_strs: hoveredGroup.key_strs } : null;
+
+  const allAssigned = groups.length > 0 && groups.every(g => g.entry.role && g.entry.role !== "?");
+  const assignedCount = groups.filter(g => g.entry.role && g.entry.role !== "?").length;
 
   return (
     <div className="vse-compare">
       <div className="vse-node-tabs">
-        {manifest.map(n => (
-          <button
-            key={n.id}
-            className={`vse-node-tab${activeId === n.id ? " active" : ""}`}
-            onClick={() => { setActiveId(n.id); setHovered({ idx: null, side: null }); }}
-          >
-            {n.label} <span className="vse-code">{n.code}</span>
-          </button>
-        ))}
+        {manifest.map(n => {
+          const ns = registry.filter(e => e.files?.includes(n.id));
+          const done = ns.length > 0 && ns.every(e => e.role && e.role !== "?");
+          return (
+            <button
+              key={n.id}
+              className={`vse-node-tab${activeId === n.id ? " active" : ""}${done ? " vse-node-tab-done" : ""}`}
+              onClick={() => { setActiveId(n.id); setHoveredIdx(null); }}
+            >
+              {done ? "✓ " : ""}{n.label} <span className="vse-code">{n.code}</span>
+            </button>
+          );
+        })}
       </div>
 
       {node && (
-        <>
-          <div className="vse-compare-wrap">
-            {/* LEFT: sticky stacked SVG panels */}
-            <div className="vse-panels-sticky">
-              <ZoomableSvgPanel url={node.origSvg} label="ОРИГИНАЛ"            hdrClass="orig" hoveredEntry={origEntry} mode="orig" svgPrefix={`${activeId}_orig`} />
-              <ZoomableSvgPanel url={node.stdSvg}  label="СТАНДАРТИЗИРОВАННЫЙ" hdrClass="std"  hoveredEntry={stdEntry}  mode="std"  svgPrefix={`${activeId}_std`} />
+        <div className="vse-annotate-wrap">
+          {/* LEFT: original + standard SVG panels */}
+          <div className="vse-panels-sticky">
+            <div className="vse-dual-panels">
+              <ZoomableSvgPanel
+                url={node.origSvg + "?t=" + buildTs}
+                label="ОРИГИНАЛ"
+                hdrClass="orig"
+                hoveredEntry={hoveredEntry}
+                mode="orig"
+                svgPrefix={`${activeId}_orig`}
+              />
+              <ZoomableSvgPanel
+                url={node.stdSvg + "?t=" + buildTs}
+                label="СТАНДАРТ"
+                hdrClass="std"
+                hoveredEntry={null}
+                mode="std"
+                svgPrefix={`${activeId}_std`}
+              />
             </div>
-
-            {/* RIGHT: scrollable style table */}
-            {nodeStyles.length > 0 && (
-            <div className="vse-node-styles">
-              <div className="vse-node-styles-hdr">
-                Стили узла — наведи на строку чтобы подсветить на обоих SVG
-              </div>
-              <table className="vse-table">
-                <thead>
-                  <tr>
-                    <th colSpan={3} className="vse-th-orig">БЫЛО</th>
-                    <th className="vse-th-arrow"></th>
-                    <th colSpan={3} className="vse-th-std">СТАЛО</th>
-                    <th>Роль</th>
-                  </tr>
-                  <tr className="vse-subhead">
-                    <th>Превью</th><th>Цвет</th><th>Толщина</th>
-                    <th></th>
-                    <th>Превью</th><th>Цвет</th><th>Толщина</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {nodeStyles.map(({ entry, i }, idx) => {
-                    const stdStyle = ROLE_STYLES[entry.role];
-                    const isHov = safeIdx === idx;
-                    return (
-                      <tr
-                        key={i}
-                        className={`vse-inspector-row${isHov ? " hovered" : ""}${entry.role !== "?" ? " vse-row-filled" : ""}`}
-                        onMouseLeave={() => setHovered({ idx: null, side: null })}
-                      >
-                        {/* БЫЛО — hover подсвечивает оригинал */}
-                        <td className="vse-tc vse-td-orig" onMouseEnter={() => setHovered({ idx, side: "orig" })}>
-                          <LineSwatch color={entry.stroke} width={entry.width} dashed={entry.dashed} />
-                        </td>
-                        <td className="vse-td-orig" onMouseEnter={() => setHovered({ idx, side: "orig" })}>
-                          <ColorDot hex={entry.stroke} /><code>{entry.stroke}</code>
-                        </td>
-                        <td className="vse-tc vse-muted vse-td-orig" onMouseEnter={() => setHovered({ idx, side: "orig" })}>
-                          {entry.width}
-                        </td>
-
-                        <td className="vse-arrow-cell" onMouseEnter={() => setHovered({ idx, side: "both" })}>→</td>
-
-                        {/* СТАЛО — hover подсвечивает стандарт */}
-                        <td className="vse-tc vse-td-std" onMouseEnter={() => setHovered({ idx, side: "std" })}>
-                          {stdStyle
-                            ? <LineSwatch color={stdStyle.stroke} width={parseFloat(stdStyle["stroke-width"]) * 2} dashed={stdStyle["stroke-dasharray"] !== "none"} />
-                            : <span className="vse-muted">—</span>}
-                        </td>
-                        <td className="vse-td-std" onMouseEnter={() => setHovered({ idx, side: "std" })}>
-                          {stdStyle
-                            ? <><ColorDot hex={stdStyle.stroke} /><code>{stdStyle.stroke}</code></>
-                            : <span className="vse-muted">не назначено</span>}
-                        </td>
-                        <td className="vse-tc vse-muted vse-td-std" onMouseEnter={() => setHovered({ idx, side: "std" })}>
-                          {stdStyle ? stdStyle["stroke-width"] : ""}
-                        </td>
-
-                        <td onMouseEnter={() => setHovered({ idx, side: "both" })}>
-                          <select
-                            className="vse-role-sel-sm"
-                            value={entry.role}
-                            onChange={e => {
-                              const next = [...registry];
-                              next[i] = { ...next[i], role: e.target.value };
-                              setRegistry(next);
-                            }}
-                          >
-                            {ROLES.map(r => (
-                              <option key={r} value={r}>{ROLE_LABELS[r] || r}</option>
-                            ))}
-                          </select>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-            )}
           </div>
-        </>
+
+          {/* RIGHT: annotation table */}
+          <div className="vse-annotate-right-sticky">
+          <div className="vse-annotate-right">
+            {nodeStyles.length > 0 && (
+              <div className="vse-node-styles">
+                <div className="vse-node-styles-hdr">
+                  Наведи на строку → подсветка на оригинале · назначь роль каждому стилю
+                  <span className="vse-assign-progress">{assignedCount} / {groups.length}</span>
+                </div>
+                <table className="vse-table">
+                  <thead>
+                    <tr>
+                      <th style={{width:"64px"}}>Превью</th>
+                      <th style={{width:"80px"}}>Цвет</th>
+                      <th style={{width:"44px"}}>Толщ.</th>
+                      <th>Роль</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {groups.map((g, idx) => {
+                      const isHov = safeIdx === idx;
+                      const assigned = g.entry.role && g.entry.role !== "?";
+                      return (
+                        <tr
+                          key={g.indices[0]}
+                          className={`vse-inspector-row${isHov ? " hovered" : ""}${assigned ? " vse-row-filled" : ""}`}
+                          onMouseEnter={() => setHoveredIdx(idx)}
+                          onMouseLeave={() => setHoveredIdx(null)}
+                        >
+                          <td className="vse-tc">
+                            <LineSwatch color={g.entry.stroke} width={g.entry.width} dashed={g.entry.dashed} />
+                          </td>
+                          <td>
+                            <ColorDot hex={g.entry.stroke} /><code>{g.entry.stroke}</code>
+                          </td>
+                          <td className="vse-tc vse-muted">{g.entry.width}</td>
+                          <td>
+                            <select
+                              className="vse-role-sel-sm"
+                              value={g.entry.role || "?"}
+                              onChange={e => {
+                                const next = [...registry];
+                                g.indices.forEach(i => { next[i] = { ...next[i], role: e.target.value }; });
+                                setRegistry(next);
+                              }}
+                            >
+                              <RoleOptions />
+                            </select>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Generate button */}
+            <div className="vse-generate-bar">
+              <button
+                className={`vse-generate-btn${saving ? " vse-save-btn-busy" : ""}${!allAssigned ? " vse-generate-btn-partial" : ""}`}
+                onClick={onSave}
+                disabled={saving}
+              >
+                {saving ? "Генерация…" : allAssigned ? "Сгенерировать стандарт →" : `Сгенерировать (${assignedCount}/${nodeStyles.length} назначено)`}
+              </button>
+              {buildStatus.state === "ok" && (
+                <span className="vse-build-ok">✓ {buildStatus.message}</span>
+              )}
+              {buildStatus.state === "error" && (
+                <span className="vse-build-error">✗ {buildStatus.message}</span>
+              )}
+              {buildStatus.state === "building" && (
+                <span className="vse-muted">⏳ {buildStatus.message}</span>
+              )}
+            </div>
+          </div>
+          </div>{/* vse-annotate-right-sticky */}
+        </div>
       )}
     </div>
   );
@@ -652,13 +770,15 @@ export default function VseReview() {
   const [registry, setRegistry]     = useState([]);
   const [meanings, setMeanings]     = useState({});
   const [buildStatus, setBuildStatus] = useState(null); // null | {state, message}
+  const [buildTs, setBuildTs] = useState(Date.now());
 
   const API = "http://localhost:7070";
 
   useEffect(() => {
-    fetch("/vse/manifest.json").then(r => r.json()).then(setManifest);
-    fetch("/vse/callout_graph.json").then(r => r.json()).then(setCallout);
-    fetch("/vse/style_registry.json").then(r => r.json()).then(setRegistry);
+    const t = "?t=" + Date.now();
+    fetch("/vse/manifest.json" + t).then(r => r.json()).then(setManifest);
+    fetch("/vse/callout_graph.json" + t).then(r => r.json()).then(setCallout);
+    fetch("/vse/style_registry.json" + t).then(r => r.json()).then(setRegistry);
   }, []);
 
   // Poll build status while building
@@ -672,7 +792,7 @@ export default function VseReview() {
         if (s.state !== "building") {
           clearInterval(id);
           if (s.state === "ok") {
-            // Reload SVGs by busting cache on manifest
+            setBuildTs(Date.now());
             fetch("/vse/manifest.json?" + Date.now()).then(r => r.json()).then(setManifest);
           }
         }
@@ -706,7 +826,7 @@ export default function VseReview() {
   };
 
   const TABS = [
-    { id: "compare",  label: "До / После" },
+    { id: "compare",  label: "Разметка" },
     { id: "callouts", label: "Выноски и обозначения" },
     { id: "registry", label: "Реестр стилей" },
   ];
@@ -733,7 +853,7 @@ export default function VseReview() {
             Скачать выноски
           </button>
         )}
-        {(tab === "registry" || tab === "compare") && (
+        {tab === "registry" && (
           <button
             className={`vse-save-btn${buildStatus?.state === "building" ? " vse-save-btn-busy" : ""}`}
             onClick={saveAndRegen}
@@ -750,7 +870,7 @@ export default function VseReview() {
       </div>
 
       <div className={tab === "compare" ? "vse-body vse-body-compare" : "vse-body"}>
-        {tab === "compare"  && manifest.length > 0 && <TabCompare manifest={manifest} registry={registry} setRegistry={setRegistry} />}
+        {tab === "compare"  && manifest.length > 0 && <TabCompare manifest={manifest} registry={registry} setRegistry={setRegistry} buildStatus={buildStatus || {state:"idle",message:""}} onSave={saveAndRegen} saving={buildStatus?.state === "building"} buildTs={buildTs} />}
         {tab === "callouts" && <TabCallouts calloutGraph={calloutGraph} meanings={meanings} setMeanings={setMeanings} />}
         {tab === "registry" && <TabRegistry registry={registry} setRegistry={setRegistry} manifest={manifest} />}
       </div>
