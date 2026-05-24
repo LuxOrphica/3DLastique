@@ -73,7 +73,7 @@ for root, dirs, files in os.walk(SAMPLES_DIR):
 with open(NODES_FILE, "w", encoding="utf-8") as f:
     json.dump(nodes, f, ensure_ascii=False, indent=2)
 
-print(f"Generated {len(nodes)} nodes → {NODES_FILE}")
+print(f"Generated {len(nodes)} nodes -> {NODES_FILE}")
 cats = {}
 for n in nodes:
     cat = n["file"].split("/")[0]
