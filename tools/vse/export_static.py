@@ -18,13 +18,15 @@ ROOT    = os.path.abspath(os.path.join(HERE, "..", ".."))
 OUT_DIR = os.path.join(ROOT, "public", "vse").replace("\\", "/")
 os.makedirs(OUT_DIR, exist_ok=True)
 
+# Source AI files root — override with env var VSE_SAMPLES_DIR
+SAMPLES_DIR = os.environ.get("VSE_SAMPLES_DIR", "C:/temp").replace("\\", "/")
+
+with open(os.path.join(HERE, "nodes.json"), encoding="utf-8") as _f:
+    _nodes = json.load(_f)
+
 SAMPLES = [
-    ("C:/temp/sample_node.ai",                    "vorotnik",   "Воротник / молния",  "CH00001"),
-    ("C:/temp/samples/neckline_FN00001.ai",        "gorlovyna",  "Горловина",          "FN00001"),
-    ("C:/temp/samples/waistband_BE00001.ai",       "poyas",      "Пояс",               "BE00001"),
-    ("C:/temp/samples/seams_SE00401.ai",           "shvy",       "Швы",                "SE00401"),
-    ("C:/temp/samples/front_placket_FP00129.ai",   "planka",     "Планка спереди",     "FP00129"),
-    ("C:/temp/samples/sleeve_vent_SC00001.ai",     "razrez",     "Разрез рукава",      "SC00001"),
+    (f"{SAMPLES_DIR}/{n['file']}", n["id"], n["label"], n["code"])
+    for n in _nodes if n.get("enabled", True)
 ]
 
 def key_to_str(key):

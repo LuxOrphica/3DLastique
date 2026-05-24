@@ -1,0 +1,44 @@
+[
+  {
+    "id":      "vorotnik",
+    "label":   "Воротник / молния",
+    "code":    "CH00001",
+    "file":    "sample_node.ai",
+    "enabled": true
+  },
+  {
+    "id":      "gorlovyna",
+    "label":   "Горловина",
+    "code":    "FN00001",
+    "file":    "samples/neckline_FN00001.ai",
+    "enabled": true
+  },
+  {
+    "id":      "poyas",
+    "label":   "Пояс",
+    "code":    "BE00001",
+    "file":    "samples/waistband_BE00001.ai",
+    "enabled": true
+  },
+  {
+    "id":      "shvy",
+    "label":   "Швы",
+    "code":    "SE00401",
+    "file":    "samples/seams_SE00401.ai",
+    "enabled": true
+  },
+  {
+    "id":      "planka",
+    "label":   "Планка спереди",
+    "code":    "FP00129",
+    "file":    "samples/front_placket_FP00129.ai",
+    "enabled": true
+  },
+  {
+    "id":      "razrez",
+    "label":   "Разрез рукава",
+    "code":    "SC00001",
+    "file":    "samples/sleeve_vent_SC00001.ai",
+    "enabled": true
+  }
+]

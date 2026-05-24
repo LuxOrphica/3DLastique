@@ -149,12 +149,22 @@ def classify_with_registry(p, text_words, registry_lookup):
     _simple_stroke = (len(items) <= 2
                       and all(it[0] in ('l', 'c') for it in items)
                       and not is_closed)
+    key = _path_style_key(p, text_words)
     if _simple_stroke:
-        # Length-sensitive roles — heuristic knows better than registry
+        # Registry takes absolute priority for non-line roles
+        if key in registry_lookup:
+            reg_role = registry_lookup[key]
+            if reg_role not in ("callout_line", "break_line", "unknown", "?"):
+                return reg_role
+        # Length-sensitive heuristic:
+        #   - registry says break_line but path is very short → likely zipper tape stub
+        from roles import _path_angle_and_length
+        _, length = _path_angle_and_length(items)
+        if key in registry_lookup and registry_lookup[key] == "break_line" and length < 40:
+            return "hw_zipper_tape"
         heur = classify_path(p, text_words)
         if heur in ("callout_line", "break_line"):
             return heur
-    key = _path_style_key(p, text_words)
     if key in registry_lookup:
         return registry_lookup[key]
     return classify_path(p, text_words)
