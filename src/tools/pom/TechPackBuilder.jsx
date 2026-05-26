@@ -145,6 +145,23 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
     labelAttach: ru ? ["Вшитая","Пришивная","Клеевая","Навесная"] : ["Sewn","Sewn on","Adhesive","Hang tag"],
     approval:    ru ? "По согласованию" : "Buyer approval",
     toFill:      ru ? "Заполнить" : "To fill",
+    stitchCode: [
+      "301 — Lockstitch",
+      "401 — Chain stitch",
+      "404 — Double chain stitch",
+      "406 — Coverstitch (bottom)",
+      "407 — Coverstitch (top+bottom)",
+      "501 — Overlock 2-thread",
+      "503 — Overlock 3-thread",
+      "504 — Overlock 4-thread",
+      "512 — Safety stitch (2+3)",
+      "514 — Safety stitch (2+4)",
+      "516 — Flatlock / flatseam",
+      "602 — Cover stitch 3-needle",
+      "605 — Cover stitch 5-thread",
+      "101 — Chain stitch single",
+      "209 — Blind stitch",
+    ],
   };
 
   const [garmentId, setGarmentId] = useState("coat_single");
@@ -641,8 +658,7 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
                 </div>
                 <EditableTable lang={siteLang}
                   columns={[
-                    { key: "stitchType", label: ru ? "Тип строчки" : "Stitch type",      width: 140 },
-                    { key: "isoCode",    label: "ISO code",                               width: 80,  mono: true },
+                    { key: "isoCode",    label: "ISO / ASTM",                             width: 220, type: "select", options: OPT.stitchCode },
                     { key: "spi",        label: ru ? "Стеж/дюйм" : "SPI",                width: 70,  mono: true },
                     { key: "zoneRU",     label: "Зона RU",                                width: 160 },
                     { key: "zoneEN",     label: "Zone EN",                                width: 160 },
@@ -652,7 +668,7 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
                   ]}
                   rows={stitchItems}
                   onChange={setStitchItems}
-                  defaultRow={{ stitchType: ru ? "Стачной" : "Lockstitch", isoCode: "301", spi: "12", zoneRU: "", zoneEN: "", thread: "Polyester 40/2", tension: ru ? "Стандартное" : "Standard", remarks: "" }}
+                  defaultRow={{ isoCode: "301 — Lockstitch", spi: "12", zoneRU: "", zoneEN: "", thread: "Polyester 40/2", tension: ru ? "Стандартное" : "Standard", remarks: "" }}
                   emptyLabel={ru ? "Нет строчек" : "No stitch specs"}
                 />
               </div>
