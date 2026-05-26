@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>VSE — Глоссарий</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; font-size: 13px; background: #f5f2ee; }
+header { padding: 16px 32px; background: #1a1a1a; color: #C8A84B; font-size: 16px; font-weight: 700; }
+.sub { font-size: 12px; color: #aaa; margin-top: 4px; }
+.toolbar { padding: 12px 32px; background: #fff; border-bottom: 1px solid #e0d8cc; display:flex; gap:12px; align-items:center; }
+table { width: 100%; border-collapse: collapse; background: #fff; }
+th { background: #1a1a1a; color: #C8A84B; padding: 8px 12px; font-size: 11px; text-align: left; position:sticky; top:0; }
+td { padding: 7px 12px; border-bottom: 1px solid #eee; vertical-align: middle; }
+.tc { text-align: center; width: 60px; }
+tr:hover td { background: #faf8f5; }
+tr.done td { background: #f0faf0; }
+.save-btn { padding: 8px 20px; background: #C8A84B; color: #fff; border: none; border-radius: 4px; font-size: 13px; font-weight: 700; cursor: pointer; }
+#status { font-size: 12px; color: #888; }
+input { outline: none; }
+input:focus { border-color: #1a1a1a !important; }
+</style>
+</head>
+<body>
+<header>VSE — Глоссарий терминов
+  <div class="sub">278 терминов из 4116 файлов · Впиши перевод → Сохранить</div>
+</header>
+<div class="toolbar">
+  <button class="save-btn" onclick="saveJSON()">Сохранить глоссарий</button>
+  <span id="status"></span>
+</div>
+<table>
+<thead><tr><th>Кол-во</th><th>Английский термин</th><th>Перевод (RU)</th></tr></thead>
+<tbody>
+<tr>
+  <td class="tc">3004</td>
+  <td><b>Lining</b></td>
+  <td><input class="tr-inp" data-idx="0" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2353</td>
+  <td><b>Interlining</b></td>
+  <td><input class="tr-inp" data-idx="1" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2049</td>
+  <td><b>Padding</b></td>
+  <td><input class="tr-inp" data-idx="2" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">1375</td>
+  <td><b>Zipper</b></td>
+  <td><input class="tr-inp" data-idx="3" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">1043</td>
+  <td><b>front facing</b></td>
+  <td><input class="tr-inp" data-idx="4" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">663</td>
+  <td><b>left front</b></td>
+  <td><input class="tr-inp" data-idx="5" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">661</td>
+  <td><b>right front</b></td>
+  <td><input class="tr-inp" data-idx="6" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">538</td>
+  <td><b>Inner</b></td>
+  <td><input class="tr-inp" data-idx="7" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">489</td>
+  <td><b>Elastic</b></td>
+  <td><input class="tr-inp" data-idx="8" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">470</td>
+  <td><b>inner placket</b></td>
+  <td><input class="tr-inp" data-idx="9" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">455</td>
+  <td><b>Tape</b></td>
+  <td><input class="tr-inp" data-idx="10" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">378</td>
+  <td><b>lining of pocket</b></td>
+  <td><input class="tr-inp" data-idx="11" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">346</td>
+  <td><b>Binding</b></td>
+  <td><input class="tr-inp" data-idx="12" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">339</td>
+  <td><b>Shell</b></td>
+  <td><input class="tr-inp" data-idx="13" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">312</td>
+  <td><b>Welt</b></td>
+  <td><input class="tr-inp" data-idx="14" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">304</td>
+  <td><b>shell fabric</b></td>
+  <td><input class="tr-inp" data-idx="15" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">285</td>
+  <td><b>Hood</b></td>
+  <td><input class="tr-inp" data-idx="16" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">250</td>
+  <td><b>Cord</b></td>
+  <td><input class="tr-inp" data-idx="17" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">239</td>
+  <td><b>of pocket</b></td>
+  <td><input class="tr-inp" data-idx="18" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">189</td>
+  <td><b>Piping</b></td>
+  <td><input class="tr-inp" data-idx="19" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">184</td>
+  <td><b>Glue</b></td>
+  <td><input class="tr-inp" data-idx="20" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">150</td>
+  <td><b>Velcro</b></td>
+  <td><input class="tr-inp" data-idx="21" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">146</td>
+  <td><b>Upper</b></td>
+  <td><input class="tr-inp" data-idx="22" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">141</td>
+  <td><b>upper collar</b></td>
+  <td><input class="tr-inp" data-idx="23" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">133</td>
+  <td><b>Snap-button</b></td>
+  <td><input class="tr-inp" data-idx="24" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">132</td>
+  <td><b>piping with cord</b></td>
+  <td><input class="tr-inp" data-idx="25" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">124</td>
+  <td><b>Type</b></td>
+  <td><input class="tr-inp" data-idx="26" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">107</td>
+  <td><b>Invisible</b></td>
+  <td><input class="tr-inp" data-idx="27" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">90</td>
+  <td><b>elastic band</b></td>
+  <td><input class="tr-inp" data-idx="28" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">78</td>
+  <td><b>pu seam-tape</b></td>
+  <td><input class="tr-inp" data-idx="29" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">70</td>
+  <td><b>set of labels</b></td>
+  <td><input class="tr-inp" data-idx="30" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">62</td>
+  <td><b>type a</b></td>
+  <td><input class="tr-inp" data-idx="31" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">62</td>
+  <td><b>type b</b></td>
+  <td><input class="tr-inp" data-idx="32" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">59</td>
+  <td><b>Three-cornered</b></td>
+  <td><input class="tr-inp" data-idx="33" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">59</td>
+  <td><b>three-cornered insert</b></td>
+  <td><input class="tr-inp" data-idx="34" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">53</td>
+  <td><b>Half-belt</b></td>
+  <td><input class="tr-inp" data-idx="35" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">52</td>
+  <td><b>Mesh</b></td>
+  <td><input class="tr-inp" data-idx="36" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">52</td>
+  <td><b>Stopper</b></td>
+  <td><input class="tr-inp" data-idx="37" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">46</td>
+  <td><b>Ring</b></td>
+  <td><input class="tr-inp" data-idx="38" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">42</td>
+  <td><b>Tunnel</b></td>
+  <td><input class="tr-inp" data-idx="39" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">41</td>
+  <td><b>Edge</b></td>
+  <td><input class="tr-inp" data-idx="40" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">41</td>
+  <td><b>Fur</b></td>
+  <td><input class="tr-inp" data-idx="41" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">40</td>
+  <td><b>back inside</b></td>
+  <td><input class="tr-inp" data-idx="42" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">39</td>
+  <td><b>Reflecting</b></td>
+  <td><input class="tr-inp" data-idx="43" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">38</td>
+  <td><b>Workmanship</b></td>
+  <td><input class="tr-inp" data-idx="44" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">37</td>
+  <td><b>Eyelet</b></td>
+  <td><input class="tr-inp" data-idx="45" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">35</td>
+  <td><b>Sleeve</b></td>
+  <td><input class="tr-inp" data-idx="46" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">35</td>
+  <td><b>reflecting piping</b></td>
+  <td><input class="tr-inp" data-idx="47" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">29</td>
+  <td><b>inner cuﬀ</b></td>
+  <td><input class="tr-inp" data-idx="48" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">28</td>
+  <td><b>Collar</b></td>
+  <td><input class="tr-inp" data-idx="49" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">28</td>
+  <td><b>downproof fabric</b></td>
+  <td><input class="tr-inp" data-idx="50" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">27</td>
+  <td><b>Sweat</b></td>
+  <td><input class="tr-inp" data-idx="51" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">27</td>
+  <td><b>Stitch</b></td>
+  <td><input class="tr-inp" data-idx="52" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">27</td>
+  <td><b>Snowskirt</b></td>
+  <td><input class="tr-inp" data-idx="53" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">27</td>
+  <td><b>Downproof</b></td>
+  <td><input class="tr-inp" data-idx="54" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">26</td>
+  <td><b>stitch on stitch</b></td>
+  <td><input class="tr-inp" data-idx="55" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">25</td>
+  <td><b>Stitching</b></td>
+  <td><input class="tr-inp" data-idx="56" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">24</td>
+  <td><b>Cup</b></td>
+  <td><input class="tr-inp" data-idx="57" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">23</td>
+  <td><b>Waistband</b></td>
+  <td><input class="tr-inp" data-idx="58" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">23</td>
+  <td><b>back yoke</b></td>
+  <td><input class="tr-inp" data-idx="59" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">22</td>
+  <td><b>Pocket</b></td>
+  <td><input class="tr-inp" data-idx="60" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">22</td>
+  <td><b>fix through all layers</b></td>
+  <td><input class="tr-inp" data-idx="61" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">22</td>
+  <td><b>lining of hood</b></td>
+  <td><input class="tr-inp" data-idx="62" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">21</td>
+  <td><b>Palm</b></td>
+  <td><input class="tr-inp" data-idx="63" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">21</td>
+  <td><b>pu seam tape</b></td>
+  <td><input class="tr-inp" data-idx="64" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">20</td>
+  <td><b>Button</b></td>
+  <td><input class="tr-inp" data-idx="65" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">20</td>
+  <td><b>side seam</b></td>
+  <td><input class="tr-inp" data-idx="66" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">20</td>
+  <td><b>invisible zipper</b></td>
+  <td><input class="tr-inp" data-idx="67" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">19</td>
+  <td><b>Visor</b></td>
+  <td><input class="tr-inp" data-idx="68" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">19</td>
+  <td><b>Bone</b></td>
+  <td><input class="tr-inp" data-idx="69" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">19</td>
+  <td><b>workmanship of hood</b></td>
+  <td><input class="tr-inp" data-idx="70" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">19</td>
+  <td><b>workmanship of fur placket</b></td>
+  <td><input class="tr-inp" data-idx="71" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">19</td>
+  <td><b>elastic cord band</b></td>
+  <td><input class="tr-inp" data-idx="72" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">18</td>
+  <td><b>Seam</b></td>
+  <td><input class="tr-inp" data-idx="73" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">18</td>
+  <td><b>Laser</b></td>
+  <td><input class="tr-inp" data-idx="74" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">18</td>
+  <td><b>Fabric</b></td>
+  <td><input class="tr-inp" data-idx="75" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">18</td>
+  <td><b>laser cut</b></td>
+  <td><input class="tr-inp" data-idx="76" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">17</td>
+  <td><b>Velcro/hook</b></td>
+  <td><input class="tr-inp" data-idx="77" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">17</td>
+  <td><b>down bag</b></td>
+  <td><input class="tr-inp" data-idx="78" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">16</td>
+  <td><b>palm side</b></td>
+  <td><input class="tr-inp" data-idx="79" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">16</td>
+  <td><b>for bone</b></td>
+  <td><input class="tr-inp" data-idx="80" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">15</td>
+  <td><b>Open</b></td>
+  <td><input class="tr-inp" data-idx="81" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">15</td>
+  <td><b>Artificial</b></td>
+  <td><input class="tr-inp" data-idx="82" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">15</td>
+  <td><b>shoulder seam</b></td>
+  <td><input class="tr-inp" data-idx="83" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">15</td>
+  <td><b>open cut</b></td>
+  <td><input class="tr-inp" data-idx="84" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">15</td>
+  <td><b>artificial fur</b></td>
+  <td><input class="tr-inp" data-idx="85" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">14</td>
+  <td><b>Loop</b></td>
+  <td><input class="tr-inp" data-idx="86" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">14</td>
+  <td><b>Artiﬁcial</b></td>
+  <td><input class="tr-inp" data-idx="87" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">14</td>
+  <td><b>elastic cord</b></td>
+  <td><input class="tr-inp" data-idx="88" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">14</td>
+  <td><b>artiﬁcial fur</b></td>
+  <td><input class="tr-inp" data-idx="89" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">13</td>
+  <td><b>Additional</b></td>
+  <td><input class="tr-inp" data-idx="90" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">13</td>
+  <td><b>left side seam</b></td>
+  <td><input class="tr-inp" data-idx="91" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">13</td>
+  <td><b>left glove</b></td>
+  <td><input class="tr-inp" data-idx="92" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">12</td>
+  <td><b>Lycra</b></td>
+  <td><input class="tr-inp" data-idx="93" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">12</td>
+  <td><b>Eyelets</b></td>
+  <td><input class="tr-inp" data-idx="94" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">12</td>
+  <td><b>right glove</b></td>
+  <td><input class="tr-inp" data-idx="95" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">12</td>
+  <td><b>pu-seam tape</b></td>
+  <td><input class="tr-inp" data-idx="96" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">12</td>
+  <td><b>seam allowance hem</b></td>
+  <td><input class="tr-inp" data-idx="97" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">11</td>
+  <td><b>Shoulder</b></td>
+  <td><input class="tr-inp" data-idx="98" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">11</td>
+  <td><b>Buckle</b></td>
+  <td><input class="tr-inp" data-idx="99" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">11</td>
+  <td><b>Snowgaiter</b></td>
+  <td><input class="tr-inp" data-idx="100" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">10</td>
+  <td><b>Half-moon</b></td>
+  <td><input class="tr-inp" data-idx="101" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">10</td>
+  <td><b>Yoke</b></td>
+  <td><input class="tr-inp" data-idx="102" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">10</td>
+  <td><b>left side</b></td>
+  <td><input class="tr-inp" data-idx="103" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">10</td>
+  <td><b>hood tunnel</b></td>
+  <td><input class="tr-inp" data-idx="104" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">9</td>
+  <td><b>Zip</b></td>
+  <td><input class="tr-inp" data-idx="105" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">9</td>
+  <td><b>Detachable</b></td>
+  <td><input class="tr-inp" data-idx="106" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">9</td>
+  <td><b>bottom hem</b></td>
+  <td><input class="tr-inp" data-idx="107" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">8</td>
+  <td><b>Tricot</b></td>
+  <td><input class="tr-inp" data-idx="108" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">8</td>
+  <td><b>fix to seam allowance only</b></td>
+  <td><input class="tr-inp" data-idx="109" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">8</td>
+  <td><b>additional fabric</b></td>
+  <td><input class="tr-inp" data-idx="110" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">8</td>
+  <td><b>tricot fleece</b></td>
+  <td><input class="tr-inp" data-idx="111" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">8</td>
+  <td><b>cord loop</b></td>
+  <td><input class="tr-inp" data-idx="112" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">8</td>
+  <td><b>fix stitch</b></td>
+  <td><input class="tr-inp" data-idx="113" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">8</td>
+  <td><b>for cord</b></td>
+  <td><input class="tr-inp" data-idx="114" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">7</td>
+  <td><b>Cuff</b></td>
+  <td><input class="tr-inp" data-idx="115" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">7</td>
+  <td><b>Body</b></td>
+  <td><input class="tr-inp" data-idx="116" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">7</td>
+  <td><b>Reflective</b></td>
+  <td><input class="tr-inp" data-idx="117" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">7</td>
+  <td><b>put under binding</b></td>
+  <td><input class="tr-inp" data-idx="118" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">7</td>
+  <td><b>invisible snap-button</b></td>
+  <td><input class="tr-inp" data-idx="119" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">7</td>
+  <td><b>all layers</b></td>
+  <td><input class="tr-inp" data-idx="120" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">7</td>
+  <td><b>fabric tape</b></td>
+  <td><input class="tr-inp" data-idx="121" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>Tag</b></td>
+  <td><input class="tr-inp" data-idx="122" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>Insert</b></td>
+  <td><input class="tr-inp" data-idx="123" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>Plastic</b></td>
+  <td><input class="tr-inp" data-idx="124" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>Velcro/loop</b></td>
+  <td><input class="tr-inp" data-idx="125" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>Welts</b></td>
+  <td><input class="tr-inp" data-idx="126" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>Silicone</b></td>
+  <td><input class="tr-inp" data-idx="127" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>Folded</b></td>
+  <td><input class="tr-inp" data-idx="128" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>Face</b></td>
+  <td><input class="tr-inp" data-idx="129" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>Silicon</b></td>
+  <td><input class="tr-inp" data-idx="130" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>put into seam</b></td>
+  <td><input class="tr-inp" data-idx="131" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>of detail</b></td>
+  <td><input class="tr-inp" data-idx="132" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>pocket tag)</b></td>
+  <td><input class="tr-inp" data-idx="133" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>front yoke</b></td>
+  <td><input class="tr-inp" data-idx="134" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>lining padding</b></td>
+  <td><input class="tr-inp" data-idx="135" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>zipper interlining</b></td>
+  <td><input class="tr-inp" data-idx="136" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">6</td>
+  <td><b>visor of hood</b></td>
+  <td><input class="tr-inp" data-idx="137" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>Main</b></td>
+  <td><input class="tr-inp" data-idx="138" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>Logo</b></td>
+  <td><input class="tr-inp" data-idx="139" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>Half</b></td>
+  <td><input class="tr-inp" data-idx="140" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>Band</b></td>
+  <td><input class="tr-inp" data-idx="141" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>Decorative</b></td>
+  <td><input class="tr-inp" data-idx="142" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>Rib</b></td>
+  <td><input class="tr-inp" data-idx="143" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>Stand</b></td>
+  <td><input class="tr-inp" data-idx="144" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>Centre</b></td>
+  <td><input class="tr-inp" data-idx="145" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>Piece</b></td>
+  <td><input class="tr-inp" data-idx="146" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>Fastening</b></td>
+  <td><input class="tr-inp" data-idx="147" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>left cup</b></td>
+  <td><input class="tr-inp" data-idx="148" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>main logo</b></td>
+  <td><input class="tr-inp" data-idx="149" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>front inside</b></td>
+  <td><input class="tr-inp" data-idx="150" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>back centre</b></td>
+  <td><input class="tr-inp" data-idx="151" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>back seam</b></td>
+  <td><input class="tr-inp" data-idx="152" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>stand of collar</b></td>
+  <td><input class="tr-inp" data-idx="153" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>centre front</b></td>
+  <td><input class="tr-inp" data-idx="154" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>pocket for hood</b></td>
+  <td><input class="tr-inp" data-idx="155" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>piece of fabric</b></td>
+  <td><input class="tr-inp" data-idx="156" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">5</td>
+  <td><b>tape from</b></td>
+  <td><input class="tr-inp" data-idx="157" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>Jacquard</b></td>
+  <td><input class="tr-inp" data-idx="158" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>Figure</b></td>
+  <td><input class="tr-inp" data-idx="159" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>Technical</b></td>
+  <td><input class="tr-inp" data-idx="160" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>Info</b></td>
+  <td><input class="tr-inp" data-idx="161" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>Interlinig</b></td>
+  <td><input class="tr-inp" data-idx="162" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>Don</b></td>
+  <td><input class="tr-inp" data-idx="163" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>Inserts</b></td>
+  <td><input class="tr-inp" data-idx="164" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>Entrance</b></td>
+  <td><input class="tr-inp" data-idx="165" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>Garment</b></td>
+  <td><input class="tr-inp" data-idx="166" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>Supplier</b></td>
+  <td><input class="tr-inp" data-idx="167" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>fix under seam allowance</b></td>
+  <td><input class="tr-inp" data-idx="168" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>palm side/</b></td>
+  <td><input class="tr-inp" data-idx="169" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>two layer of shell fabric</b></td>
+  <td><input class="tr-inp" data-idx="170" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>figure bt</b></td>
+  <td><input class="tr-inp" data-idx="171" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>pu tape</b></td>
+  <td><input class="tr-inp" data-idx="172" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>decorative insert</b></td>
+  <td><input class="tr-inp" data-idx="173" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>binding from</b></td>
+  <td><input class="tr-inp" data-idx="174" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>center of front</b></td>
+  <td><input class="tr-inp" data-idx="175" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>inner jacket</b></td>
+  <td><input class="tr-inp" data-idx="176" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>interlining zipper</b></td>
+  <td><input class="tr-inp" data-idx="177" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>padding lining</b></td>
+  <td><input class="tr-inp" data-idx="178" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>reflective tape</b></td>
+  <td><input class="tr-inp" data-idx="179" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>tape piping</b></td>
+  <td><input class="tr-inp" data-idx="180" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>fabric swatch to</b></td>
+  <td><input class="tr-inp" data-idx="181" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>fix bottom welt</b></td>
+  <td><input class="tr-inp" data-idx="182" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>inner elastic cord</b></td>
+  <td><input class="tr-inp" data-idx="183" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>plastic cord</b></td>
+  <td><input class="tr-inp" data-idx="184" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>inserts from</b></td>
+  <td><input class="tr-inp" data-idx="185" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>lining front</b></td>
+  <td><input class="tr-inp" data-idx="186" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>lining back</b></td>
+  <td><input class="tr-inp" data-idx="187" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>pocket s</b></td>
+  <td><input class="tr-inp" data-idx="188" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>inner welt</b></td>
+  <td><input class="tr-inp" data-idx="189" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">4</td>
+  <td><b>only for garment supplier reference</b></td>
+  <td><input class="tr-inp" data-idx="190" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>Size</b></td>
+  <td><input class="tr-inp" data-idx="191" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>Rigth</b></td>
+  <td><input class="tr-inp" data-idx="192" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>Reflactive</b></td>
+  <td><input class="tr-inp" data-idx="193" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>Herring-bone</b></td>
+  <td><input class="tr-inp" data-idx="194" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>Flat</b></td>
+  <td><input class="tr-inp" data-idx="195" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>Quilting</b></td>
+  <td><input class="tr-inp" data-idx="196" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>Flap</b></td>
+  <td><input class="tr-inp" data-idx="197" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>Placket</b></td>
+  <td><input class="tr-inp" data-idx="198" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>Pants</b></td>
+  <td><input class="tr-inp" data-idx="199" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>inside left</b></td>
+  <td><input class="tr-inp" data-idx="200" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>inside rigth</b></td>
+  <td><input class="tr-inp" data-idx="201" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>bottom patch</b></td>
+  <td><input class="tr-inp" data-idx="202" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>tape for</b></td>
+  <td><input class="tr-inp" data-idx="203" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>put under edge of detail</b></td>
+  <td><input class="tr-inp" data-idx="204" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>into seam</b></td>
+  <td><input class="tr-inp" data-idx="205" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>centre of front</b></td>
+  <td><input class="tr-inp" data-idx="206" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>rigth glove</b></td>
+  <td><input class="tr-inp" data-idx="207" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>zip garage</b></td>
+  <td><input class="tr-inp" data-idx="208" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>binding from tape</b></td>
+  <td><input class="tr-inp" data-idx="209" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>glue tape</b></td>
+  <td><input class="tr-inp" data-idx="210" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>inner collar</b></td>
+  <td><input class="tr-inp" data-idx="211" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>snap button</b></td>
+  <td><input class="tr-inp" data-idx="212" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>neck welt</b></td>
+  <td><input class="tr-inp" data-idx="213" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>tape from fabric</b></td>
+  <td><input class="tr-inp" data-idx="214" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>glue interlining</b></td>
+  <td><input class="tr-inp" data-idx="215" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>folded line</b></td>
+  <td><input class="tr-inp" data-idx="216" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>flat view</b></td>
+  <td><input class="tr-inp" data-idx="217" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>folded view</b></td>
+  <td><input class="tr-inp" data-idx="218" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>fold line</b></td>
+  <td><input class="tr-inp" data-idx="219" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>fabric to fix in the</b></td>
+  <td><input class="tr-inp" data-idx="220" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>central part of a hood</b></td>
+  <td><input class="tr-inp" data-idx="221" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>brush tricot</b></td>
+  <td><input class="tr-inp" data-idx="222" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>elastic tape</b></td>
+  <td><input class="tr-inp" data-idx="223" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>draw cord</b></td>
+  <td><input class="tr-inp" data-idx="224" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>don t cut edge of</b></td>
+  <td><input class="tr-inp" data-idx="225" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>elastic band by overlok</b></td>
+  <td><input class="tr-inp" data-idx="226" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>on elastic band with overlock</b></td>
+  <td><input class="tr-inp" data-idx="227" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>knife removed</b></td>
+  <td><input class="tr-inp" data-idx="228" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>should be on</b></td>
+  <td><input class="tr-inp" data-idx="229" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">3</td>
+  <td><b>pants body</b></td>
+  <td><input class="tr-inp" data-idx="230" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>bottom insert</b></td>
+  <td><input class="tr-inp" data-idx="231" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>side part</b></td>
+  <td><input class="tr-inp" data-idx="232" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>middle of side edge</b></td>
+  <td><input class="tr-inp" data-idx="233" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>band part</b></td>
+  <td><input class="tr-inp" data-idx="234" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>put under edge</b></td>
+  <td><input class="tr-inp" data-idx="235" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>with fold</b></td>
+  <td><input class="tr-inp" data-idx="236" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>edge/ cuff</b></td>
+  <td><input class="tr-inp" data-idx="237" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>for fix hook</b></td>
+  <td><input class="tr-inp" data-idx="238" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>for fix hangtag</b></td>
+  <td><input class="tr-inp" data-idx="239" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>fix under seam</b></td>
+  <td><input class="tr-inp" data-idx="240" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>jacquard size label</b></td>
+  <td><input class="tr-inp" data-idx="241" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>in two layers</b></td>
+  <td><input class="tr-inp" data-idx="242" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>inner yoke</b></td>
+  <td><input class="tr-inp" data-idx="243" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>inner tunnel</b></td>
+  <td><input class="tr-inp" data-idx="244" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>from shell</b></td>
+  <td><input class="tr-inp" data-idx="245" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>pu seam</b></td>
+  <td><input class="tr-inp" data-idx="246" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>tape from shell</b></td>
+  <td><input class="tr-inp" data-idx="247" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>to face</b></td>
+  <td><input class="tr-inp" data-idx="248" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>center of back</b></td>
+  <td><input class="tr-inp" data-idx="249" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>line of neckline from shell</b></td>
+  <td><input class="tr-inp" data-idx="250" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>line of neckline from lining</b></td>
+  <td><input class="tr-inp" data-idx="251" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>silicone tape</b></td>
+  <td><input class="tr-inp" data-idx="252" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>binding from shell</b></td>
+  <td><input class="tr-inp" data-idx="253" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>with interlining</b></td>
+  <td><input class="tr-inp" data-idx="254" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>front insert</b></td>
+  <td><input class="tr-inp" data-idx="255" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>reflactive tape</b></td>
+  <td><input class="tr-inp" data-idx="256" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>natural fur</b></td>
+  <td><input class="tr-inp" data-idx="257" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>face side</b></td>
+  <td><input class="tr-inp" data-idx="258" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>tunnel from lining</b></td>
+  <td><input class="tr-inp" data-idx="259" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>button should be</b></td>
+  <td><input class="tr-inp" data-idx="260" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>stitched through</b></td>
+  <td><input class="tr-inp" data-idx="261" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>all placket layers</b></td>
+  <td><input class="tr-inp" data-idx="262" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>half moon</b></td>
+  <td><input class="tr-inp" data-idx="263" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>to the stitching seam</b></td>
+  <td><input class="tr-inp" data-idx="264" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>band with</b></td>
+  <td><input class="tr-inp" data-idx="265" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>needle from co2</b></td>
+  <td><input class="tr-inp" data-idx="266" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>chain stitching from o4</b></td>
+  <td><input class="tr-inp" data-idx="267" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>detachable details</b></td>
+  <td><input class="tr-inp" data-idx="268" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>tape with glue</b></td>
+  <td><input class="tr-inp" data-idx="269" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>through all layers</b></td>
+  <td><input class="tr-inp" data-idx="270" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>nylon mesh</b></td>
+  <td><input class="tr-inp" data-idx="271" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>vvvv vvvv</b></td>
+  <td><input class="tr-inp" data-idx="272" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>reflecting tape</b></td>
+  <td><input class="tr-inp" data-idx="273" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>lining of</b></td>
+  <td><input class="tr-inp" data-idx="274" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>edge of zipper</b></td>
+  <td><input class="tr-inp" data-idx="275" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>pocket entrance</b></td>
+  <td><input class="tr-inp" data-idx="276" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr>
+<tr>
+  <td class="tc">2</td>
+  <td><b>pu film</b></td>
+  <td><input class="tr-inp" data-idx="277" type="text" placeholder="перевод..."
+      style="width:260px;padding:4px 8px;border:1px solid #C8A84B;border-radius:3px;font-size:13px"></td>
+</tr></tbody>
+</table>
+<script>
+const data = [["Lining", 3004], ["Interlining", 2353], ["Padding", 2049], ["Zipper", 1375], ["front facing", 1043], ["left front", 663], ["right front", 661], ["Inner", 538], ["Elastic", 489], ["inner placket", 470], ["Tape", 455], ["lining of pocket", 378], ["Binding", 346], ["Shell", 339], ["Welt", 312], ["shell fabric", 304], ["Hood", 285], ["Cord", 250], ["of pocket", 239], ["Piping", 189], ["Glue", 184], ["Velcro", 150], ["Upper", 146], ["upper collar", 141], ["Snap-button", 133], ["piping with cord", 132], ["Type", 124], ["Invisible", 107], ["elastic band", 90], ["pu seam-tape", 78], ["set of labels", 70], ["type a", 62], ["type b", 62], ["Three-cornered", 59], ["three-cornered insert", 59], ["Half-belt", 53], ["Mesh", 52], ["Stopper", 52], ["Ring", 46], ["Tunnel", 42], ["Edge", 41], ["Fur", 41], ["back inside", 40], ["Reflecting", 39], ["Workmanship", 38], ["Eyelet", 37], ["Sleeve", 35], ["reflecting piping", 35], ["inner cuﬀ", 29], ["Collar", 28], ["downproof fabric", 28], ["Sweat", 27], ["Stitch", 27], ["Snowskirt", 27], ["Downproof", 27], ["stitch on stitch", 26], ["Stitching", 25], ["Cup", 24], ["Waistband", 23], ["back yoke", 23], ["Pocket", 22], ["fix through all layers", 22], ["lining of hood", 22], ["Palm", 21], ["pu seam tape", 21], ["Button", 20], ["side seam", 20], ["invisible zipper", 20], ["Visor", 19], ["Bone", 19], ["workmanship of hood", 19], ["workmanship of fur placket", 19], ["elastic cord band", 19], ["Seam", 18], ["Laser", 18], ["Fabric", 18], ["laser cut", 18], ["Velcro/hook", 17], ["down bag", 17], ["palm side", 16], ["for bone", 16], ["Open", 15], ["Artificial", 15], ["shoulder seam", 15], ["open cut", 15], ["artificial fur", 15], ["Loop", 14], ["Artiﬁcial", 14], ["elastic cord", 14], ["artiﬁcial fur", 14], ["Additional", 13], ["left side seam", 13], ["left glove", 13], ["Lycra", 12], ["Eyelets", 12], ["right glove", 12], ["pu-seam tape", 12], ["seam allowance hem", 12], ["Shoulder", 11], ["Buckle", 11], ["Snowgaiter", 11], ["Half-moon", 10], ["Yoke", 10], ["left side", 10], ["hood tunnel", 10], ["Zip", 9], ["Detachable", 9], ["bottom hem", 9], ["Tricot", 8], ["fix to seam allowance only", 8], ["additional fabric", 8], ["tricot fleece", 8], ["cord loop", 8], ["fix stitch", 8], ["for cord", 8], ["Cuff", 7], ["Body", 7], ["Reflective", 7], ["put under binding", 7], ["invisible snap-button", 7], ["all layers", 7], ["fabric tape", 7], ["Tag", 6], ["Insert", 6], ["Plastic", 6], ["Velcro/loop", 6], ["Welts", 6], ["Silicone", 6], ["Folded", 6], ["Face", 6], ["Silicon", 6], ["put into seam", 6], ["of detail", 6], ["pocket tag)", 6], ["front yoke", 6], ["lining padding", 6], ["zipper interlining", 6], ["visor of hood", 6], ["Main", 5], ["Logo", 5], ["Half", 5], ["Band", 5], ["Decorative", 5], ["Rib", 5], ["Stand", 5], ["Centre", 5], ["Piece", 5], ["Fastening", 5], ["left cup", 5], ["main logo", 5], ["front inside", 5], ["back centre", 5], ["back seam", 5], ["stand of collar", 5], ["centre front", 5], ["pocket for hood", 5], ["piece of fabric", 5], ["tape from", 5], ["Jacquard", 4], ["Figure", 4], ["Technical", 4], ["Info", 4], ["Interlinig", 4], ["Don", 4], ["Inserts", 4], ["Entrance", 4], ["Garment", 4], ["Supplier", 4], ["fix under seam allowance", 4], ["palm side/", 4], ["two layer of shell fabric", 4], ["figure bt", 4], ["pu tape", 4], ["decorative insert", 4], ["binding from", 4], ["center of front", 4], ["inner jacket", 4], ["interlining zipper", 4], ["padding lining", 4], ["reflective tape", 4], ["tape piping", 4], ["fabric swatch to", 4], ["fix bottom welt", 4], ["inner elastic cord", 4], ["plastic cord", 4], ["inserts from", 4], ["lining front", 4], ["lining back", 4], ["pocket s", 4], ["inner welt", 4], ["only for garment supplier reference", 4], ["Size", 3], ["Rigth", 3], ["Reflactive", 3], ["Herring-bone", 3], ["Flat", 3], ["Quilting", 3], ["Flap", 3], ["Placket", 3], ["Pants", 3], ["inside left", 3], ["inside rigth", 3], ["bottom patch", 3], ["tape for", 3], ["put under edge of detail", 3], ["into seam", 3], ["centre of front", 3], ["rigth glove", 3], ["zip garage", 3], ["binding from tape", 3], ["glue tape", 3], ["inner collar", 3], ["snap button", 3], ["neck welt", 3], ["tape from fabric", 3], ["glue interlining", 3], ["folded line", 3], ["flat view", 3], ["folded view", 3], ["fold line", 3], ["fabric to fix in the", 3], ["central part of a hood", 3], ["brush tricot", 3], ["elastic tape", 3], ["draw cord", 3], ["don t cut edge of", 3], ["elastic band by overlok", 3], ["on elastic band with overlock", 3], ["knife removed", 3], ["should be on", 3], ["pants body", 3], ["bottom insert", 2], ["side part", 2], ["middle of side edge", 2], ["band part", 2], ["put under edge", 2], ["with fold", 2], ["edge/ cuff", 2], ["for fix hook", 2], ["for fix hangtag", 2], ["fix under seam", 2], ["jacquard size label", 2], ["in two layers", 2], ["inner yoke", 2], ["inner tunnel", 2], ["from shell", 2], ["pu seam", 2], ["tape from shell", 2], ["to face", 2], ["center of back", 2], ["line of neckline from shell", 2], ["line of neckline from lining", 2], ["silicone tape", 2], ["binding from shell", 2], ["with interlining", 2], ["front insert", 2], ["reflactive tape", 2], ["natural fur", 2], ["face side", 2], ["tunnel from lining", 2], ["button should be", 2], ["stitched through", 2], ["all placket layers", 2], ["half moon", 2], ["to the stitching seam", 2], ["band with", 2], ["needle from co2", 2], ["chain stitching from o4", 2], ["detachable details", 2], ["tape with glue", 2], ["through all layers", 2], ["nylon mesh", 2], ["vvvv vvvv", 2], ["reflecting tape", 2], ["lining of", 2], ["edge of zipper", 2], ["pocket entrance", 2], ["pu film", 2]].map(([phrase, count]) => ({phrase, count, ru: ''}));
+
+document.querySelectorAll('.tr-inp').forEach(inp => {
+  inp.addEventListener('input', () => {
+    inp.closest('tr').classList.toggle('done', inp.value.trim() !== '');
+    data[inp.dataset.idx].ru = inp.value.trim();
+  });
+});
+
+function saveJSON() {
+  document.querySelectorAll('.tr-inp').forEach(inp => {
+    data[inp.dataset.idx].ru = inp.value.trim();
+  });
+  const assigned = data.filter(d => d.ru);
+  const blob = new Blob([JSON.stringify(assigned, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'glossary.json';
+  a.click();
+  document.getElementById('status').textContent = `Сохранено: ${assigned.length} переводов`;
+}
+</script>
+</body>
+</html>

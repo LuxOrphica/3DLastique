@@ -2,11 +2,13 @@ import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import nodeLibrary from "../pom/node-library.json";
 import "./NodeCatalog.css";
 
-const IMG_URL = (jpgId) =>
-  `https://drive.google.com/thumbnail?id=${jpgId}&sz=w300`;
+const IMG_URL = (jpgId, code) =>
+  jpgId ? `https://drive.google.com/thumbnail?id=${jpgId}&sz=w300`
+        : `/nodes/${code}.jpg`;
 
-const IMG_LARGE = (jpgId) =>
-  `https://drive.google.com/thumbnail?id=${jpgId}&sz=w1200`;
+const IMG_LARGE = (jpgId, code) =>
+  jpgId ? `https://drive.google.com/thumbnail?id=${jpgId}&sz=w1200`
+        : `/nodes/${code}.jpg`;
 
 function buildCategories() {
   const map = new Map();
@@ -43,7 +45,7 @@ function NodeCard({ node, onClick, selected, viewMode }) {
       >
         <div className="nc-list-thumb-wrap">
           {!imgError
-            ? <img src={IMG_URL(node.jpgId)} alt={node.code} className="nc-list-thumb" onError={() => setImgError(true)} />
+            ? <img src={IMG_URL(node.jpgId, node.code)} alt={node.code} className="nc-list-thumb" onError={() => setImgError(true)} />
             : <div className="nc-card-img-fallback">{node.code}</div>
           }
         </div>
@@ -61,7 +63,7 @@ function NodeCard({ node, onClick, selected, viewMode }) {
       <div className="nc-card-img-wrap">
         {!imgError
           ? <img
-              src={IMG_URL(node.jpgId)}
+              src={IMG_URL(node.jpgId, node.code)}
               alt={node.code}
               className="nc-card-img"
               onError={() => setImgError(true)}
@@ -152,7 +154,7 @@ function NodeDetail({ node, onClose }) {
       <button className="nc-detail-close" onClick={onClose}>✕</button>
       <div className="nc-detail-img-wrap">
         {!imgError
-          ? <ZoomableImage src={IMG_LARGE(node.jpgId)} onError={() => setImgError(true)} />
+          ? <ZoomableImage src={IMG_LARGE(node.jpgId, node.code)} onError={() => setImgError(true)} />
           : <div className="nc-card-img-fallback large">{node.code}</div>
         }
       </div>
@@ -182,8 +184,8 @@ export default function NodeCatalog({ lang = "ru" }) {
   const nodes = useMemo(() => {
     const q = search.trim().toLowerCase();
     return nodeLibrary.filter(n => {
-      if (n.categoryRU !== activeCat) return false;
-      if (activeSub && n.subcategoryEN !== activeSub) return false;
+      if (!q && n.categoryRU !== activeCat) return false;
+      if (!q && activeSub && n.subcategoryEN !== activeSub) return false;
       if (q) {
         return n.code.toLowerCase().includes(q)
           || n.nameRU.toLowerCase().includes(q)
