@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
+import nodeLibrary from "./node-library.json";
 import { exportTechPackExcel } from "./exportTechPack";
 import { EditableTable } from "./EditableTable";
 import { PDFDownloadLink } from "@react-pdf/renderer";
@@ -103,9 +104,15 @@ const TAB_GROUPS = [
     labelRU: "10 Файлы",        labelEN: "10 Files",
     sections: ["file_handoff"],
   },
+  {
+    id: "nodes",
+    labelRU: "11 Узлы",         labelEN: "11 Details",
+    sections: ["nodes"],
+  },
 ];
 
 function tabVisible(garmentId, tab) {
+  if (tab.id === "nodes") return true;
   return tab.sections.some(s => {
     const st = getSectionStatus(garmentId, s);
     return st === "always" || st === "optional";
@@ -196,6 +203,8 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
   const [labelItems,    setLabelItems]    = useState([]);
   const [packingItems,  setPackingItems]  = useState([]);
   const [fileItems,     setFileItems]     = useState([]);
+  const [selectedNodes, setSelectedNodes] = useState([]); // [{code, jpgId, nameRU, nameEN, bomRef, notes}]
+  const [nodeSearch,    setNodeSearch]    = useState("");
 
   const garment = GARMENTS.find(g => g.id === garmentId);
 
@@ -350,21 +359,20 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
         {/* 01 STYLE */}
         {activeTab === "style" && (
           <div className="style-info-form">
+            <div className="style-info-group-label">{ru ? "Идентификация" : "Identification"}</div>
             {[
-              ["brand",       ru ? "Бренд"       : "Brand"],
+              ["brand",       ru ? "Бренд"           : "Brand"],
               ["styleCode",   "Style No."],
               ["nameEN",      "Name EN"],
-              ["nameRU",      ru ? "Название RU" : "Name RU"],
-              ["specStage",   ru ? "Стадия"      : "Stage"],
-              ["factory",     ru ? "Фабрика"     : "Factory"],
-              ["description", ru ? "Описание"    : "Description"],
+              ["nameRU",      ru ? "Название RU"     : "Name RU"],
+              ["designer",    ru ? "Дизайнер"        : "Designer"],
+              ["specStage",   ru ? "Стадия"          : "Stage"],
+              ["factory",     ru ? "Фабрика"         : "Factory"],
+              ["countryOfOrigin", ru ? "Страна производства" : "Country of origin"],
             ].map(([field, label]) => (
               <label key={field} className="style-info-field">
                 <span>{label}</span>
-                {field === "description"
-                  ? <textarea value={styleInfo[field] || ""} onChange={e => updateStyle(field, e.target.value)} rows={2} />
-                  : <input type="text" value={styleInfo[field] || ""} onChange={e => updateStyle(field, e.target.value)} />
-                }
+                <input type="text" value={styleInfo[field] || ""} onChange={e => updateStyle(field, e.target.value)} />
               </label>
             ))}
             <label className="style-info-field">
@@ -379,12 +387,35 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
               </select>
             </label>
             <label className="style-info-field">
+              <span>{ru ? "Год" : "Year"}</span>
+              <input type="text" value={styleInfo.year || ""} onChange={e => updateStyle("year", e.target.value)} placeholder={new Date().getFullYear().toString()} />
+            </label>
+            <label className="style-info-field">
               <span>{ru ? "Пол" : "Gender"}</span>
               <select value={styleInfo.gender} onChange={e => updateStyle("gender", e.target.value)}>
                 <option value="Women">{ru ? "Женский" : "Women"}</option>
                 <option value="Men">{ru ? "Мужской" : "Men"}</option>
                 <option value="Unisex">{ru ? "Унисекс" : "Unisex"}</option>
               </select>
+            </label>
+
+            <div className="style-info-group-label" style={{ marginTop: 16 }}>{ru ? "Коммерческие данные" : "Commercial"}</div>
+            {[
+              ["targetFOB",    ru ? "Target FOB (USD)" : "Target FOB (USD)"],
+              ["targetRetail", ru ? "Target retail (USD)" : "Target retail (USD)"],
+              ["fabricContent",ru ? "Состав ткани (верх)" : "Shell fabric content"],
+              ["fabricWeight", ru ? "Плотность (GSM)" : "Fabric weight (GSM)"],
+            ].map(([field, label]) => (
+              <label key={field} className="style-info-field">
+                <span>{label}</span>
+                <input type="text" value={styleInfo[field] || ""} onChange={e => updateStyle(field, e.target.value)} />
+              </label>
+            ))}
+
+            <div className="style-info-group-label" style={{ marginTop: 16 }}>{ru ? "Описание / примечания" : "Description / Notes"}</div>
+            <label className="style-info-field style-info-field--full">
+              <span>{ru ? "Описание" : "Description"}</span>
+              <textarea value={styleInfo.description || ""} onChange={e => updateStyle("description", e.target.value)} rows={2} />
             </label>
           </div>
         )}
@@ -445,20 +476,24 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
             <EditableTable lang={siteLang}
               columns={[
                 { key: "type",        label: ru ? "Тип" : "Type",                   width: 90, type: "select", options: OPT.bomType },
-                { key: "nameRU",      label: "Наименование RU",                     width: 180 },
-                { key: "nameEN",      label: "Item EN",                             width: 180 },
-                { key: "placement",   label: ru ? "Расположение" : "Placement",     width: 140 },
-                { key: "requirement", label: ru ? "Требование" : "Requirement",     width: 140 },
-                { key: "parameter",   label: ru ? "Параметр" : "Parameter",         width: 100 },
-                { key: "qty",         label: ru ? "Кол." : "Qty",                   width: 70 },
+                { key: "nameRU",      label: "Наименование RU",                     width: 150 },
+                { key: "nameEN",      label: "Item EN",                             width: 150 },
+                { key: "article",     label: ru ? "Артикул" : "Article / Ref",      width: 100 },
+                { key: "colorRef",    label: "Pantone / RAL",                       width: 100, mono: true },
+                { key: "content",     label: ru ? "Состав %" : "Content %",         width: 110 },
+                { key: "gsm",         label: "GSM",                                 width: 60,  mono: true },
+                { key: "width",       label: ru ? "Ширина" : "Width",               width: 70 },
+                { key: "moq",         label: "MOQ",                                 width: 70 },
+                { key: "supplier",    label: ru ? "Поставщик" : "Supplier",         width: 120 },
+                { key: "placement",   label: ru ? "Расположение" : "Placement",     width: 110 },
+                { key: "qty",         label: ru ? "Кол." : "Qty",                   width: 65 },
                 { key: "unit",        label: ru ? "Ед." : "Unit",                   width: 55, type: "select", options: OPT.unit },
-                { key: "approval",    label: ru ? "Согласование" : "Approval",      width: 120 },
                 { key: "status",      label: ru ? "Статус" : "Status",              width: 80, type: "select", options: OPT.statusBom },
-                { key: "remarks",     label: ru ? "Примечания" : "Remarks",         width: 180, type: "textarea" },
+                { key: "remarks",     label: ru ? "Примечания" : "Remarks",         width: 150, type: "textarea" },
               ]}
               rows={bomItems}
               onChange={setBomItems}
-              defaultRow={{ type: OPT.bomType[0], nameRU: "", nameEN: "", placement: "", requirement: OPT.approval, parameter: "TBD", qty: "TBD", unit: "m", approval: OPT.approval, status: OPT.toFill, remarks: "" }}
+              defaultRow={{ type: OPT.bomType[0], nameRU: "", nameEN: "", article: "", colorRef: "", content: "", gsm: "", width: "", moq: "", supplier: "", placement: "", qty: "TBD", unit: "m", status: OPT.toFill, remarks: "" }}
               emptyLabel={ru ? "Нет материалов" : "No BOM items"}
             />
           </>
@@ -750,6 +785,107 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
             />
           </>
         )}
+
+        {/* 11 NODES / DETAILS */}
+        {activeTab === "nodes" && (() => {
+          const q = nodeSearch.trim().toLowerCase();
+          const filtered = q
+            ? nodeLibrary.filter(n =>
+                n.code.toLowerCase().includes(q) ||
+                (n.nameRU || "").toLowerCase().includes(q) ||
+                (n.nameEN || "").toLowerCase().includes(q) ||
+                (n.subcategoryRU || "").toLowerCase().includes(q)
+              ).slice(0, 60)
+            : [];
+          const addNode = (node) => {
+            if (selectedNodes.find(n => n.code === node.code)) return;
+            setSelectedNodes(prev => [...prev, {
+              code: node.code, jpgId: node.jpgId || "",
+              nameRU: node.nameRU || node.subcategoryRU || "",
+              nameEN: node.nameEN || node.subcategoryEN || "",
+              bomRef: "", notes: "",
+            }]);
+            setNodeSearch("");
+          };
+          const removeNode = (code) => setSelectedNodes(prev => prev.filter(n => n.code !== code));
+          const updateNode = (code, field, val) =>
+            setSelectedNodes(prev => prev.map(n => n.code === code ? { ...n, [field]: val } : n));
+          const imgSrc = (jpgId, code) =>
+            jpgId ? `https://drive.google.com/thumbnail?id=${jpgId}&sz=w300` : `/nodes/${code}.jpg`;
+
+          return (
+            <>
+              <p className="section-hint">
+                {ru ? "Детальные чертежи узлов конструкции. Найди узел и добавь в техпак." : "Detailed construction drawings. Search and add nodes to the tech pack."}
+              </p>
+              <div style={{ display: "flex", gap: 8, marginBottom: 12, alignItems: "center" }}>
+                <input
+                  type="text"
+                  value={nodeSearch}
+                  onChange={e => setNodeSearch(e.target.value)}
+                  placeholder={ru ? "Поиск узла по коду или названию..." : "Search node by code or name..."}
+                  style={{ flex: 1, maxWidth: 400, padding: "6px 10px", border: "1px solid #C8A84B", borderRadius: 4, fontFamily: "inherit", fontSize: 13 }}
+                  autoFocus
+                />
+                {q && <span style={{ fontSize: 12, color: "#888" }}>{filtered.length} {ru ? "результатов" : "results"}</span>}
+              </div>
+
+              {/* Search results */}
+              {q.length > 0 && filtered.length > 0 && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16, padding: 12, background: "#faf8f5", border: "1px solid #e0d8cc", borderRadius: 4 }}>
+                  {filtered.map(node => (
+                    <div key={node.code} onClick={() => addNode(node)}
+                      style={{ cursor: "pointer", width: 90, textAlign: "center", padding: "6px 4px", borderRadius: 4, border: "1px solid #e0d8cc", background: "#fff", opacity: selectedNodes.find(n => n.code === node.code) ? 0.4 : 1 }}
+                      title={node.subcategoryRU}
+                    >
+                      <img src={imgSrc(node.jpgId, node.code)} alt={node.code}
+                        style={{ width: 80, height: 60, objectFit: "cover", borderRadius: 2 }}
+                        onError={e => { e.target.style.display = "none"; }}
+                      />
+                      <div style={{ fontSize: 10, color: "#666", marginTop: 3, lineHeight: 1.2 }}>{node.code}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {q.length > 0 && filtered.length === 0 && (
+                <p style={{ fontSize: 12, color: "#999", marginBottom: 16 }}>{ru ? "Ничего не найдено" : "No results"}</p>
+              )}
+
+              {/* Selected nodes */}
+              {selectedNodes.length === 0 && !q && (
+                <p style={{ fontSize: 12, color: "#aaa", textAlign: "center", padding: "32px 0" }}>
+                  {ru ? "Нет узлов. Начни поиск выше чтобы добавить." : "No nodes added. Search above to add."}
+                </p>
+              )}
+              {selectedNodes.length > 0 && (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12 }}>
+                  {selectedNodes.map(node => (
+                    <div key={node.code} style={{ border: "1px solid #e0d8cc", borderRadius: 4, padding: 10, background: "#fff", position: "relative" }}>
+                      <button onClick={() => removeNode(node.code)}
+                        style={{ position: "absolute", top: 6, right: 6, background: "none", border: "none", cursor: "pointer", color: "#bbb", fontSize: 16, lineHeight: 1 }}
+                        title={ru ? "Удалить" : "Remove"}
+                      >×</button>
+                      <img src={imgSrc(node.jpgId, node.code)} alt={node.code}
+                        style={{ width: "100%", height: 120, objectFit: "cover", borderRadius: 3, marginBottom: 6 }}
+                        onError={e => { e.target.style.display = "none"; }}
+                      />
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#666", marginBottom: 2 }}>{node.code}</div>
+                      <div style={{ fontSize: 12, color: "#333", marginBottom: 6, lineHeight: 1.3 }}>{ru ? node.nameRU : node.nameEN}</div>
+                      <input type="text" value={node.bomRef} onChange={e => updateNode(node.code, "bomRef", e.target.value)}
+                        placeholder="BOM ref"
+                        style={{ width: "100%", padding: "3px 6px", fontSize: 11, border: "1px solid #ddd", borderRadius: 3, marginBottom: 4, fontFamily: "monospace" }}
+                      />
+                      <input type="text" value={node.notes} onChange={e => updateNode(node.code, "notes", e.target.value)}
+                        placeholder={ru ? "Примечание..." : "Notes..."}
+                        style={{ width: "100%", padding: "3px 6px", fontSize: 11, border: "1px solid #ddd", borderRadius: 3, fontFamily: "inherit" }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          );
+        })()}
 
         {/* 10 FILES */}
         {activeTab === "files" && (

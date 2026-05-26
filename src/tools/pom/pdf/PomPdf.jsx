@@ -37,9 +37,9 @@ const COL = {
   num: 18, code: 28, nameRU: 120, nameEN: 120, tol: 32, size: 34,
 };
 const BOM_COL = {
-  num: 18, type: 55, nameRU: 100, nameEN: 100, placement: 78,
-  requirement: 78, parameter: 52, qty: 32, unit: 28,
-  approval: 52, status: 36,
+  num: 16, type: 44, nameRU: 76, nameEN: 76, article: 46,
+  colorRef: 46, content: 52, gsm: 28, width: 32, moq: 32,
+  supplier: 60, placement: 54, qty: 26, unit: 22, status: 32,
 };
 const PP_COL = {
   num: 20, dxf: 34, section: 78, nameRU: 118, shortRU: 68,
@@ -617,12 +617,16 @@ function BomPage({ styleInfo, bomItems }) {
             <Text style={[s.th, { width: BOM_COL.type }]}>Type</Text>
             <Text style={[s.th, { width: BOM_COL.nameRU }]}>Наименование RU</Text>
             <Text style={[s.th, { width: BOM_COL.nameEN }]}>Item EN</Text>
+            <Text style={[s.th, { width: BOM_COL.article }]}>Article / Ref</Text>
+            <Text style={[s.th, { width: BOM_COL.colorRef }]}>Pantone / RAL</Text>
+            <Text style={[s.th, { width: BOM_COL.content }]}>Content %</Text>
+            <Text style={[s.th, { width: BOM_COL.gsm, textAlign: "center" }]}>GSM</Text>
+            <Text style={[s.th, { width: BOM_COL.width, textAlign: "center" }]}>Width</Text>
+            <Text style={[s.th, { width: BOM_COL.moq, textAlign: "center" }]}>MOQ</Text>
+            <Text style={[s.th, { width: BOM_COL.supplier }]}>Supplier</Text>
             <Text style={[s.th, { width: BOM_COL.placement }]}>Placement</Text>
-            <Text style={[s.th, { width: BOM_COL.requirement }]}>Requirement</Text>
-            <Text style={[s.th, { width: BOM_COL.parameter }]}>Parameter</Text>
             <Text style={[s.th, { width: BOM_COL.qty, textAlign: "center" }]}>Qty</Text>
             <Text style={[s.th, { width: BOM_COL.unit, textAlign: "center" }]}>Unit</Text>
-            <Text style={[s.th, { width: BOM_COL.approval }]}>Approval</Text>
             <Text style={[s.th, { width: BOM_COL.status }]}>Status</Text>
             <Text style={[s.th, { flex: 1 }]}>Remarks</Text>
           </View>
@@ -637,12 +641,16 @@ function BomPage({ styleInfo, bomItems }) {
                     <Text style={[s.td, { width: BOM_COL.type }]}>{item.type || ""}</Text>
                     <Text style={[s.td, { width: BOM_COL.nameRU }]}>{item.nameRU || ""}</Text>
                     <Text style={[s.td, { width: BOM_COL.nameEN }]}>{item.nameEN || ""}</Text>
+                    <Text style={[s.td, { width: BOM_COL.article }]}>{item.article || ""}</Text>
+                    <Text style={[s.td, { width: BOM_COL.colorRef }]}>{item.colorRef || ""}</Text>
+                    <Text style={[s.td, { width: BOM_COL.content }]}>{item.content || ""}</Text>
+                    <Text style={[s.tdNum, { width: BOM_COL.gsm }]}>{item.gsm || ""}</Text>
+                    <Text style={[s.tdNum, { width: BOM_COL.width }]}>{item.width || ""}</Text>
+                    <Text style={[s.tdNum, { width: BOM_COL.moq }]}>{item.moq || ""}</Text>
+                    <Text style={[s.td, { width: BOM_COL.supplier }]}>{item.supplier || ""}</Text>
                     <Text style={[s.td, { width: BOM_COL.placement }]}>{item.placement || ""}</Text>
-                    <Text style={[s.td, { width: BOM_COL.requirement }]}>{item.requirement || ""}</Text>
-                    <Text style={[s.td, { width: BOM_COL.parameter }]}>{item.parameter || ""}</Text>
                     <Text style={[s.tdNum, { width: BOM_COL.qty }]}>{item.qty || "-"}</Text>
                     <Text style={[s.tdNum, { width: BOM_COL.unit }]}>{item.unit || "-"}</Text>
-                    <Text style={[s.td, { width: BOM_COL.approval }]}>{item.approval || ""}</Text>
                     <Text style={[s.td, { width: BOM_COL.status }]}>{item.status || ""}</Text>
                     <Text style={[s.td, { flex: 1 }]}>{item.remarks || ""}</Text>
                   </View>

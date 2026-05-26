@@ -490,6 +490,7 @@ export default function PomBuilder({ lang: siteLang = "ru" }) {
                         </th>
                       ))}
                       <th className="col-tol">TOL ±</th>
+                      <th className="col-tol" title="Grade rule — шаг между размерами">Grade</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -531,6 +532,17 @@ export default function PomBuilder({ lang: siteLang = "ru" }) {
                             ))}
                             <td className="col-tol">
                               {unit === "mm" ? +(p.tolPlus * 10).toFixed(0) : p.tolPlus}
+                            </td>
+                            <td className="col-tol" style={{ color: "#888", fontSize: "0.9em" }}>
+                              {(() => {
+                                const baseIdx = sizes.indexOf(baseSize);
+                                const nextIdx = baseIdx + 1 < sizes.length ? baseIdx + 1 : baseIdx - 1;
+                                if (nextIdx === baseIdx) return "—";
+                                const v1 = calcValue(p, baseSize, baseSize);
+                                const v2 = calcValue(p, sizes[nextIdx], baseSize);
+                                const diff = +convert(Math.abs(v2 - v1)).toFixed(2);
+                                return diff > 0 ? `+${diff}` : diff;
+                              })()}
                             </td>
                           </tr>
                         );
