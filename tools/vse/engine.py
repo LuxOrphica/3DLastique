@@ -11,6 +11,15 @@ from bbox import get_content_bbox
 
 REGISTRY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "style_registry.json")
 
+def _safe_print(text):
+    try:
+        print(text)
+    except OSError:
+        try:
+            sys.stdout.buffer.write((str(text) + "\n").encode("utf-8", errors="replace"))
+        except Exception:
+            pass
+
 def _rgb_to_hex(c):
     if not c:
         return "none"
@@ -302,9 +311,12 @@ def standardize(ai_path, svg_out):
         "contour_outer", "seam_line", "contour_cut",
         "construction_aux", "contour_fold", "seam_allowance",
         "boundary_interlining", "boundary_lining", "boundary_fragment",
-        "stitch_edge", "stitch_thru",
+        "stitch_edge", "stitch_thru", "stitch_topstitch", "stitch_double",
+        "stitch_hidden", "stitch_cover", "stitch_overlock",
         "stitch_L", "stitch_C", "stitch_O", "stitch_F", "stitch_zigzag", "stitch_Bt",
-        "callout_line", "break_line", "dim_line",
+        "guide_line", "line_reference", "line_elastic", "line_fur", "line_velcro",
+        "line_mesh", "line_decorative", "line_photo_trace",
+        "callout_line", "callout_zoom", "break_line", "dim_line",
         "hw_button", "hw_buttonhole", "hw_snap", "hw_other",
         "arrow", "unknown",
     ]
@@ -366,12 +378,12 @@ def standardize(ai_path, svg_out):
     for role, _ in classified:
         role_counts[role] = role_counts.get(role, 0) + 1
 
-    print(f"VSE — {ai_path.split('/')[-1].split(chr(92))[-1]}")
-    print(f"  Canvas: {W:.0f}x{H:.0f}  Paths: {len(classified)}  Text: {len(text_words)}")
+    _safe_print(f"VSE - {ai_path.split('/')[-1].split(chr(92))[-1]}")
+    _safe_print(f"  Canvas: {W:.0f}x{H:.0f}  Paths: {len(classified)}  Text: {len(text_words)}")
     for role, count in sorted(role_counts.items(), key=lambda x: -x[1]):
         lbl = ROLE_STYLES.get(role, {}).get("_label", role)
-        print(f"  {role:25} {count:3}x  {lbl}")
-    print(f"  -> {svg_out}")
+        _safe_print(f"  {role:25} {count:3}x  {lbl}")
+    _safe_print(f"  -> {svg_out}")
     return svg_content
 
 

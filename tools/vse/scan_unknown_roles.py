@@ -6,6 +6,7 @@ Usage: python scan_unknown_roles.py [samples_dir]
 import os, sys, json
 import fitz
 from engine import _build_registry_lookup, classify_with_registry, _path_style_key, _rgb_to_hex
+from role_taxonomy import suggest_semantic_role
 
 HERE        = os.path.dirname(os.path.abspath(__file__))
 SAMPLES_DIR = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("VSE_SAMPLES_DIR", "C:/temp/samples")
@@ -64,7 +65,7 @@ OUT = os.path.join(HERE, "unknown_roles_report.json")
 report = []
 for r in rows:
     t = r["tuple"]
-    report.append({
+    item = {
         "count":      r["count"],
         "files":      r["files"][:5],
         "key":        t,
@@ -72,7 +73,9 @@ for r in rows:
         "raw_stroke": r.get("raw_stroke"),
         "raw_fill":   r.get("raw_fill"),
         "auto_role":  r.get("auto_role", "unknown"),
-    })
+    }
+    item["suggested_role"] = suggest_semantic_role(item)
+    report.append(item)
 with open(OUT, "w", encoding="utf-8") as f:
     json.dump(report, f, ensure_ascii=False, indent=2)
 

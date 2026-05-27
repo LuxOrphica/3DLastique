@@ -1,0 +1,1966 @@
+{
+  "total_styles": 238,
+  "assigned_styles": 7,
+  "unassigned_styles": 231,
+  "unassigned_weight": 848,
+  "status_counts": {
+    "empty": 231,
+    "custom": 7
+  },
+  "role_counts": [
+    [
+      "линия на фото?",
+      3
+    ],
+    [
+      "непонятно",
+      2
+    ],
+    [
+      "ремень-стяжка?",
+      2
+    ]
+  ],
+  "role_weight": [
+    [
+      "непонятно",
+      31
+    ],
+    [
+      "ремень-стяжка?",
+      6
+    ],
+    [
+      "линия на фото?",
+      4
+    ]
+  ],
+  "custom_roles": [
+    {
+      "role": "линия на фото?",
+      "styles": 3,
+      "weight": 4,
+      "suggested_standard_role": ""
+    },
+    {
+      "role": "непонятно",
+      "styles": 2,
+      "weight": 31,
+      "suggested_standard_role": ""
+    },
+    {
+      "role": "ремень-стяжка?",
+      "styles": 2,
+      "weight": 6,
+      "suggested_standard_role": ""
+    }
+  ],
+  "top_unassigned": [
+    {
+      "count": 62,
+      "auto_role": "unknown",
+      "raw_stroke": "none",
+      "raw_fill": "#fdfefd",
+      "suggested_role": "fill_glue",
+      "files": [
+        "LB00262 glue.ai",
+        "LB00266 raincoat welding.ai",
+        "CT00086_Zipper.ai",
+        "AC00200_Cap_s Half-belt.ai",
+        "AC00201_Cap_s Half-belt.ai"
+      ],
+      "key_str": "('none', '#ffffff', 0, False, False, False, False, False, True, '-', 'S')"
+    },
+    {
+      "count": 38,
+      "auto_role": "unknown",
+      "raw_stroke": "none",
+      "raw_fill": "#d9dad9",
+      "suggested_role": "",
+      "files": [
+        "VE00001_Horizontal ventilation.ai",
+        "VE00002_Horizontal ventilation.ai",
+        "VE00003_Horizontal ventilation.ai",
+        "VE00004_Horizontal ventilation.ai",
+        "VE00005_Horizontal ventilation.ai"
+      ],
+      "key_str": "('none', '#ffffff', 0, False, False, False, True, False, False, '-', 'XS')"
+    },
+    {
+      "count": 37,
+      "auto_role": "unknown",
+      "raw_stroke": "none",
+      "raw_fill": "#ffffff",
+      "suggested_role": "",
+      "files": [
+        "CT00086_Zipper.ai",
+        "ST00057_hood.ai",
+        "ST00083_hood.ai",
+        "ST00084_hood.ai",
+        "ST00086_hood.ai"
+      ],
+      "key_str": "('none', '#ffffff', 0, False, False, False, False, False, True, '-', 'M')"
+    },
+    {
+      "count": 17,
+      "auto_role": "unknown",
+      "raw_stroke": "#2b388f",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "CH00070_hidden h.ai",
+        "CH00071_hidden h.ai",
+        "CH00072_hidden h.ai",
+        "CH00073_hidden h.ai",
+        "CH00078_hidden h.ai"
+      ],
+      "key_str": "('#1b4fa8', 'none', 1.5, False, False, False, False, False, False, '-', 'S')"
+    },
+    {
+      "count": 15,
+      "auto_role": "fill_shape",
+      "raw_stroke": "none",
+      "raw_fill": "#b6da9a",
+      "suggested_role": "",
+      "files": [
+        "LB00151.ai",
+        "LB00152.ai",
+        "LB00159_Swim.ai",
+        "LB00163_Sport bra.ai",
+        "LB00603_Visors Woven.ai"
+      ],
+      "key_str": "('none', '#b6da9a', 0, False, False, True, False, True, True, '-', 'S')"
+    },
+    {
+      "count": 13,
+      "auto_role": "unknown",
+      "raw_stroke": "none",
+      "raw_fill": "#ffffff",
+      "suggested_role": "line_photo_trace",
+      "files": [
+        "ED00493_hood_with tape.ai",
+        "ED00802_hood_with tape.ai",
+        "HB00008_Half-belt.ai",
+        "ST00051_hood.ai",
+        "ST00101.ai"
+      ],
+      "key_str": "('none', '#ffffff', 0, False, True, False, True, False, True, '-', 'XS')"
+    },
+    {
+      "count": 12,
+      "auto_role": "unknown",
+      "raw_stroke": "none",
+      "raw_fill": "#ffffff",
+      "suggested_role": "",
+      "files": [
+        "AC00003.ai",
+        "ST00005.ai",
+        "ST00006.ai",
+        "ST00009.ai",
+        "ST00010.ai"
+      ],
+      "key_str": "('none', '#ffffff', 0, False, False, False, False, False, True, '-', 'XS')"
+    },
+    {
+      "count": 12,
+      "auto_role": "unknown",
+      "raw_stroke": "#214099",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "AC00200_Cap_s Half-belt.ai",
+        "SV00001_Knitted.ai",
+        "SV00003_Knitted.ai",
+        "SV00004_Knitted.ai",
+        "SV00006_Woven.ai"
+      ],
+      "key_str": "('#1b4fa8', 'none', 1.0, False, False, False, False, False, False, '-', 'XS')"
+    },
+    {
+      "count": 12,
+      "auto_role": "unknown",
+      "raw_stroke": "#2d67b0",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "AC00208_Cap_s Half-belt.ai",
+        "AC00209_Cap_s Half-belt.ai",
+        "SV00011_Woven.ai",
+        "SV00014.ai",
+        "SV00015_Woven.ai"
+      ],
+      "key_str": "('#1b4fa8', 'none', 1.0, False, True, False, False, False, False, 'D', 'S')"
+    },
+    {
+      "count": 12,
+      "auto_role": "unknown",
+      "raw_stroke": "#2c2e83",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "CL00003.ai",
+        "CH00068_hidden h.ai",
+        "CH00069_hidden h.ai",
+        "CH00098_hidden h.ai",
+        "CH00605_hidden h.ai"
+      ],
+      "key_str": "('#1b4fa8', 'none', 1.5, False, False, False, False, False, True, '-', 'S')"
+    },
+    {
+      "count": 12,
+      "auto_role": "fill_shape",
+      "raw_stroke": "none",
+      "raw_fill": "#cac9c9",
+      "suggested_role": "",
+      "files": [
+        "FH00004.ai",
+        "FH00011.ai",
+        "FH00015.ai",
+        "FH00016.ai",
+        "FH00017.ai"
+      ],
+      "key_str": "('none', '#cac9c9', 0, False, False, True, False, True, True, '-', 'XS')"
+    },
+    {
+      "count": 11,
+      "auto_role": "unknown",
+      "raw_stroke": "#214099",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "AC00201_Cap_s Half-belt.ai",
+        "AC00202_Cap_s Half-belt.ai",
+        "AC00203_Cap_s Half-belt.ai",
+        "AC00204_Cap_s Half-belt.ai",
+        "SV00002_Knitted.ai"
+      ],
+      "key_str": "('#1b4fa8', 'none', 1.0, False, False, False, False, False, True, '-', 'XS')"
+    },
+    {
+      "count": 11,
+      "auto_role": "unknown",
+      "raw_stroke": "#d2d2d2",
+      "raw_fill": "#ffffff",
+      "suggested_role": "line_elastic",
+      "files": [
+        "AC00209_Cap_s Half-belt.ai"
+      ],
+      "key_str": "('#d2d2d2', '#ffffff', 0.5, False, True, False, False, False, False, 'H', 'XS')"
+    },
+    {
+      "count": 11,
+      "auto_role": "unknown",
+      "raw_stroke": "#2b388f",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "CH00075_hidden h.ai",
+        "CH00076_hidden h.ai",
+        "CH00077_hidden h.ai"
+      ],
+      "key_str": "('#1b4fa8', 'none', 1.7, False, True, False, True, False, False, '-', 'XS')"
+    },
+    {
+      "count": 11,
+      "auto_role": "unknown",
+      "raw_stroke": "#534439",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "FH00001.ai",
+        "FH00002.ai",
+        "FH00004.ai",
+        "FH00005.ai",
+        "FH00007.ai"
+      ],
+      "key_str": "('#534439', 'none', 0.28, False, False, False, False, False, True, '-', 'M')"
+    },
+    {
+      "count": 11,
+      "auto_role": "unknown",
+      "raw_stroke": "#4a453e",
+      "raw_fill": "none",
+      "suggested_role": "line_fur",
+      "files": [
+        "FH00002.ai",
+        "FH00005.ai",
+        "FH00010.ai",
+        "FH00013.ai",
+        "FH00022.ai"
+      ],
+      "key_str": "('#4a453e', 'none', 0.5, True, True, False, True, False, False, '-', 'XS')"
+    },
+    {
+      "count": 11,
+      "auto_role": "fill_shape",
+      "raw_stroke": "#3e4b68",
+      "raw_fill": "#cac9c9",
+      "suggested_role": "",
+      "files": [
+        "FH00004.ai",
+        "FH00011.ai",
+        "FH00015.ai",
+        "FH00016.ai",
+        "FH00017.ai"
+      ],
+      "key_str": "('#3e4b68', '#cac9c9', 0.5, False, False, True, False, True, True, '-', 'XS')"
+    },
+    {
+      "count": 10,
+      "auto_role": "unknown",
+      "raw_stroke": "#d2d2d2",
+      "raw_fill": "#ffffff",
+      "suggested_role": "line_elastic",
+      "files": [
+        "AC00209_Cap_s Half-belt.ai"
+      ],
+      "key_str": "('#d2d2d2', '#ffffff', 0.5, False, True, False, False, False, True, 'V', 'XS')"
+    },
+    {
+      "count": 10,
+      "auto_role": "unknown",
+      "raw_stroke": "none",
+      "raw_fill": "#dad9d9",
+      "suggested_role": "",
+      "files": [
+        "FP00124_m_Woven.ai",
+        "ST00054_hood.ai",
+        "IP01117_Slanted with welt.ai",
+        "IP01036_Slanted pocket.ai",
+        "IP01038_Slanted pocket.ai"
+      ],
+      "key_str": "('none', '#ffffff', 0, False, False, False, True, False, True, '-', 'XS')"
+    },
+    {
+      "count": 10,
+      "auto_role": "unknown",
+      "raw_stroke": "#214099",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "BL00003.ai",
+        "BL00004.ai",
+        "BL00005.ai",
+        "BL00006.ai",
+        "BL00007.ai"
+      ],
+      "key_str": "('#1b4fa8', 'none', 0.55, False, False, False, False, False, True, '-', 'S')"
+    },
+    {
+      "count": 8,
+      "auto_role": "unknown",
+      "raw_stroke": "#396cb3",
+      "raw_fill": "none",
+      "suggested_role": "callout_zoom",
+      "files": [
+        "LB00164_Outventure.ai",
+        "LB00259.ai",
+        "LB00263.ai",
+        "IP01430_Vertical with welt_with double entry.ai",
+        "IP01431_Vertical with welt.ai"
+      ],
+      "key_str": "('#1b4fa8', 'none', 0.75, False, True, False, False, False, True, 'D', 'S')"
+    },
+    {
+      "count": 8,
+      "auto_role": "unknown",
+      "raw_stroke": "#5a5652",
+      "raw_fill": "none",
+      "suggested_role": "callout_line",
+      "files": [
+        "LB00613_Gloves Knitting.ai"
+      ],
+      "key_str": "('#5a5652', 'none', 0.5, False, True, False, False, False, True, 'V', 'XS')"
+    },
+    {
+      "count": 8,
+      "auto_role": "unknown",
+      "raw_stroke": "#6c6966",
+      "raw_fill": "none",
+      "suggested_role": "line_velcro",
+      "files": [
+        "СT00027_Velcro.ai",
+        "СT00028_Velcro.ai",
+        "СT00029_Velcro.ai",
+        "СT00030_Velcro.ai"
+      ],
+      "key_str": "('#6c6966', 'none', 1.0, True, True, False, False, False, False, 'D', 'S')"
+    },
+    {
+      "count": 8,
+      "auto_role": "unknown",
+      "raw_stroke": "none",
+      "raw_fill": "#ffffff",
+      "suggested_role": "",
+      "files": [
+        "CH00217_sb.ai",
+        "CH00218_sb.ai",
+        "ST00080_hood.ai",
+        "ST00096_hood.ai",
+        "ST00099_hood.ai"
+      ],
+      "key_str": "('none', '#ffffff', 0, False, False, False, False, False, False, '-', 'XS')"
+    },
+    {
+      "count": 8,
+      "auto_role": "unknown",
+      "raw_stroke": "#4a453e",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "FH00004.ai",
+        "FH00007.ai",
+        "FH00012.ai",
+        "FH00026.ai"
+      ],
+      "key_str": "('#4a453e', 'none', 0.5, False, True, False, True, False, False, '-', 'XS')"
+    },
+    {
+      "count": 8,
+      "auto_role": "unknown",
+      "raw_stroke": "#534439",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "FH00011.ai",
+        "FH00015.ai",
+        "FH00016.ai",
+        "FH00017.ai",
+        "FH00020.ai"
+      ],
+      "key_str": "('#534439', 'none', 0.47, False, False, False, False, False, True, '-', 'M')"
+    },
+    {
+      "count": 8,
+      "auto_role": "unknown",
+      "raw_stroke": "#544539",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "FH00049.ai",
+        "FH00050.ai",
+        "FH00051.ai",
+        "FH00054.ai"
+      ],
+      "key_str": "('#544539', 'none', 0.28, False, False, False, False, False, True, '-', 'S')"
+    },
+    {
+      "count": 8,
+      "auto_role": "unknown",
+      "raw_stroke": "#56585b",
+      "raw_fill": "none",
+      "suggested_role": "line_fur",
+      "files": [
+        "ED00465_hood.ai",
+        "ED00479_hood.ai"
+      ],
+      "key_str": "('#56585b', 'none', 0.5, True, True, False, False, False, True, 'V', 'XS')"
+    },
+    {
+      "count": 7,
+      "auto_role": "unknown",
+      "raw_stroke": "#2b388f",
+      "raw_fill": "none",
+      "suggested_role": "callout_line",
+      "files": [
+        "CH00605_hidden h.ai",
+        "DC00015.ai",
+        "FP00005_m_Knitted.ai",
+        "FP00006_w_Knitted.ai",
+        "WB00364_knitted.ai"
+      ],
+      "key_str": "('#1b4fa8', 'none', 1.5, False, True, False, True, False, True, '-', 'XS')"
+    },
+    {
+      "count": 7,
+      "auto_role": "unknown",
+      "raw_stroke": "#4a453e",
+      "raw_fill": "none",
+      "suggested_role": "line_fur",
+      "files": [
+        "FH00001.ai",
+        "FH00010.ai",
+        "FH00013.ai",
+        "FH00014.ai"
+      ],
+      "key_str": "('#4a453e', 'none', 0.5, True, True, False, True, False, True, '-', 'XS')"
+    },
+    {
+      "count": 7,
+      "auto_role": "unknown",
+      "raw_stroke": "#7e3e96",
+      "raw_fill": "none",
+      "suggested_role": "callout_line",
+      "files": [
+        "ED00427_hood.ai",
+        "ED00428_hood.ai",
+        "ED00499_hood.ai",
+        "ED00841_hood.ai"
+      ],
+      "key_str": "('#7e3e96', 'none', 3.0, False, True, False, False, False, True, 'V', 'S')"
+    },
+    {
+      "count": 7,
+      "auto_role": "fill_shape",
+      "raw_stroke": "none",
+      "raw_fill": "#29b473",
+      "suggested_role": "fill_glue",
+      "files": [
+        "WB00015_knitted.ai",
+        "WB00175_knitted.ai",
+        "DP00400_Scheme for Down with glue.ai",
+        "DP00402_Scheme for Down with glue.ai",
+        "DP00403_Scheme for Down with glue.ai"
+      ],
+      "key_str": "('none', '#29b473', 0, False, False, True, False, True, True, '-', 'XS')"
+    },
+    {
+      "count": 6,
+      "auto_role": "fill_shape",
+      "raw_stroke": "none",
+      "raw_fill": "#b6da9a",
+      "suggested_role": "",
+      "files": [
+        "LB00153.ai",
+        "LB00154.ai",
+        "LB00155_Swim.ai",
+        "LB00156_Swim.ai",
+        "LB00157_Swim.ai"
+      ],
+      "key_str": "('none', '#b6da9a', 0, False, False, True, False, True, True, '-', 'M')"
+    },
+    {
+      "count": 6,
+      "auto_role": "unknown",
+      "raw_stroke": "#6c6966",
+      "raw_fill": "none",
+      "suggested_role": "callout_line",
+      "files": [
+        "LB00613_Gloves Knitting.ai"
+      ],
+      "key_str": "('#6c6966', 'none', 0.5, False, True, False, False, False, True, 'V', 'XS')"
+    },
+    {
+      "count": 6,
+      "auto_role": "unknown",
+      "raw_stroke": "#6c6966",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "LB00613_Gloves Knitting.ai"
+      ],
+      "key_str": "('#6c6966', 'none', 0.5, False, False, False, False, False, True, '-', 'S')"
+    },
+    {
+      "count": 6,
+      "auto_role": "unknown",
+      "raw_stroke": "#5a5652",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "LB00613_Gloves Knitting.ai"
+      ],
+      "key_str": "('#5a5652', 'none', 0.5, False, False, False, False, False, True, '-', 'S')"
+    },
+    {
+      "count": 6,
+      "auto_role": "unknown",
+      "raw_stroke": "#2c2e83",
+      "raw_fill": "none",
+      "suggested_role": "callout_line",
+      "files": [
+        "CL00002.ai",
+        "CL00005.ai",
+        "FP00005_m_Knitted.ai",
+        "FP00006_w_Knitted.ai"
+      ],
+      "key_str": "('#1b4fa8', 'none', 1.5, False, True, False, False, False, True, 'V', 'XS')"
+    },
+    {
+      "count": 6,
+      "auto_role": "unknown",
+      "raw_stroke": "#2c2e83",
+      "raw_fill": "none",
+      "suggested_role": "callout_line",
+      "files": [
+        "CL00005.ai",
+        "CH00068_hidden h.ai",
+        "CH00069_hidden h.ai",
+        "CH00073_hidden h.ai",
+        "FP00005_m_Knitted.ai"
+      ],
+      "key_str": "('#1b4fa8', 'none', 1.5, False, True, False, False, False, True, 'H', 'XS')"
+    },
+    {
+      "count": 6,
+      "auto_role": "unknown",
+      "raw_stroke": "#534439",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "FH00002.ai",
+        "FH00004.ai",
+        "FH00005.ai",
+        "FH00010.ai",
+        "FH00013.ai"
+      ],
+      "key_str": "('#534439', 'none', 0.28, False, False, False, False, False, True, '-', 'S')"
+    },
+    {
+      "count": 6,
+      "auto_role": "unknown",
+      "raw_stroke": "#57585a",
+      "raw_fill": "none",
+      "suggested_role": "",
+      "files": [
+        "FH00019.ai"
+      ],
+      "key_str": "('#57585a', 'none', 0.5, True, True, False, False, False, True, 'V', 'XS')"
+    }
+  ],
+  "top_families": [
+    {
+      "family_key": "gray|unknown|0|False|False|False|False|False|True|-|S",
+      "count": 62,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 62,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "none",
+          "raw_fill": "#fdfefd",
+          "files": [
+            "LB00262 glue.ai",
+            "LB00266 raincoat welding.ai",
+            "CT00086_Zipper.ai"
+          ],
+          "key_str": "('none', '#ffffff', 0, False, False, False, False, False, True, '-', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|0|False|False|False|True|False|False|-|XS",
+      "count": 38,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 38,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "none",
+          "raw_fill": "#d9dad9",
+          "files": [
+            "VE00001_Horizontal ventilation.ai",
+            "VE00002_Horizontal ventilation.ai",
+            "VE00003_Horizontal ventilation.ai"
+          ],
+          "key_str": "('none', '#ffffff', 0, False, False, False, True, False, False, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|0|False|False|False|False|False|True|-|M",
+      "count": 37,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 37,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "none",
+          "raw_fill": "#ffffff",
+          "files": [
+            "CT00086_Zipper.ai",
+            "ST00057_hood.ai",
+            "ST00083_hood.ai"
+          ],
+          "key_str": "('none', '#ffffff', 0, False, False, False, False, False, True, '-', 'M')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|0.5|False|True|False|False|False|True|V|XS",
+      "count": 24,
+      "styles": 3,
+      "unassigned_styles": 3,
+      "roles": [],
+      "examples": [
+        {
+          "count": 10,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#d2d2d2",
+          "raw_fill": "#ffffff",
+          "files": [
+            "AC00209_Cap_s Half-belt.ai"
+          ],
+          "key_str": "('#d2d2d2', '#ffffff', 0.5, False, True, False, False, False, True, 'V', 'XS')"
+        },
+        {
+          "count": 8,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#5a5652",
+          "raw_fill": "none",
+          "files": [
+            "LB00613_Gloves Knitting.ai"
+          ],
+          "key_str": "('#5a5652', 'none', 0.5, False, True, False, False, False, True, 'V', 'XS')"
+        },
+        {
+          "count": 6,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#6c6966",
+          "raw_fill": "none",
+          "files": [
+            "LB00613_Gloves Knitting.ai"
+          ],
+          "key_str": "('#6c6966', 'none', 0.5, False, True, False, False, False, True, 'V', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|fill_shape|0|False|False|True|False|True|True|-|XS",
+      "count": 20,
+      "styles": 4,
+      "unassigned_styles": 4,
+      "roles": [],
+      "examples": [
+        {
+          "count": 12,
+          "role": "",
+          "auto_role": "fill_shape",
+          "raw_stroke": "none",
+          "raw_fill": "#cac9c9",
+          "files": [
+            "FH00004.ai",
+            "FH00011.ai",
+            "FH00015.ai"
+          ],
+          "key_str": "('none', '#cac9c9', 0, False, False, True, False, True, True, '-', 'XS')"
+        },
+        {
+          "count": 4,
+          "role": "",
+          "auto_role": "fill_shape",
+          "raw_stroke": "none",
+          "raw_fill": "#d1d2d4",
+          "files": [
+            "PU00001.ai",
+            "PU00003.ai"
+          ],
+          "key_str": "('none', '#d1d2d4', 0, False, False, True, False, True, True, '-', 'XS')"
+        },
+        {
+          "count": 3,
+          "role": "",
+          "auto_role": "fill_shape",
+          "raw_stroke": "none",
+          "raw_fill": "#c1c2c2",
+          "files": [
+            "PS00001_ Patch pocket.ai",
+            "PS00002_ Patch pocket.ai",
+            "PS00009_ Patch pocket.ai"
+          ],
+          "key_str": "('none', '#c1c2c2', 0, False, False, True, False, True, True, '-', 'XS')"
+        },
+        {
+          "count": 1,
+          "role": "",
+          "auto_role": "fill_shape",
+          "raw_stroke": "none",
+          "raw_fill": "#d0d2d2",
+          "files": [
+            "AC00006.ai"
+          ],
+          "key_str": "('none', '#d0d2d2', 0, False, False, True, False, True, True, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|1.5|False|False|False|False|False|False|-|S",
+      "count": 17,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 17,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#2b388f",
+          "raw_fill": "none",
+          "files": [
+            "CH00070_hidden h.ai",
+            "CH00071_hidden h.ai",
+            "CH00072_hidden h.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 1.5, False, False, False, False, False, False, '-', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "dark|unknown|0.5|True|True|False|False|False|True|V|XS",
+      "count": 16,
+      "styles": 1,
+      "unassigned_styles": 0,
+      "roles": [
+        [
+          "непонятно",
+          1
+        ]
+      ],
+      "examples": [
+        {
+          "count": 16,
+          "role": "непонятно",
+          "auto_role": "unknown",
+          "raw_stroke": "#47423b",
+          "raw_fill": "none",
+          "files": [
+            "FH00009_v2.ai",
+            "FH00018.ai"
+          ],
+          "key_str": "('#47423b', 'none', 0.5, True, True, False, False, False, True, 'V', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "other|fill_shape|0|False|False|True|False|True|True|-|S",
+      "count": 16,
+      "styles": 2,
+      "unassigned_styles": 2,
+      "roles": [],
+      "examples": [
+        {
+          "count": 15,
+          "role": "",
+          "auto_role": "fill_shape",
+          "raw_stroke": "none",
+          "raw_fill": "#b6da9a",
+          "files": [
+            "LB00151.ai",
+            "LB00152.ai",
+            "LB00159_Swim.ai"
+          ],
+          "key_str": "('none', '#b6da9a', 0, False, False, True, False, True, True, '-', 'S')"
+        },
+        {
+          "count": 1,
+          "role": "",
+          "auto_role": "fill_shape",
+          "raw_stroke": "none",
+          "raw_fill": "#f05a23",
+          "files": [
+            "WB00621_Waist.ai"
+          ],
+          "key_str": "('none', '#f05a23', 0, False, False, True, False, True, True, '-', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|0|False|False|False|False|False|False|-|S",
+      "count": 15,
+      "styles": 1,
+      "unassigned_styles": 0,
+      "roles": [
+        [
+          "непонятно",
+          1
+        ]
+      ],
+      "examples": [
+        {
+          "count": 15,
+          "role": "непонятно",
+          "auto_role": "unknown",
+          "raw_stroke": "none",
+          "raw_fill": "#ffffff",
+          "files": [
+            "AC00200_Cap_s Half-belt.ai",
+            "AC00201_Cap_s Half-belt.ai",
+            "AC00205_Cap_s Half-belt.ai"
+          ],
+          "key_str": "('none', '#ffffff', 0, False, False, False, False, False, False, '-', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "dark|unknown|0.28|False|False|False|False|False|True|-|S",
+      "count": 14,
+      "styles": 2,
+      "unassigned_styles": 2,
+      "roles": [],
+      "examples": [
+        {
+          "count": 8,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#544539",
+          "raw_fill": "none",
+          "files": [
+            "FH00049.ai",
+            "FH00050.ai",
+            "FH00051.ai"
+          ],
+          "key_str": "('#544539', 'none', 0.28, False, False, False, False, False, True, '-', 'S')"
+        },
+        {
+          "count": 6,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#534439",
+          "raw_fill": "none",
+          "files": [
+            "FH00002.ai",
+            "FH00004.ai",
+            "FH00005.ai"
+          ],
+          "key_str": "('#534439', 'none', 0.28, False, False, False, False, False, True, '-', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "other|unknown|0.5|True|True|False|False|False|True|V|XS",
+      "count": 14,
+      "styles": 2,
+      "unassigned_styles": 2,
+      "roles": [],
+      "examples": [
+        {
+          "count": 8,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#56585b",
+          "raw_fill": "none",
+          "files": [
+            "ED00465_hood.ai",
+            "ED00479_hood.ai"
+          ],
+          "key_str": "('#56585b', 'none', 0.5, True, True, False, False, False, True, 'V', 'XS')"
+        },
+        {
+          "count": 6,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#57585a",
+          "raw_fill": "none",
+          "files": [
+            "FH00019.ai"
+          ],
+          "key_str": "('#57585a', 'none', 0.5, True, True, False, False, False, True, 'V', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|0|False|True|False|True|False|True|-|XS",
+      "count": 13,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 13,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "none",
+          "raw_fill": "#ffffff",
+          "files": [
+            "ED00493_hood_with tape.ai",
+            "ED00802_hood_with tape.ai",
+            "HB00008_Half-belt.ai"
+          ],
+          "key_str": "('none', '#ffffff', 0, False, True, False, True, False, True, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|0|False|False|False|False|False|True|-|XS",
+      "count": 12,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 12,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "none",
+          "raw_fill": "#ffffff",
+          "files": [
+            "AC00003.ai",
+            "ST00005.ai",
+            "ST00006.ai"
+          ],
+          "key_str": "('none', '#ffffff', 0, False, False, False, False, False, True, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|1.0|False|False|False|False|False|False|-|XS",
+      "count": 12,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 12,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#214099",
+          "raw_fill": "none",
+          "files": [
+            "AC00200_Cap_s Half-belt.ai",
+            "SV00001_Knitted.ai",
+            "SV00003_Knitted.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 1.0, False, False, False, False, False, False, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|1.0|False|True|False|False|False|False|D|S",
+      "count": 12,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 12,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#2d67b0",
+          "raw_fill": "none",
+          "files": [
+            "AC00208_Cap_s Half-belt.ai",
+            "AC00209_Cap_s Half-belt.ai",
+            "SV00011_Woven.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 1.0, False, True, False, False, False, False, 'D', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|1.5|False|False|False|False|False|True|-|S",
+      "count": 12,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 12,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#2c2e83",
+          "raw_fill": "none",
+          "files": [
+            "CL00003.ai",
+            "CH00068_hidden h.ai",
+            "CH00069_hidden h.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 1.5, False, False, False, False, False, True, '-', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|0.5|False|False|False|False|False|True|-|S",
+      "count": 12,
+      "styles": 2,
+      "unassigned_styles": 2,
+      "roles": [],
+      "examples": [
+        {
+          "count": 6,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#6c6966",
+          "raw_fill": "none",
+          "files": [
+            "LB00613_Gloves Knitting.ai"
+          ],
+          "key_str": "('#6c6966', 'none', 0.5, False, False, False, False, False, True, '-', 'S')"
+        },
+        {
+          "count": 6,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#5a5652",
+          "raw_fill": "none",
+          "files": [
+            "LB00613_Gloves Knitting.ai"
+          ],
+          "key_str": "('#5a5652', 'none', 0.5, False, False, False, False, False, True, '-', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|1.0|False|False|False|False|False|True|-|XS",
+      "count": 11,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 11,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#214099",
+          "raw_fill": "none",
+          "files": [
+            "AC00201_Cap_s Half-belt.ai",
+            "AC00202_Cap_s Half-belt.ai",
+            "AC00203_Cap_s Half-belt.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 1.0, False, False, False, False, False, True, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|0.5|False|True|False|False|False|False|H|XS",
+      "count": 11,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 11,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#d2d2d2",
+          "raw_fill": "#ffffff",
+          "files": [
+            "AC00209_Cap_s Half-belt.ai"
+          ],
+          "key_str": "('#d2d2d2', '#ffffff', 0.5, False, True, False, False, False, False, 'H', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|1.7|False|True|False|True|False|False|-|XS",
+      "count": 11,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 11,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#2b388f",
+          "raw_fill": "none",
+          "files": [
+            "CH00075_hidden h.ai",
+            "CH00076_hidden h.ai",
+            "CH00077_hidden h.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 1.7, False, True, False, True, False, False, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "dark|unknown|0.28|False|False|False|False|False|True|-|M",
+      "count": 11,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 11,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#534439",
+          "raw_fill": "none",
+          "files": [
+            "FH00001.ai",
+            "FH00002.ai",
+            "FH00004.ai"
+          ],
+          "key_str": "('#534439', 'none', 0.28, False, False, False, False, False, True, '-', 'M')"
+        }
+      ]
+    },
+    {
+      "family_key": "dark|unknown|0.5|True|True|False|True|False|False|-|XS",
+      "count": 11,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 11,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#4a453e",
+          "raw_fill": "none",
+          "files": [
+            "FH00002.ai",
+            "FH00005.ai",
+            "FH00010.ai"
+          ],
+          "key_str": "('#4a453e', 'none', 0.5, True, True, False, True, False, False, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|fill_shape|0.5|False|False|True|False|True|True|-|XS",
+      "count": 11,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 11,
+          "role": "",
+          "auto_role": "fill_shape",
+          "raw_stroke": "#3e4b68",
+          "raw_fill": "#cac9c9",
+          "files": [
+            "FH00004.ai",
+            "FH00011.ai",
+            "FH00015.ai"
+          ],
+          "key_str": "('#3e4b68', '#cac9c9', 0.5, False, False, True, False, True, True, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "dark|unknown|0.5|True|True|False|True|False|True|-|XS",
+      "count": 11,
+      "styles": 2,
+      "unassigned_styles": 2,
+      "roles": [],
+      "examples": [
+        {
+          "count": 7,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#4a453e",
+          "raw_fill": "none",
+          "files": [
+            "FH00001.ai",
+            "FH00010.ai",
+            "FH00013.ai"
+          ],
+          "key_str": "('#4a453e', 'none', 0.5, True, True, False, True, False, True, '-', 'XS')"
+        },
+        {
+          "count": 4,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#47423b",
+          "raw_fill": "none",
+          "files": [
+            "FH00009_v2.ai"
+          ],
+          "key_str": "('#47423b', 'none', 0.5, True, True, False, True, False, True, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|0|False|False|False|True|False|True|-|XS",
+      "count": 10,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 10,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "none",
+          "raw_fill": "#dad9d9",
+          "files": [
+            "FP00124_m_Woven.ai",
+            "ST00054_hood.ai",
+            "IP01117_Slanted with welt.ai"
+          ],
+          "key_str": "('none', '#ffffff', 0, False, False, False, True, False, True, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|0.55|False|False|False|False|False|True|-|S",
+      "count": 10,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 10,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#214099",
+          "raw_fill": "none",
+          "files": [
+            "BL00003.ai",
+            "BL00004.ai",
+            "BL00005.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 0.55, False, False, False, False, False, True, '-', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "dark|unknown|0.47|False|False|False|False|False|True|-|M",
+      "count": 9,
+      "styles": 2,
+      "unassigned_styles": 2,
+      "roles": [],
+      "examples": [
+        {
+          "count": 8,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#534439",
+          "raw_fill": "none",
+          "files": [
+            "FH00011.ai",
+            "FH00015.ai",
+            "FH00016.ai"
+          ],
+          "key_str": "('#534439', 'none', 0.47, False, False, False, False, False, True, '-', 'M')"
+        },
+        {
+          "count": 1,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#514336",
+          "raw_fill": "none",
+          "files": [
+            "FH00018.ai"
+          ],
+          "key_str": "('#514336', 'none', 0.47, False, False, False, False, False, True, '-', 'M')"
+        }
+      ]
+    },
+    {
+      "family_key": "red|unknown|1.34|False|True|False|False|False|False|V|XS",
+      "count": 9,
+      "styles": 2,
+      "unassigned_styles": 2,
+      "roles": [],
+      "examples": [
+        {
+          "count": 5,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#b8141c",
+          "raw_fill": "none",
+          "files": [
+            "ED00481_hood.ai",
+            "ED00490_hood.ai",
+            "ED00834_hood.ai"
+          ],
+          "key_str": "('#b8141c', 'none', 1.34, False, True, False, False, False, False, 'V', 'XS')"
+        },
+        {
+          "count": 4,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#b9141b",
+          "raw_fill": "none",
+          "files": [
+            "ED00469_hood.ai",
+            "ED00844_hood.ai"
+          ],
+          "key_str": "('#b9141b', 'none', 1.34, False, True, False, False, False, False, 'V', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|0.75|False|True|False|False|False|True|D|S",
+      "count": 8,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 8,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#396cb3",
+          "raw_fill": "none",
+          "files": [
+            "LB00164_Outventure.ai",
+            "LB00259.ai",
+            "LB00263.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 0.75, False, True, False, False, False, True, 'D', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|1.0|True|True|False|False|False|False|D|S",
+      "count": 8,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 8,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#6c6966",
+          "raw_fill": "none",
+          "files": [
+            "СT00027_Velcro.ai",
+            "СT00028_Velcro.ai",
+            "СT00029_Velcro.ai"
+          ],
+          "key_str": "('#6c6966', 'none', 1.0, True, True, False, False, False, False, 'D', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|0|False|False|False|False|False|False|-|XS",
+      "count": 8,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 8,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "none",
+          "raw_fill": "#ffffff",
+          "files": [
+            "CH00217_sb.ai",
+            "CH00218_sb.ai",
+            "ST00080_hood.ai"
+          ],
+          "key_str": "('none', '#ffffff', 0, False, False, False, False, False, False, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "dark|unknown|0.5|False|True|False|True|False|False|-|XS",
+      "count": 8,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 8,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#4a453e",
+          "raw_fill": "none",
+          "files": [
+            "FH00004.ai",
+            "FH00007.ai",
+            "FH00012.ai"
+          ],
+          "key_str": "('#4a453e', 'none', 0.5, False, True, False, True, False, False, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|4.0|False|True|False|True|False|False|-|XS",
+      "count": 8,
+      "styles": 2,
+      "unassigned_styles": 2,
+      "roles": [],
+      "examples": [
+        {
+          "count": 5,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#ffffff",
+          "raw_fill": "none",
+          "files": [
+            "ED00116_Turn-in.ai",
+            "ED00136_Turn-in.ai",
+            "ED00184_Turn-in.ai"
+          ],
+          "key_str": "('#ffffff', 'none', 4.0, False, True, False, True, False, False, '-', 'XS')"
+        },
+        {
+          "count": 3,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#ffffff",
+          "raw_fill": "#ffffff",
+          "files": [
+            "ST000092_hood.ai",
+            "ST00090_hood_v2.ai",
+            "ST00090_hood.ai"
+          ],
+          "key_str": "('#ffffff', '#ffffff', 4.0, False, True, False, True, False, False, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|1.0|False|False|False|False|False|True|-|S",
+      "count": 8,
+      "styles": 4,
+      "unassigned_styles": 4,
+      "roles": [],
+      "examples": [
+        {
+          "count": 4,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#445ea9",
+          "raw_fill": "#ffffff",
+          "files": [
+            "ED00108_Turn-in.ai",
+            "PP00304_Pleat.ai",
+            "PP00307_Pleat.ai"
+          ],
+          "key_str": "('#1b4fa8', '#ffffff', 1.0, False, False, False, False, False, True, '-', 'S')"
+        },
+        {
+          "count": 2,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#a7a9ab",
+          "raw_fill": "none",
+          "files": [
+            "PU00001.ai",
+            "PU00003.ai"
+          ],
+          "key_str": "('#a7a9ab', 'none', 1.0, False, False, False, False, False, True, '-', 'S')"
+        },
+        {
+          "count": 1,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#f0f0f0",
+          "raw_fill": "#f0f0f0",
+          "files": [
+            "LB00614_Bandana.ai"
+          ],
+          "key_str": "('#ffffff', '#ffffff', 1.0, False, False, False, False, False, True, '-', 'S')"
+        },
+        {
+          "count": 1,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#bebec0",
+          "raw_fill": "none",
+          "files": [
+            "ST00056_hood.ai"
+          ],
+          "key_str": "('#bebec0', 'none', 1.0, False, False, False, False, False, True, '-', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|1.5|False|True|False|True|False|True|-|XS",
+      "count": 7,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 7,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#2b388f",
+          "raw_fill": "none",
+          "files": [
+            "CH00605_hidden h.ai",
+            "DC00015.ai",
+            "FP00005_m_Knitted.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 1.5, False, True, False, True, False, True, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "other|unknown|3.0|False|True|False|False|False|True|V|S",
+      "count": 7,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 7,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#7e3e96",
+          "raw_fill": "none",
+          "files": [
+            "ED00427_hood.ai",
+            "ED00428_hood.ai",
+            "ED00499_hood.ai"
+          ],
+          "key_str": "('#7e3e96', 'none', 3.0, False, True, False, False, False, True, 'V', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|fill_shape|0|False|False|True|False|True|True|-|XS",
+      "count": 7,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 7,
+          "role": "",
+          "auto_role": "fill_shape",
+          "raw_stroke": "none",
+          "raw_fill": "#29b473",
+          "files": [
+            "WB00015_knitted.ai",
+            "WB00175_knitted.ai",
+            "DP00400_Scheme for Down with glue.ai"
+          ],
+          "key_str": "('none', '#29b473', 0, False, False, True, False, True, True, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "other|fill_shape|0|False|False|True|False|True|True|-|M",
+      "count": 6,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 6,
+          "role": "",
+          "auto_role": "fill_shape",
+          "raw_stroke": "none",
+          "raw_fill": "#b6da9a",
+          "files": [
+            "LB00153.ai",
+            "LB00154.ai",
+            "LB00155_Swim.ai"
+          ],
+          "key_str": "('none', '#b6da9a', 0, False, False, True, False, True, True, '-', 'M')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|1.5|False|True|False|False|False|True|V|XS",
+      "count": 6,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 6,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#2c2e83",
+          "raw_fill": "none",
+          "files": [
+            "CL00002.ai",
+            "CL00005.ai",
+            "FP00005_m_Knitted.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 1.5, False, True, False, False, False, True, 'V', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|1.5|False|True|False|False|False|True|H|XS",
+      "count": 6,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 6,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#2c2e83",
+          "raw_fill": "none",
+          "files": [
+            "CL00005.ai",
+            "CH00068_hidden h.ai",
+            "CH00069_hidden h.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 1.5, False, True, False, False, False, True, 'H', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "dark|unknown|0.71|False|False|False|False|False|True|-|XS",
+      "count": 6,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 6,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#565655",
+          "raw_fill": "none",
+          "files": [
+            "ED00507_swim.ai",
+            "ED00508_swim.ai",
+            "ED00509_swim.ai"
+          ],
+          "key_str": "('#565655', 'none', 0.71, False, False, False, False, False, True, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|0|False|True|False|True|False|False|-|XS",
+      "count": 6,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 6,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "none",
+          "raw_fill": "#dad9d9",
+          "files": [
+            "FP00124_m_Woven.ai",
+            "PU00001.ai",
+            "PU00003.ai"
+          ],
+          "key_str": "('none', '#ffffff', 0, False, True, False, True, False, False, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "other|unknown|0.5|True|True|False|False|False|False|V|XS",
+      "count": 6,
+      "styles": 2,
+      "unassigned_styles": 2,
+      "roles": [],
+      "examples": [
+        {
+          "count": 4,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#56585b",
+          "raw_fill": "none",
+          "files": [
+            "ED00480_hood.ai"
+          ],
+          "key_str": "('#56585b', 'none', 0.5, True, True, False, False, False, False, 'V', 'XS')"
+        },
+        {
+          "count": 2,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#57585a",
+          "raw_fill": "none",
+          "files": [
+            "FH00019.ai"
+          ],
+          "key_str": "('#57585a', 'none', 0.5, True, True, False, False, False, False, 'V', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "gray|unknown|1.0|True|True|False|False|False|True|V|XS",
+      "count": 6,
+      "styles": 2,
+      "unassigned_styles": 2,
+      "roles": [],
+      "examples": [
+        {
+          "count": 4,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#d1d2d4",
+          "raw_fill": "none",
+          "files": [
+            "PU00001.ai"
+          ],
+          "key_str": "('#d1d2d4', 'none', 1.0, True, True, False, False, False, True, 'V', 'XS')"
+        },
+        {
+          "count": 2,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#e3e3e3",
+          "raw_fill": "none",
+          "files": [
+            "LB00262 glue.ai",
+            "LB00266 raincoat welding.ai"
+          ],
+          "key_str": "('#ffffff', 'none', 1.0, True, True, False, False, False, True, 'V', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "dark|unknown|0.71|False|False|False|True|False|True|-|XS",
+      "count": 6,
+      "styles": 4,
+      "unassigned_styles": 4,
+      "roles": [],
+      "examples": [
+        {
+          "count": 2,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#4a453e",
+          "raw_fill": "none",
+          "files": [
+            "SH00001.ai",
+            "SH00002.ai"
+          ],
+          "key_str": "('#4a453e', 'none', 0.71, False, False, False, True, False, True, '-', 'XS')"
+        },
+        {
+          "count": 2,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#47423a",
+          "raw_fill": "none",
+          "files": [
+            "IP00503_Horizontal pocket_v2.ai",
+            "IP00503_Horizontal pocket.ai"
+          ],
+          "key_str": "('#47423a', 'none', 0.71, False, False, False, True, False, True, '-', 'XS')"
+        },
+        {
+          "count": 1,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#505254",
+          "raw_fill": "none",
+          "files": [
+            "SH00003.ai"
+          ],
+          "key_str": "('#505254', 'none', 0.71, False, False, False, True, False, True, '-', 'XS')"
+        },
+        {
+          "count": 1,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#565655",
+          "raw_fill": "none",
+          "files": [
+            "SE00354_seams.ai"
+          ],
+          "key_str": "('#565655', 'none', 0.71, False, False, False, True, False, True, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|1.0|False|True|False|True|False|True|-|XS",
+      "count": 5,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 5,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#214099",
+          "raw_fill": "none",
+          "files": [
+            "AC00200_Cap_s Half-belt.ai",
+            "AC00207_Cap_s Half-belt.ai",
+            "SE00246_Binding.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 1.0, False, True, False, True, False, True, '-', 'XS')"
+        }
+      ]
+    },
+    {
+      "family_key": "dark|unknown|0.47|False|False|False|False|False|True|-|S",
+      "count": 5,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 5,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#534439",
+          "raw_fill": "none",
+          "files": [
+            "FH00001.ai",
+            "FH00003.ai",
+            "FH00006.ai"
+          ],
+          "key_str": "('#534439', 'none', 0.47, False, False, False, False, False, True, '-', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|0.78|False|False|False|False|False|True|-|S",
+      "count": 5,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 5,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#214099",
+          "raw_fill": "none",
+          "files": [
+            "HB00123_Sleeve_s half-belt.ai",
+            "HB00154_Sleeve_s half-belt.ai",
+            "SL00050.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 0.78, False, False, False, False, False, True, '-', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "orange|fill_shape|0|False|False|True|False|True|True|-|S",
+      "count": 5,
+      "styles": 1,
+      "unassigned_styles": 0,
+      "roles": [
+        [
+          "ремень-стяжка?",
+          1
+        ]
+      ],
+      "examples": [
+        {
+          "count": 5,
+          "role": "ремень-стяжка?",
+          "auto_role": "fill_shape",
+          "raw_stroke": "none",
+          "raw_fill": "#f7ab3a",
+          "files": [
+            "SR00004.ai"
+          ],
+          "key_str": "('none', '#f7ab3a', 0, False, False, True, False, True, True, '-', 'S')"
+        }
+      ]
+    },
+    {
+      "family_key": "blue|unknown|3.0|False|False|False|False|False|True|-|S",
+      "count": 5,
+      "styles": 1,
+      "unassigned_styles": 1,
+      "roles": [],
+      "examples": [
+        {
+          "count": 5,
+          "role": "",
+          "auto_role": "unknown",
+          "raw_stroke": "#0000ff",
+          "raw_fill": "none",
+          "files": [
+            "SE00334_swim.ai",
+            "SE00349_seams.ai",
+            "SE00351_seams.ai"
+          ],
+          "key_str": "('#1b4fa8', 'none', 3.0, False, False, False, False, False, True, '-', 'S')"
+        }
+      ]
+    }
+  ],
+  "conflicts": []
+}

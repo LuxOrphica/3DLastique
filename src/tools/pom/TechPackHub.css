@@ -1,0 +1,408 @@
+.techpack-hub {
+  min-height: calc(100vh - 56px);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 18%, transparent), transparent 34rem),
+    var(--bg);
+}
+
+.techpack-hub-hero {
+  padding: 84px 0 56px;
+}
+
+.techpack-hub-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 40px;
+  align-items: end;
+}
+
+.techpack-hub h1 {
+  max-width: 780px;
+  color: var(--accent2);
+  font-size: clamp(34px, 5vw, 58px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+
+.techpack-hub h2 {
+  color: var(--accent2);
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.15;
+}
+
+.techpack-hub h3 {
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1.25;
+  margin: 8px 0 10px;
+}
+
+.techpack-hub p {
+  color: var(--text3);
+  font-size: 15px;
+}
+
+.techpack-hub-hero p {
+  max-width: 720px;
+  font-size: 17px;
+}
+
+.techpack-hub-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.techpack-hub-primary,
+.techpack-hub-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border-radius: 6px;
+  padding: 0 18px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.techpack-hub-primary {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.techpack-hub-secondary {
+  border: 1px solid var(--border2);
+  color: var(--text2);
+}
+
+.techpack-hub-summary,
+.techpack-hub-card,
+.techpack-hub-info,
+.techpack-hub-status {
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg3) 78%, transparent);
+}
+
+.techpack-hub-summary {
+  padding: 22px;
+}
+
+.techpack-hub-summary span,
+.techpack-hub-card-eyebrow {
+  display: block;
+  color: var(--text4);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.techpack-hub-summary strong {
+  display: block;
+  color: var(--accent2);
+  font-size: 26px;
+  line-height: 1.1;
+  margin: 10px 0;
+}
+
+.techpack-hub-section {
+  padding: 56px 0;
+}
+
+.techpack-hub-section-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+.techpack-hub-section-head p {
+  max-width: 460px;
+}
+
+.techpack-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.techpack-hub-card {
+  padding: 22px;
+}
+
+.techpack-hub-card ul,
+.techpack-hub-guide ul,
+.techpack-hub-roadmap ol {
+  margin-top: 16px;
+  padding-left: 18px;
+  color: var(--text2);
+  font-size: 14px;
+}
+
+.techpack-hub-card li,
+.techpack-hub-guide li,
+.techpack-hub-roadmap li,
+.techpack-hub-checklist li {
+  margin-bottom: 8px;
+}
+
+.techpack-hub-timeline {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.techpack-hub-step {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 16px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg3) 76%, transparent);
+  padding: 18px;
+}
+
+.techpack-hub-step-code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--accent2);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.techpack-hub-step small,
+.techpack-hub-guide small {
+  display: block;
+  margin-top: 10px;
+  color: var(--text4);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.techpack-hub-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.techpack-hub-info-grid,
+.techpack-hub-status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.techpack-hub-info,
+.techpack-hub-status {
+  padding: 18px;
+}
+
+.techpack-hub-guide {
+  min-height: 220px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bg3) 86%, transparent), color-mix(in srgb, var(--bg4) 92%, transparent));
+  padding: 18px;
+}
+
+.techpack-hub-guide span {
+  display: inline-flex;
+  border: 1px solid var(--border2);
+  border-radius: 999px;
+  padding: 3px 9px;
+  color: var(--accent2);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.techpack-hub-guide-link {
+  display: inline-flex;
+  margin-top: 12px;
+  color: var(--accent2);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.techpack-guide-hero {
+  padding-bottom: 40px;
+}
+
+.techpack-guide-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.techpack-guide-nav {
+  position: sticky;
+  top: 76px;
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg3) 78%, transparent);
+  padding: 18px;
+}
+
+.techpack-guide-nav a {
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: var(--text3);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.techpack-guide-nav a:hover,
+.techpack-guide-nav a.active {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent2);
+}
+
+.techpack-guide-content {
+  display: grid;
+  gap: 16px;
+}
+
+.techpack-guide-block {
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg3) 78%, transparent);
+  padding: 24px;
+}
+
+.techpack-guide-block h2 {
+  margin-bottom: 14px;
+}
+
+.techpack-guide-block ul {
+  padding-left: 20px;
+  color: var(--text2);
+  font-size: 15px;
+}
+
+.techpack-guide-block li {
+  margin-bottom: 10px;
+}
+
+.techpack-hub-table {
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bg3) 80%, transparent);
+}
+
+.techpack-hub-table-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.45fr 1.35fr;
+  gap: 16px;
+  padding: 15px 18px;
+  border-top: 1px solid var(--border);
+  color: var(--text2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.techpack-hub-table-row:first-child {
+  border-top: 0;
+}
+
+.techpack-hub-table-head {
+  color: var(--text4);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--bg4) 86%, transparent);
+}
+
+.techpack-hub-table-row strong {
+  color: var(--accent2);
+  font-size: 14px;
+}
+
+.techpack-hub-checklist {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 32px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg3) 78%, transparent);
+  padding: 30px;
+}
+
+.techpack-hub-checklist ol {
+  columns: 2;
+  column-gap: 32px;
+  padding-left: 20px;
+  color: var(--text2);
+  font-size: 14px;
+}
+
+.techpack-hub-roadmap {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 32px;
+  border-top: 1px solid var(--border);
+  padding-top: 40px;
+}
+
+@media (max-width: 900px) {
+  .techpack-hub-hero-grid,
+  .techpack-hub-roadmap,
+  .techpack-hub-checklist,
+  .techpack-guide-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .techpack-guide-nav {
+    position: static;
+  }
+
+  .techpack-hub-grid,
+  .techpack-hub-timeline,
+  .techpack-hub-guide-grid,
+  .techpack-hub-info-grid,
+  .techpack-hub-status-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .techpack-hub-table-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .techpack-hub-checklist ol {
+    columns: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .techpack-hub-hero {
+    padding-top: 56px;
+  }
+
+  .techpack-hub-section-head {
+    display: block;
+  }
+
+  .techpack-hub-grid,
+  .techpack-hub-timeline,
+  .techpack-hub-guide-grid,
+  .techpack-hub-info-grid,
+  .techpack-hub-status-grid,
+  .techpack-hub-table-row {
+    grid-template-columns: 1fr;
+  }
+
+  .techpack-hub-checklist {
+    padding: 22px;
+  }
+}

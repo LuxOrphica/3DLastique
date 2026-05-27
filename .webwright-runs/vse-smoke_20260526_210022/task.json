@@ -1,0 +1,5 @@
+{
+  "task": "Open the local VSE review page, verify that it loads the VSE manifest and registry, confirm the page exposes the new roles line_elastic line_fur callout_zoom, and produce a concise report with any console or network errors.",
+  "task_id": "vse-smoke",
+  "start_url": "http://localhost:5176/tools/vse"
+}

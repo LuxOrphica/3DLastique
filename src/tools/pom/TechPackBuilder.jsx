@@ -72,7 +72,7 @@ const TAB_GROUPS = [
   {
     id: "construction",
     labelRU: "04 Конструкция",  labelEN: "04 Construction",
-    sections: ["fusing", "lining", "swimwear_lining", "elastic", "seam_allowances", "stitch_spec"],
+    sections: ["fusing", "lining", "swimwear_lining", "elastic", "seam_allowances", "stitch_spec", "yarn_spec", "denim_wash", "swimwear_performance"],
   },
   {
     id: "measurements",
@@ -222,6 +222,26 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
   const [fileItems,     setFileItems]     = useState([]);
   const [selectedNodes, setSelectedNodes] = useState([]); // [{code, jpgId, nameRU, nameEN, bomRef, notes}]
   const [nodeSearch,    setNodeSearch]    = useState("");
+
+  const [yarnSpec, setYarnSpec] = useState({
+    yarnCount: "", gauge: "", ply: "2-ply", twist: "S",
+    dyeMethod: "yarn-dyed", coursesPerCm: "", walesPerCm: "",
+    shrinkagePre: "", shrinkagePost: "", notes: "",
+  });
+  const updateYarn = (f, v) => setYarnSpec(p => ({ ...p, [f]: v }));
+
+  const [denimWash, setDenimWash] = useState({
+    washType: "raw/dry", recipe: "", distressingNotes: "",
+    hardwareFinish: "antique brass", shrinkagePre: "", shrinkagePost: "", notes: "",
+  });
+  const updateDenim = (f, v) => setDenimWash(p => ({ ...p, [f]: v }));
+
+  const [swimPerf, setSwimPerf] = useState({
+    stretch4wayW: "", stretch4wayF: "", chlorineResistance: "",
+    upfRating: "UPF 50+", seamType: "flatlock",
+    colourFastness: "", notes: "",
+  });
+  const updateSwimPerf = (f, v) => setSwimPerf(p => ({ ...p, [f]: v }));
 
   const garment = GARMENTS.find(g => g.id === garmentId);
 
@@ -671,6 +691,166 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
                   defaultRow={{ isoCode: "301 — Lockstitch", spi: "12", zoneRU: "", zoneEN: "", thread: "Polyester 40/2", tension: ru ? "Стандартное" : "Standard", remarks: "" }}
                   emptyLabel={ru ? "Нет строчек" : "No stitch specs"}
                 />
+              </div>
+            )}
+
+            {/* Yarn spec (knitwear) */}
+            {getSectionStatus(garmentId, "yarn_spec") !== "n/a" && (
+              <div className="construction-block">
+                <div className="construction-block-header">
+                  <h3 className="construction-block-title">{ru ? "Пряжа / вязальная спецификация" : "Yarn specification"}</h3>
+                </div>
+                <div className="style-info-form">
+                  <div className="style-info-group-label">{ru ? "Параметры пряжи" : "Yarn parameters"}</div>
+                  <label className="style-info-field">
+                    <span>{ru ? "Счёт пряжи (Nm)" : "Yarn count (Nm)"}</span>
+                    <input type="text" value={yarnSpec.yarnCount} onChange={e => updateYarn("yarnCount", e.target.value)} placeholder="2/48" />
+                  </label>
+                  <label className="style-info-field">
+                    <span>{ru ? "Класс машины (GG)" : "Machine gauge (GG)"}</span>
+                    <input type="text" value={yarnSpec.gauge} onChange={e => updateYarn("gauge", e.target.value)} placeholder="12" />
+                  </label>
+                  <label className="style-info-field">
+                    <span>{ru ? "Кратность" : "Ply"}</span>
+                    <select value={yarnSpec.ply} onChange={e => updateYarn("ply", e.target.value)}>
+                      {["single","2-ply","3-ply","4-ply","cable"].map(v => <option key={v} value={v}>{v}</option>)}
+                    </select>
+                  </label>
+                  <label className="style-info-field">
+                    <span>{ru ? "Крутка" : "Twist direction"}</span>
+                    <select value={yarnSpec.twist} onChange={e => updateYarn("twist", e.target.value)}>
+                      <option value="S">S</option>
+                      <option value="Z">Z</option>
+                      <option value="—">—</option>
+                    </select>
+                  </label>
+                  <label className="style-info-field">
+                    <span>{ru ? "Метод крашения" : "Dye method"}</span>
+                    <select value={yarnSpec.dyeMethod} onChange={e => updateYarn("dyeMethod", e.target.value)}>
+                      {["yarn-dyed","piece-dyed","space-dyed","jacquard","natural/undyed"].map(v => <option key={v} value={v}>{v}</option>)}
+                    </select>
+                  </label>
+                  <div className="style-info-group-label" style={{ marginTop: 12 }}>{ru ? "Плотность петель" : "Stitch density"}</div>
+                  <label className="style-info-field">
+                    <span>{ru ? "Петельных рядов / см" : "Courses / cm"}</span>
+                    <input type="text" value={yarnSpec.coursesPerCm} onChange={e => updateYarn("coursesPerCm", e.target.value)} placeholder="8" />
+                  </label>
+                  <label className="style-info-field">
+                    <span>{ru ? "Петельных столбцов / см" : "Wales / cm"}</span>
+                    <input type="text" value={yarnSpec.walesPerCm} onChange={e => updateYarn("walesPerCm", e.target.value)} placeholder="6" />
+                  </label>
+                  <div className="style-info-group-label" style={{ marginTop: 12 }}>{ru ? "Усадка" : "Shrinkage targets"}</div>
+                  <label className="style-info-field">
+                    <span>{ru ? "До стирки %" : "Pre-wash %"}</span>
+                    <input type="text" value={yarnSpec.shrinkagePre} onChange={e => updateYarn("shrinkagePre", e.target.value)} placeholder="0" />
+                  </label>
+                  <label className="style-info-field">
+                    <span>{ru ? "После стирки %" : "Post-wash %"}</span>
+                    <input type="text" value={yarnSpec.shrinkagePost} onChange={e => updateYarn("shrinkagePost", e.target.value)} placeholder="≤5" />
+                  </label>
+                  <label className="style-info-field style-info-field--full">
+                    <span>{ru ? "Примечания" : "Notes"}</span>
+                    <textarea value={yarnSpec.notes} onChange={e => updateYarn("notes", e.target.value)} rows={2} />
+                  </label>
+                </div>
+              </div>
+            )}
+
+            {/* Denim wash (denim_jeans) */}
+            {getSectionStatus(garmentId, "denim_wash") !== "n/a" && (
+              <div className="construction-block">
+                <div className="construction-block-header">
+                  <h3 className="construction-block-title">{ru ? "Варка / отделка денима" : "Denim wash & finish"}</h3>
+                </div>
+                <div className="style-info-form">
+                  <div className="style-info-group-label">{ru ? "Тип обработки" : "Wash type"}</div>
+                  <label className="style-info-field">
+                    <span>{ru ? "Вид варки" : "Wash type"}</span>
+                    <select value={denimWash.washType} onChange={e => updateDenim("washType", e.target.value)}>
+                      {["raw/dry","stone wash","enzyme wash","acid wash","bleach wash","overdye","sand blast","laser","custom"].map(v =>
+                        <option key={v} value={v}>{v}</option>
+                      )}
+                    </select>
+                  </label>
+                  <label className="style-info-field">
+                    <span>{ru ? "Отделка фурнитуры" : "Hardware finish"}</span>
+                    <select value={denimWash.hardwareFinish} onChange={e => updateDenim("hardwareFinish", e.target.value)}>
+                      {["antique brass","silver","gunmetal","copper","black oxide","custom"].map(v =>
+                        <option key={v} value={v}>{v}</option>
+                      )}
+                    </select>
+                  </label>
+                  <label className="style-info-field style-info-field--full">
+                    <span>{ru ? "Рецептура (enzyme/stone/bleach)" : "Recipe (enzyme/stone/bleach)"}</span>
+                    <textarea value={denimWash.recipe} onChange={e => updateDenim("recipe", e.target.value)} rows={3} placeholder={ru ? "Описание химии и процессов..." : "Describe chemicals and process..."} />
+                  </label>
+                  <label className="style-info-field style-info-field--full">
+                    <span>{ru ? "Карта потертостей / distressing" : "Distressing map notes"}</span>
+                    <textarea value={denimWash.distressingNotes} onChange={e => updateDenim("distressingNotes", e.target.value)} rows={2} placeholder={ru ? "Положение и степень потертостей..." : "Location and intensity of distressing..."} />
+                  </label>
+                  <div className="style-info-group-label" style={{ marginTop: 12 }}>{ru ? "Усадка" : "Shrinkage"}</div>
+                  <label className="style-info-field">
+                    <span>{ru ? "До варки %" : "Pre-wash %"}</span>
+                    <input type="text" value={denimWash.shrinkagePre} onChange={e => updateDenim("shrinkagePre", e.target.value)} placeholder="0" />
+                  </label>
+                  <label className="style-info-field">
+                    <span>{ru ? "После варки %" : "Post-wash %"}</span>
+                    <input type="text" value={denimWash.shrinkagePost} onChange={e => updateDenim("shrinkagePost", e.target.value)} placeholder="≤3" />
+                  </label>
+                  <label className="style-info-field style-info-field--full">
+                    <span>{ru ? "Примечания" : "Notes"}</span>
+                    <textarea value={denimWash.notes} onChange={e => updateDenim("notes", e.target.value)} rows={2} />
+                  </label>
+                </div>
+              </div>
+            )}
+
+            {/* Swimwear performance (swimwear) */}
+            {getSectionStatus(garmentId, "swimwear_performance") !== "n/a" && (
+              <div className="construction-block">
+                <div className="construction-block-header">
+                  <h3 className="construction-block-title">{ru ? "Техн. характеристики купальника" : "Swimwear performance"}</h3>
+                </div>
+                <div className="style-info-form">
+                  <div className="style-info-group-label">{ru ? "Растяжение 4-way" : "4-way stretch"}</div>
+                  <label className="style-info-field">
+                    <span>{ru ? "По основе %" : "Warp stretch %"}</span>
+                    <input type="text" value={swimPerf.stretch4wayW} onChange={e => updateSwimPerf("stretch4wayW", e.target.value)} placeholder="≥80" />
+                  </label>
+                  <label className="style-info-field">
+                    <span>{ru ? "По утку %" : "Fill stretch %"}</span>
+                    <input type="text" value={swimPerf.stretch4wayF} onChange={e => updateSwimPerf("stretch4wayF", e.target.value)} placeholder="≥80" />
+                  </label>
+                  <div className="style-info-group-label" style={{ marginTop: 12 }}>{ru ? "Стойкость" : "Durability"}</div>
+                  <label className="style-info-field">
+                    <span>{ru ? "Стойкость к хлору, ч (AATCC 162)" : "Chlorine resistance hrs (AATCC 162)"}</span>
+                    <input type="text" value={swimPerf.chlorineResistance} onChange={e => updateSwimPerf("chlorineResistance", e.target.value)} placeholder="≥100" />
+                  </label>
+                  <label className="style-info-field">
+                    <span>{ru ? "UPF защита" : "UPF rating"}</span>
+                    <select value={swimPerf.upfRating} onChange={e => updateSwimPerf("upfRating", e.target.value)}>
+                      <option value="UPF 50+">UPF 50+</option>
+                      <option value="UPF 30+">UPF 30+</option>
+                      <option value="не требуется">{ru ? "Не требуется" : "Not required"}</option>
+                    </select>
+                  </label>
+                  <label className="style-info-field">
+                    <span>{ru ? "Тип шва" : "Seam type"}</span>
+                    <select value={swimPerf.seamType} onChange={e => updateSwimPerf("seamType", e.target.value)}>
+                      {["flatlock","flatseam","overlock + cover","bonded","flatlock + cover tape"].map(v =>
+                        <option key={v} value={v}>{v}</option>
+                      )}
+                    </select>
+                  </label>
+                  <label className="style-info-field">
+                    <span>{ru ? "Устойчивость окраски" : "Colour fastness (wash/light/perspiration)"}</span>
+                    <input type="text" value={swimPerf.colourFastness} onChange={e => updateSwimPerf("colourFastness", e.target.value)} placeholder="4/5/4" />
+                  </label>
+                  <label className="style-info-field style-info-field--full">
+                    <span>{ru ? "Примечания" : "Notes"}</span>
+                    <textarea value={swimPerf.notes} onChange={e => updateSwimPerf("notes", e.target.value)} rows={2} />
+                  </label>
+                </div>
               </div>
             )}
           </>

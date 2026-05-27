@@ -1,0 +1,367 @@
+{
+  "standard_count": 57,
+  "used_standard_count": 28,
+  "unused_standard": [
+    "boundary_lining",
+    "boundary_zone",
+    "construction_aux",
+    "contour_cut",
+    "contour_fold",
+    "fill_pink_dark",
+    "fill_pink_light",
+    "fill_shape",
+    "guide_line",
+    "hw_other",
+    "hw_snap",
+    "hw_zipper",
+    "line_photo_trace",
+    "line_reference",
+    "line_velcro",
+    "seam_allowance",
+    "seam_line",
+    "stitch_Bt",
+    "stitch_C",
+    "stitch_F",
+    "stitch_L",
+    "stitch_O",
+    "stitch_cover",
+    "stitch_double",
+    "stitch_hidden",
+    "stitch_overlock",
+    "stitch_topstitch",
+    "stitch_zigzag",
+    "unknown"
+  ],
+  "used_standard": [
+    {
+      "role": "_skip",
+      "count": 2,
+      "sources": [
+        "public_svg",
+        "style_registry"
+      ]
+    },
+    {
+      "role": "arrow",
+      "count": 1,
+      "sources": [
+        "style_registry"
+      ]
+    },
+    {
+      "role": "boundary_fragment",
+      "count": 11,
+      "sources": [
+        "public_svg",
+        "style_registry"
+      ]
+    },
+    {
+      "role": "boundary_interlining",
+      "count": 18,
+      "sources": [
+        "public_svg",
+        "style_registry"
+      ]
+    },
+    {
+      "role": "break_line",
+      "count": 31,
+      "sources": [
+        "public_svg",
+        "style_registry"
+      ]
+    },
+    {
+      "role": "callout_line",
+      "count": 40,
+      "sources": [
+        "public_svg",
+        "style_registry"
+      ]
+    },
+    {
+      "role": "callout_zoom",
+      "count": 6,
+      "sources": [
+        "style_registry"
+      ]
+    },
+    {
+      "role": "contour_outer",
+      "count": 129,
+      "sources": [
+        "public_svg",
+        "style_registry"
+      ]
+    },
+    {
+      "role": "dim_line",
+      "count": 1,
+      "sources": [
+        "style_registry"
+      ]
+    },
+    {
+      "role": "fill_contrast",
+      "count": 14,
+      "sources": [
+        "style_registry",
+        "unknown_roles_assigned"
+      ]
+    },
+    {
+      "role": "fill_dark_fabric",
+      "count": 38,
+      "sources": [
+        "style_registry",
+        "unknown_roles_assigned"
+      ]
+    },
+    {
+      "role": "fill_fabric",
+      "count": 34,
+      "sources": [
+        "style_registry",
+        "unknown_roles_assigned"
+      ]
+    },
+    {
+      "role": "fill_fabric_gray",
+      "count": 38,
+      "sources": [
+        "style_registry",
+        "unknown_roles_assigned"
+      ]
+    },
+    {
+      "role": "fill_glue",
+      "count": 74,
+      "sources": [
+        "style_registry",
+        "unknown_roles_assigned"
+      ]
+    },
+    {
+      "role": "fill_interlining",
+      "count": 26,
+      "sources": [
+        "style_registry",
+        "unknown_roles_assigned"
+      ]
+    },
+    {
+      "role": "fill_piping",
+      "count": 37,
+      "sources": [
+        "style_registry",
+        "unknown_roles_assigned"
+      ]
+    },
+    {
+      "role": "fill_pu_tape",
+      "count": 52,
+      "sources": [
+        "style_registry",
+        "unknown_roles_assigned"
+      ]
+    },
+    {
+      "role": "fill_tape",
+      "count": 16,
+      "sources": [
+        "style_registry",
+        "unknown_roles_assigned"
+      ]
+    },
+    {
+      "role": "hw_button",
+      "count": 10,
+      "sources": [
+        "public_svg",
+        "style_registry"
+      ]
+    },
+    {
+      "role": "hw_buttonhole",
+      "count": 15,
+      "sources": [
+        "public_svg",
+        "style_registry"
+      ]
+    },
+    {
+      "role": "hw_zipper_tape",
+      "count": 24,
+      "sources": [
+        "public_svg",
+        "style_registry"
+      ]
+    },
+    {
+      "role": "label",
+      "count": 6,
+      "sources": [
+        "public_svg"
+      ]
+    },
+    {
+      "role": "line_decorative",
+      "count": 2,
+      "sources": [
+        "style_registry"
+      ]
+    },
+    {
+      "role": "line_elastic",
+      "count": 3,
+      "sources": [
+        "style_registry"
+      ]
+    },
+    {
+      "role": "line_fur",
+      "count": 4,
+      "sources": [
+        "style_registry"
+      ]
+    },
+    {
+      "role": "line_mesh",
+      "count": 1,
+      "sources": [
+        "style_registry"
+      ]
+    },
+    {
+      "role": "stitch_edge",
+      "count": 85,
+      "sources": [
+        "public_svg",
+        "style_registry"
+      ]
+    },
+    {
+      "role": "stitch_thru",
+      "count": 40,
+      "sources": [
+        "public_svg",
+        "style_registry"
+      ]
+    }
+  ],
+  "non_standard": [
+    {
+      "role": "Decorative fabric",
+      "count": 2,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": "line_decorative"
+    },
+    {
+      "role": "Mesh",
+      "count": 1,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": "line_mesh"
+    },
+    {
+      "role": "Reflectig piping",
+      "count": 1,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": "fill_piping"
+    },
+    {
+      "role": "stitch_symbol",
+      "count": 13,
+      "sources": [
+        "public_svg"
+      ],
+      "suggested_standard_role": ""
+    },
+    {
+      "role": "Выноски с увеличением",
+      "count": 6,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": "callout_zoom"
+    },
+    {
+      "role": "Мех",
+      "count": 4,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": "line_fur"
+    },
+    {
+      "role": "Размерная линия",
+      "count": 1,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": "dim_line"
+    },
+    {
+      "role": "Резинка",
+      "count": 3,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": "line_elastic"
+    },
+    {
+      "role": "Соединяющая стрелка",
+      "count": 1,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": "arrow"
+    },
+    {
+      "role": "Строчка по краю",
+      "count": 2,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": "stitch_edge"
+    },
+    {
+      "role": "выносная линия",
+      "count": 4,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": "callout_line"
+    },
+    {
+      "role": "линия на фото?",
+      "count": 3,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": ""
+    },
+    {
+      "role": "непонятно",
+      "count": 2,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": ""
+    },
+    {
+      "role": "ремень-стяжка?",
+      "count": 2,
+      "sources": [
+        "unknown_roles_assigned"
+      ],
+      "suggested_standard_role": ""
+    }
+  ]
+}

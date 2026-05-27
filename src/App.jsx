@@ -11,6 +11,8 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import PomBuilder from "./tools/pom/PomBuilder";
 import TechPackBuilder from "./tools/pom/TechPackBuilder";
+import TechPackGuidePage from "./tools/pom/TechPackGuidePage";
+import TechPackHub from "./tools/pom/TechPackHub";
 import NodeCatalog from "./tools/nodes/NodeCatalog";
 import VseReview from "./tools/vse/VseReview";
 import "./index.css";
@@ -58,6 +60,18 @@ export default function App() {
         <div style={{ position: "relative" }}>
           <Header t={t} lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />
           <TechPackBuilder lang={lang} />
+        </div>
+      } />
+      <Route path="/tools/techpack-hub" element={
+        <div style={{ position: "relative" }}>
+          <Header t={t} lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />
+          <TechPackHub />
+        </div>
+      } />
+      <Route path="/tools/techpack/guides/:slug" element={
+        <div style={{ position: "relative" }}>
+          <Header t={t} lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />
+          <TechPackGuidePage />
         </div>
       } />
       <Route path="/tools/nodes" element={

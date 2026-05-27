@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 const NAV_KEYS = ["services", "howItWorks", "forWhom", "products", "contact"];
 const NAV_HREFS = { services: "#services", howItWorks: "#how", forWhom: "#for-whom", products: "#products", contact: "#contact" };
 const TECHPACK_HREF = "/tools/techpack";
+const TECHPACK_HUB_HREF = "/tools/techpack-hub";
 
 export default function Header({ t, lang, setLang, theme, toggleTheme }) {
   const [open, setOpen] = useState(false);
@@ -29,6 +30,7 @@ export default function Header({ t, lang, setLang, theme, toggleTheme }) {
           <a href="/tools/pom" className={`nav-link${pathname === "/tools/pom" ? " nav-link-active" : ""}`}>Табель мер</a>
           <a href="/tools/nodes" className={`nav-link${pathname === "/tools/nodes" ? " nav-link-active" : ""}`}>Узлы</a>
           <a href="/tools/vse" className={`nav-link${pathname === "/tools/vse" ? " nav-link-active" : ""}`}>VSE</a>
+          <a href={TECHPACK_HUB_HREF} className={`nav-link${pathname === TECHPACK_HUB_HREF ? " nav-link-active" : ""}`}>Tech Pack Hub</a>
           <a href={TECHPACK_HREF} className={`nav-link nav-link-techpack${pathname === "/tools/techpack" ? " nav-link-techpack-active" : ""}`}>Техпак</a>
         </nav>
 
@@ -80,6 +82,10 @@ export default function Header({ t, lang, setLang, theme, toggleTheme }) {
             display: "block", padding: "10px 0", fontSize: 13, color: "var(--text2)",
             borderBottom: "1px solid var(--border)",
           }}>Узлы</a>
+          <a href={TECHPACK_HUB_HREF} onClick={() => setOpen(false)} style={{
+            display: "block", padding: "10px 0", fontSize: 13, color: "var(--text2)",
+            borderBottom: "1px solid var(--border)",
+          }}>Tech Pack Hub</a>
           <a href={TECHPACK_HREF} onClick={() => setOpen(false)} style={{
             display: "block", padding: "10px 0", fontSize: 13, color: "var(--accent)",
             borderBottom: "1px solid var(--border)", fontWeight: 600,
