@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 0.00 198.26 188.16">
   <!-- VSE — Visual Standardization Engine -->
   <g id="role-contour_outer" data-role="contour_outer">
-    <path d="M 163.95 23.10 C 163.95 23.10 178.00 19.78 178.00 33.10 L 177.63 144.26" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-    <path d="M 30.02 43.59 L 164.30 23.04" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-    <path d="M 38.05 165.18 L 38.05 51.92 C 38.51 40.00 19.83 41.24 19.82 52.44 L 19.78 168.16 L 178.26 143.84" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-  </g>
-  <g id="role-boundary_lining" data-role="boundary_lining">
-    <path d="M 53.51 50.95 L 177.07 33.31" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:12 4;fill:none;stroke-linecap:butt;opacity:1" data-role="boundary_lining"/>
-    <path d="M 53.51 64.73 L 177.07 47.09" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:12 4;fill:none;stroke-linecap:butt;opacity:1" data-role="boundary_lining"/>
+    <path d="M 163.95 23.10 C 163.95 23.10 178.00 19.78 178.00 33.10 L 177.63 144.26" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+    <path d="M 30.02 43.59 L 164.30 23.04" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+    <path d="M 38.05 165.18 L 38.05 51.92 C 38.51 40.00 19.83 41.24 19.82 52.44 L 19.78 168.16 L 178.26 143.84" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
-    <path d="M 47.63 51.83 L 9.63 51.83" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-    <path d="M 47.63 64.73 L 9.63 64.73" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
+    <path d="M 47.63 51.83 L 9.63 51.83" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+    <path d="M 47.63 64.73 L 9.63 64.73" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 53.51 50.95 L 177.07 33.31" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+    <path d="M 53.51 64.73 L 177.07 47.09" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-label" data-role="label">
   </g>

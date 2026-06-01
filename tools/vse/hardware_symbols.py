@@ -52,7 +52,7 @@ def _union_bbox(paths):
     return x0, y0, x1, y1
 
 
-def zipper_symbol_svg(x0, y0, x1, y1, stroke="#1A1A1A"):
+def zipper_symbol_svg(x0, y0, x1, y1, stroke="#1A1A1A", slider_center=None):
     """
     Standard tech-pack zipper symbol.
     Two tape lines + regular teeth marks + slider rectangle.
@@ -89,7 +89,7 @@ def zipper_symbol_svg(x0, y0, x1, y1, stroke="#1A1A1A"):
             tx += spacing
 
         # Slider
-        sx = (x0 + x1) / 2
+        sx = slider_center[0] if slider_center else (x0 + x1) / 2
         sw = min(14, w * 0.08)
         sh = half_gap * 2.8
         els.append(f'<rect x="{sx - sw/2:.1f}" y="{cy - sh/2:.1f}" '
@@ -117,8 +117,9 @@ def zipper_symbol_svg(x0, y0, x1, y1, stroke="#1A1A1A"):
                        f'stroke="{TOOTH_COLOR}" stroke-width="{TOOTH_W}"/>')
             ty += spacing
 
-        # Slider
-        sy = (y0 + y1) / 2
+        # Slider. If the source has a filled slider/stop rectangle, keep it near
+        # that original position instead of forcing the symbol midpoint.
+        sy = slider_center[1] if slider_center else (y0 + y1) / 2
         sh = min(14, h * 0.08)
         sw = half_gap * 2.8
         els.append(f'<rect x="{cx - sw/2:.1f}" y="{sy - sh/2:.1f}" '
@@ -138,6 +139,13 @@ def render_zipper_clusters(zipper_paths, tape_paths=None):
     snippets = []
     for cluster in clusters:
         x0, y0, x1, y1 = _union_bbox(cluster)
-        svg = zipper_symbol_svg(x0, y0, x1, y1)
+        filled = [p for p in cluster if p.get("fill") is not None and p.get("rect")]
+        slider_center = None
+        if filled:
+            # Use the largest filled part as the slider/stop anchor.
+            anchor = max(filled, key=lambda p: p["rect"].width * p["rect"].height)
+            r = anchor["rect"]
+            slider_center = ((r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2)
+        svg = zipper_symbol_svg(x0, y0, x1, y1, slider_center=slider_center)
         snippets.append(svg)
     return snippets

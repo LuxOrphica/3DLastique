@@ -1,18 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="246.83 124.91 250.33 270.38">
   <!-- VSE — Visual Standardization Engine -->
-  <g id="role-contour_outer" data-role="contour_outer">
-    <path d="M 337.10 375.29 L 337.03 166.63" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-    <path d="M 337.10 375.29 L 477.05 352.45 L 477.05 144.91 L 310.94 171.63 L 310.97 271.98 C 312.12 289.58 329.09 289.06 330.08 271.98 L 330.08 255.07 L 337.10 253.97" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-    <path d="M 320.88 284.97 L 337.06 282.40" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-  </g>
-  <g id="role-boundary_lining" data-role="boundary_lining">
-    <path d="M 346.58 279.81 L 477.16 257.08" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:12 4;fill:none;stroke-linecap:butt;opacity:1" data-role="boundary_lining"/>
-  </g>
-  <g id="role-stitch_edge" data-role="stitch_edge">
-    <path d="M 302.08 279.80 L 346.58 279.82" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-  </g>
   <g id="role-hw_zipper_tape" data-role="hw_zipper_tape">
     <path d="M 300.14 243.84 L 310.94 250.27" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:none;stroke-linecap:square;opacity:1" data-role="hw_zipper_tape"/>
+  </g>
+  <g id="role-contour_outer" data-role="contour_outer">
+    <path d="M 337.10 375.29 L 337.03 166.63" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+    <path d="M 337.10 375.29 L 477.05 352.45 L 477.05 144.91 L 310.94 171.63 L 310.97 271.98 C 312.12 289.58 329.09 289.06 330.08 271.98 L 330.08 255.07 L 337.10 253.97" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+    <path d="M 320.88 284.97 L 337.06 282.40" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+  </g>
+  <g id="role-stitch_edge" data-role="stitch_edge">
+    <path d="M 302.08 279.80 L 346.58 279.82" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 346.58 279.81 L 477.16 257.08" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-label" data-role="label">
     <text x="266.8" y="251.0" font-family="Arial, sans-serif" font-size="12.0" fill="#1A1A1A">Lining</text>

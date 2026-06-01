@@ -1,23 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="49.29 79.30 179.32 163.07">
   <!-- VSE — Visual Standardization Engine -->
   <g id="role-contour_outer" data-role="contour_outer">
-    <path d="M 124.59 193.50 L 140.25 190.84" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-    <path d="M 125.59 193.50 L 125.12 206.64 C 125.12 222.37 111.17 221.91 111.17 207.11 L 111.17 141.19 C 111.71 141.23 140.26 136.98 140.26 136.98" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-    <path d="M 118.16 218.32 L 208.61 201.42" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-    <path d="M 140.25 108.11 L 140.25 203.03 C 140.25 217.83 130.25 218.29 130.25 202.57 L 130.25 193.06" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
+    <path d="M 124.59 193.50 L 140.25 190.84" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+    <path d="M 125.59 193.50 L 125.12 206.64 C 125.12 222.37 111.17 221.91 111.17 207.11 L 111.17 141.19 C 111.71 141.23 140.26 136.98 140.26 136.98" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+    <path d="M 118.16 218.32 L 208.61 201.42" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+  </g>
+  <g id="role-fill_pu_tape" data-role="fill_pu_tape">
+    <path d="M 111.17 140.71 L 111.17 154.83 L 140.32 150.08 L 140.32 136.28 L 111.17 140.71 Z" style="stroke:#6B6B6B;stroke-width:0.5;stroke-dasharray:none;fill:#CAC2B8;opacity:0.68" data-role="fill_pu_tape"/>
+  </g>
+  <g id="role-contour_outer" data-role="contour_outer">
+    <path d="M 140.25 108.11 L 140.25 203.03 C 140.25 217.83 130.25 218.29 130.25 202.57 L 130.25 193.06" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
-    <path d="M 117.23 214.63 L 136.11 211.38" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-    <path d="M 105.55 211.88 L 136.06 206.62" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-  </g>
-  <g id="role-callout_line" data-role="callout_line">
-    <path d="M 126.67 147.27 L 102.36 124.52" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line"/>
+    <path d="M 117.23 214.63 L 136.11 211.38" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+    <path d="M 105.55 211.88 L 136.06 206.62" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
   </g>
   <g id="role-break_line" data-role="break_line">
     <path d="M 208.61 201.42 L 208.61 99.30 L 140.25 108.39" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
   </g>
-  <g id="role-fill_pu_tape" data-role="fill_pu_tape">
-    <path d="M 111.17 140.71 L 111.17 154.83 L 140.32 150.08 L 140.32 136.28 L 111.17 140.71 Z" style="stroke:#6B6B6B;stroke-width:0.5;stroke-dasharray:none;fill:#CAC2B8;opacity:0.68" data-role="fill_pu_tape"/>
+  <g id="role-callout_line" data-role="callout_line">
+    <path d="M 126.67 147.27 L 102.36 124.52" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line"/>
   </g>
   <g id="role-label" data-role="label">
     <text x="69.3" y="124.6" font-family="Arial, sans-serif" font-size="10.0" fill="#1A1A1A">PU seam-tape</text>

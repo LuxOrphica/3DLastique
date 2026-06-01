@@ -1,18 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="12.64 0.00 826.50 323.00">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-stitch_Bt" data-role="stitch_Bt">
+    <path d="M 165.27 201.84 L 165.27 134.51" style="stroke:#C8102E;stroke-width:3.0;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_Bt"/>
+    <path d="M 298.83 135.67 L 298.83 203.00" style="stroke:#C8102E;stroke-width:3.0;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_Bt"/>
+    <path d="M 431.45 134.51 L 431.45 201.84" style="stroke:#C8102E;stroke-width:3.0;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_Bt"/>
+    <path d="M 563.13 135.67 L 563.13 203.00" style="stroke:#C8102E;stroke-width:3.0;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_Bt"/>
+  </g>
   <g id="role-contour_outer" data-role="contour_outer">
-    <path d="M 652.51 126.51 L 693.01 126.51" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-    <path d="M 652.51 210.84 L 693.01 210.84" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-  </g>
-  <g id="role-stitch_edge" data-role="stitch_edge">
-    <path d="M 165.27 204.84 L 165.27 131.51" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-    <path d="M 298.83 132.67 L 298.83 206.00" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-    <path d="M 431.45 131.51 L 431.45 204.84" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-    <path d="M 563.13 132.67 L 563.13 206.00" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-  </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 166.20 206.84 L 364.20 273.50 L 298.83 206.84" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
-    <path d="M 562.20 206.84 L 364.20 273.50 L 429.58 206.84" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
+    <path d="M 652.51 126.51 L 693.01 126.51" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+    <path d="M 652.51 210.84 L 693.01 210.84" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-unknown" data-role="unknown">
     <path d="M 33.58 167.18 C 33.58 144.72 63.27 126.51 99.89 126.51 C 136.51 126.51 166.20 144.72 166.20 167.18" style="stroke:#AAAAAA;stroke-width:0.5;stroke-dasharray:none;fill:none;opacity:0.5" data-role="unknown"/>
@@ -25,6 +21,10 @@
     <path d="M 297.89 169.17 C 297.89 191.63 327.58 209.84 364.20 209.84 C 400.82 209.84 430.51 191.63 430.51 169.17" style="stroke:#AAAAAA;stroke-width:0.5;stroke-dasharray:none;fill:none;opacity:0.5" data-role="unknown"/>
     <path d="M 430.51 169.17 C 430.51 191.63 460.20 209.84 496.82 209.84 C 533.45 209.84 563.13 191.63 563.13 169.17" style="stroke:#AAAAAA;stroke-width:0.5;stroke-dasharray:none;fill:none;opacity:0.5" data-role="unknown"/>
     <path d="M 563.13 169.17 C 563.13 191.63 592.82 209.84 629.45 209.84" style="stroke:#AAAAAA;stroke-width:0.5;stroke-dasharray:none;fill:none;opacity:0.5" data-role="unknown"/>
+  </g>
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 166.20 206.84 L 364.20 273.50 L 298.83 206.84" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
+    <path d="M 562.20 206.84 L 364.20 273.50 L 429.58 206.84" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
   </g>
   <g id="role-label" data-role="label">
     <text x="64.0" y="185.3" font-family="Arial, sans-serif" font-size="24.0" fill="#1A1A1A">DOWN</text>

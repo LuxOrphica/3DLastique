@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import "./VseReview.css";
 
 const ROLE_STYLES = {
@@ -6,7 +6,8 @@ const ROLE_STYLES = {
   contour_outer:       { stroke: "#1A1A1A", "stroke-width": "1.5",  "stroke-dasharray": "none" },
   contour_fold:        { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "8 3 2 3" },
   contour_cut:         { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
-  // Швы
+  contour_hidden:      { stroke: "#8A8A8A", "stroke-width": "0.65", "stroke-dasharray": "4 2" },
+  // РЁРІС‹
   seam_line:           { stroke: "#1A1A1A", "stroke-width": "2.5",  "stroke-dasharray": "none" },
   seam_allowance:      { stroke: "#555555", "stroke-width": "0.5",  "stroke-dasharray": "4 2" },
   // Строчки (ISO 4915 / Sportmaster AW24)
@@ -22,7 +23,7 @@ const ROLE_STYLES = {
   stitch_O:            { stroke: "#C8102E", "stroke-width": "1.0",  "stroke-dasharray": "2 1 2 1" },
   stitch_F:            { stroke: "#C8102E", "stroke-width": "1.2",  "stroke-dasharray": "4 1 1 1 4 1" },
   stitch_zigzag:       { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "2 0.5" },
-  stitch_Bt:           { stroke: "#1A1A1A", "stroke-width": "2.0",  "stroke-dasharray": "none" },
+  stitch_Bt:           { stroke: "#C8102E", "stroke-width": "3.0",  "stroke-dasharray": "none" },
   // Границы
   boundary_fragment:   { stroke: "#27A6DE", "stroke-width": "1.5",  "stroke-dasharray": "none" },
   boundary_zone:       { stroke: "#1B4FA8", "stroke-width": "0.75", "stroke-dasharray": "6 3" },
@@ -35,9 +36,18 @@ const ROLE_STYLES = {
   fill_dark_fabric:    { stroke: "#444444", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_contrast:       { stroke: "#B54422", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_tape:           { stroke: "#777777", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  fill_binding:        { stroke: "#B8763A", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  fill_elastic:        { stroke: "#666666", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  fill_cord:           { stroke: "#333333", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  fill_velcro:         { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
+  fill_material_mask:  { stroke: "none",    "stroke-width": "0",    "stroke-dasharray": "none" },
+  fill_white_detail:   { stroke: "none",    "stroke-width": "0",    "stroke-dasharray": "none" },
   fill_pu_tape:        { stroke: "#6B6B6B", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_piping:         { stroke: "#9B741B", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_glue:           { stroke: "#7E6A3A", "stroke-width": "0.5",  "stroke-dasharray": "3 2" },
+  fill_gradient:       { stroke: "#777777", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  fill_fur:            { stroke: "#6B4A2E", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  fill_shadow:         { stroke: "#6F6F6F", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_pink_light:     { stroke: "#C785A8", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_pink_dark:      { stroke: "#9A4A73", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   construction_aux:    { stroke: "#555555", "stroke-width": "0.5",  "stroke-dasharray": "none" },
@@ -45,6 +55,10 @@ const ROLE_STYLES = {
   // Фурнитура
   hw_zipper:           { stroke: "#1A1A1A", "stroke-width": "1.2",  "stroke-dasharray": "none" },
   hw_zipper_tape:      { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
+  hw_zipper_tape_edge: { stroke: "#333333", "stroke-width": "0.65", "stroke-dasharray": "none" },
+  hw_buckle_fill:      { stroke: "none",    "stroke-width": "0",    "stroke-dasharray": "none" },
+  hw_buckle:           { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
+  hw_ring:             { stroke: "#1A1A1A", "stroke-width": "6.5",  "stroke-dasharray": "none" },
   hw_button:           { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
   hw_snap:             { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
   hw_other:            { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
@@ -57,27 +71,31 @@ const ROLE_STYLES = {
   line_reference:      { stroke: "#555555", "stroke-width": "0.5",  "stroke-dasharray": "2 2" },
   line_elastic:        { stroke: "#8A8A8A", "stroke-width": "0.75", "stroke-dasharray": "2 2" },
   line_fur:            { stroke: "#4A453E", "stroke-width": "0.65", "stroke-dasharray": "1 2" },
-  line_velcro:         { stroke: "#6C6966", "stroke-width": "0.75", "stroke-dasharray": "3 2" },
+  line_velcro:         { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
   line_mesh:           { stroke: "#555555", "stroke-width": "0.5",  "stroke-dasharray": "1 2" },
   line_decorative:     { stroke: "#1B4FA8", "stroke-width": "0.75", "stroke-dasharray": "none" },
   line_photo_trace:    { stroke: "#AAAAAA", "stroke-width": "0.5",  "stroke-dasharray": "2 2" },
+  line_gathered_edge:  { stroke: "#777777", "stroke-width": "0.45", "stroke-dasharray": "none" },
   arrow:               { stroke: "#333333", "stroke-width": "0.6",  "stroke-dasharray": "none" },
+  stitch_symbol:       { stroke: "#1A1A1A", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   // Прочее
   unknown:             { stroke: "#999999", "stroke-width": "0.5",  "stroke-dasharray": "none" },
 };
 
 const ROLE_GROUPS = [
   { label: "— не назначено —", roles: ["?"] },
-  { label: "Контуры",          roles: ["contour_outer", "contour_fold", "contour_cut"] },
-  { label: "Швы",              roles: ["seam_line", "seam_allowance"] },
-  { label: "Строчки",          roles: ["stitch_edge", "stitch_thru", "stitch_topstitch", "stitch_double", "stitch_hidden", "stitch_cover", "stitch_overlock", "stitch_zigzag", "stitch_L", "stitch_C", "stitch_O", "stitch_F", "stitch_Bt"] },
+  { label: "Контуры",          roles: ["contour_outer", "contour_fold", "contour_cut", "contour_hidden"] },
+  { label: "РЁРІС‹",              roles: ["seam_line", "seam_allowance"] },
+  { label: "Строчки",          roles: ["stitch_edge", "stitch_thru", "stitch_topstitch", "stitch_double", "stitch_hidden", "stitch_cover", "stitch_overlock", "stitch_zigzag", "stitch_L", "stitch_C", "stitch_O", "stitch_F", "stitch_Bt", "stitch_symbol"] },
   { label: "Слои и зоны",           roles: ["boundary_fragment", "boundary_zone", "boundary_lining", "boundary_interlining"] },
-  { label: "Заливки",          roles: ["fill_interlining", "fill_fabric", "fill_fabric_gray", "fill_dark_fabric", "fill_contrast", "fill_tape", "fill_pu_tape", "fill_piping", "fill_glue", "fill_pink_light", "fill_pink_dark", "construction_aux", "fill_shape"] },
-  { label: "Фурнитура",        roles: ["hw_zipper", "hw_zipper_tape", "hw_button", "hw_buttonhole", "hw_snap", "hw_other"] },
-  { label: "Выноски",          roles: ["callout_line", "callout_zoom", "dim_line", "arrow", "stitch_symbol"] },
-  { label: "Смысловые линии",  roles: ["guide_line", "line_reference", "line_elastic", "line_fur", "line_velcro", "line_mesh", "line_decorative", "line_photo_trace", "break_line"] },
+  { label: "Заливки",          roles: ["fill_interlining", "fill_fabric", "fill_fabric_gray", "fill_dark_fabric", "fill_contrast", "fill_tape", "fill_binding", "fill_elastic", "fill_cord", "fill_velcro", "fill_material_mask", "fill_pu_tape", "fill_piping", "fill_glue", "fill_pink_light", "fill_pink_dark", "construction_aux", "fill_shape"] },
+  { label: "Фурнитура",        roles: ["hw_zipper", "hw_zipper_tape", "hw_zipper_tape_edge", "hw_buckle", "hw_buckle_fill", "hw_ring", "hw_button", "hw_buttonhole", "hw_snap", "hw_other"] },
+  { label: "Выноски",          roles: ["callout_line", "callout_zoom", "dim_line", "arrow"] },
+  { label: "Смысловые линии",  roles: ["guide_line", "line_reference", "line_elastic", "line_fur", "line_velcro", "line_mesh", "line_decorative", "line_photo_trace", "line_gathered_edge", "break_line"] },
   { label: "Прочее",           roles: ["unknown", "_skip"] },
 ];
+
+ROLE_GROUPS.splice(6, 0, { label: "Эффекты заливки", roles: ["fill_gradient", "fill_fur", "fill_shadow"] });
 
 const ROLES = ROLE_GROUPS.flatMap(g => g.roles);
 
@@ -87,7 +105,8 @@ const ROLE_LABELS = {
   "contour_outer":       "Контур детали",
   "contour_fold":        "Линия сгиба",
   "contour_cut":         "Линия разреза",
-  // Швы
+  "contour_hidden":      "Невидимый контур / пунктир",
+  // РЁРІС‹
   "seam_line":           "Линия шва",
   "seam_allowance":      "Припуск на шов",
   // Строчки
@@ -103,7 +122,7 @@ const ROLE_LABELS = {
   "stitch_O":            "Оверлок O (ISO 504/514)",
   "stitch_F":            "Распошивалка F (ISO 602/605)",
   "stitch_zigzag":       "Зигзаг",
-  "stitch_Bt":           "Закрепка Bt",
+  "stitch_Bt":           "Закрепка / bar tack (Bc/Bt)",
   // Границы
   "boundary_fragment":   "Прокладка (Padding)",
   "boundary_zone":       "Конструктивная зона",
@@ -116,6 +135,11 @@ const ROLE_LABELS = {
   "fill_dark_fabric":    "Темная ткань / темная деталь",
   "fill_contrast":       "Контрастная деталь",
   "fill_tape":           "Тесьма / лента",
+  "fill_binding":        "Окантовка / binding",
+  "fill_elastic":        "Резинка / elastic band",
+  "fill_cord":           "Шнур / cord",
+  "fill_velcro":         "Велкро / velcro",
+  "fill_material_mask":  "Маска материала",
   "fill_pu_tape":        "PU tape / полиуретановая лента",
   "fill_piping":         "Кант / piping",
   "fill_glue":           "Клеевая зона / glue",
@@ -126,6 +150,9 @@ const ROLE_LABELS = {
   // Фурнитура
   "hw_zipper":           "Молния",
   "hw_zipper_tape":      "Молния",
+  "hw_zipper_tape_edge": "Контур тесьмы молнии",
+  "hw_buckle":           "Пряжка",
+  "hw_buckle_fill":      "Заливка пряжки",
   "hw_button":           "Пуговица (Button, Bs)",
   "hw_buttonhole":       "Петля (Buttonhole, Bh)",
   "hw_snap":             "Кнопка / люверс",
@@ -139,10 +166,11 @@ const ROLE_LABELS = {
   "line_reference":      "Справочная смысловая линия",
   "line_elastic":        "Резинка / эластичная линия",
   "line_fur":            "Мех / ворсовая линия",
-  "line_velcro":         "Липучка / Velcro",
+  "line_velcro":         "Обводка липучки / Velcro outline",
   "line_mesh":           "Сетка / mesh",
   "line_decorative":     "Декоративная линия",
   "line_photo_trace":    "Линия с фото / неуверенная",
+  "line_gathered_edge":  "Мятый / сборенный край материала",
   "arrow":               "Стрелка",
   "stitch_symbol":       "Символ строчки (vvvv)",
   // Прочее
@@ -150,10 +178,197 @@ const ROLE_LABELS = {
   "_skip":               "— не выводить —",
 };
 
+const ROLE_GROUP_LABELS = {
+  "— РЅРµ назначено —": "— не назначено —",
+  "Контуры": "Контуры",
+  "РЁРІС‹": "Швы",
+  "Строчки": "Строчки",
+  "Слои Рё Р·РѕРЅС‹": "Слои и зоны",
+  "Заливки": "Заливки",
+  "Эффекты заливки": "Эффекты заливки",
+  "Фурнитура": "Фурнитура",
+  "Выноски": "Выноски",
+  "Смысловые линии": "Смысловые линии",
+  "Прочее": "Прочее",
+};
+
+const ROLE_LABELS_CLEAN = {
+  "?": "— не назначено —",
+  contour_outer: "Контур детали",
+  contour_fold: "Линия сгиба",
+  contour_cut: "Линия разреза",
+  contour_hidden: "Невидимый контур / пунктир",
+  seam_line: "Линия шва",
+  seam_allowance: "Припуск на шов",
+  stitch_edge: "Строчка по краю",
+  stitch_thru: "Сквозная строчка",
+  stitch_topstitch: "Отделочная строчка / topstitch",
+  stitch_double: "Двойная строчка",
+  stitch_hidden: "Скрытая / потайная строчка",
+  stitch_cover: "Распошивальная / cover stitch",
+  stitch_overlock: "Оверлочная строчка",
+  stitch_L: "Челночная L (ISO 301)",
+  stitch_C: "Цепная C (ISO 401)",
+  stitch_O: "Оверлок O (ISO 504/514)",
+  stitch_F: "Распошивальная F (ISO 602/605)",
+  stitch_zigzag: "Зигзаг",
+  stitch_Bt: "Закрепка / bar tack (Bc/Bt)",
+  boundary_fragment: "Прокладка / padding",
+  boundary_zone: "Конструктивная зона",
+  boundary_lining: "Подкладка / lining",
+  boundary_interlining: "Флизелин / interlining",
+  fill_interlining: "Штриховка прокладки",
+  fill_fabric: "Штриховка ткани",
+  fill_fabric_gray: "Серая ткань / нейтральная заливка",
+  fill_dark_fabric: "Темная ткань / темная деталь",
+  fill_contrast: "Контрастная деталь",
+  fill_tape: "Тесьма / лента",
+  fill_binding: "Окантовка / binding",
+  fill_elastic: "Резинка / elastic band",
+  fill_cord: "Шнур / cord",
+  fill_material_mask: "Маска материала",
+  fill_pu_tape: "PU tape / полиуретановая лента",
+  fill_piping: "Кант / piping",
+  fill_glue: "Клеевая зона / glue",
+  fill_gradient: "Градиентная заливка / shading",
+  fill_fur: "Меховая градиентная заливка / fur fill",
+  fill_shadow: "Теневая / металлическая градиентная заливка",
+  fill_pink_light: "Светлая розовая заливка",
+  fill_pink_dark: "Темная розово-фиолетовая заливка",
+  construction_aux: "Вспомогательная линия",
+  fill_shape: "Заливка / прочее",
+  hw_zipper: "Молния",
+  hw_zipper_tape: "Тесьма молнии",
+  hw_zipper_tape_edge: "Контур тесьмы молнии",
+  hw_buckle: "Пряжка / buckle",
+  hw_buckle_fill: "Заливка пряжки",
+  hw_button: "Пуговица / button",
+  hw_buttonhole: "Петля / buttonhole",
+  hw_snap: "Кнопка / люверс",
+  hw_other: "Фурнитура / прочее",
+  callout_line: "Выноска",
+  callout_zoom: "Выноска к увеличению",
+  break_line: "Линия обрыва",
+  dim_line: "Размерная линия",
+  guide_line: "Вспомогательная направляющая",
+  line_reference: "Справочная смысловая линия",
+  line_elastic: "Резинка / эластичная линия",
+  line_fur: "Мех / ворсовая линия",
+  line_velcro: "Обводка липучки / Velcro outline",
+  line_mesh: "Сетка / mesh",
+  line_decorative: "Декоративная линия",
+  line_photo_trace: "Линия с фото / неуверенная",
+  line_gathered_edge: "Мятый / сборенный край материала",
+  arrow: "Стрелка",
+  stitch_symbol: "Символ строчки",
+  unknown: "Неизвестно",
+  _skip: "— не выводить —",
+};
+
+const ROLE_GROUPS_UI = [
+  { label: "— не назначено —", roles: ["?"] },
+  { label: "Контуры", roles: ["contour_outer", "contour_fold", "contour_cut", "contour_hidden"] },
+  { label: "Швы", roles: ["seam_line", "seam_allowance"] },
+  { label: "Строчки", roles: ["stitch_edge", "stitch_thru", "stitch_topstitch", "stitch_double", "stitch_hidden", "stitch_cover", "stitch_overlock", "stitch_zigzag", "stitch_L", "stitch_C", "stitch_O", "stitch_F", "stitch_Bt"] },
+  { label: "Слои и зоны", roles: ["boundary_fragment", "boundary_zone", "boundary_lining", "boundary_interlining"] },
+{ label: "Заливки", roles: ["fill_interlining", "fill_fabric", "fill_fabric_gray", "fill_dark_fabric", "fill_contrast", "fill_tape", "fill_binding", "fill_elastic", "fill_cord", "fill_velcro", "fill_material_mask", "fill_pu_tape", "fill_piping", "fill_glue", "fill_pink_light", "fill_pink_dark", "construction_aux", "fill_shape"] },
+  { label: "Эффекты заливки", roles: ["fill_gradient", "fill_fur", "fill_shadow"] },
+  { label: "Фурнитура", roles: ["hw_zipper", "hw_zipper_tape", "hw_zipper_tape_edge", "hw_buckle", "hw_buckle_fill", "hw_ring", "hw_button", "hw_buttonhole", "hw_snap", "hw_other"] },
+  { label: "Выноски", roles: ["callout_line", "callout_zoom", "dim_line", "arrow", "stitch_symbol"] },
+  { label: "Смысловые линии", roles: ["guide_line", "line_reference", "line_elastic", "line_fur", "line_velcro", "line_mesh", "line_decorative", "line_photo_trace", "line_gathered_edge", "break_line"] },
+  { label: "Прочее", roles: ["unknown", "_skip"] },
+];
+
+const ROLE_LABELS_UI = {
+  "?": "— не назначено —",
+  contour_outer: "Контур детали",
+  contour_fold: "Линия сгиба",
+  contour_cut: "Линия разреза",
+  contour_hidden: "Невидимый контур / пунктир",
+  seam_line: "Линия шва",
+  seam_allowance: "Припуск на шов",
+  stitch_edge: "Строчка по краю",
+  stitch_thru: "Сквозная строчка",
+  stitch_topstitch: "Отделочная строчка / topstitch",
+  stitch_double: "Двойная строчка",
+  stitch_hidden: "Скрытая / потайная строчка",
+  stitch_cover: "Распошивальная / cover stitch",
+  stitch_overlock: "Оверлочная строчка",
+  stitch_L: "Челночная L (ISO 301)",
+  stitch_C: "Цепная C (ISO 401)",
+  stitch_O: "Оверлок O (ISO 504/514)",
+  stitch_F: "Распошивальная F (ISO 602/605)",
+  stitch_zigzag: "Зигзаг",
+  stitch_Bt: "Закрепка / bar tack (Bc/Bt)",
+  boundary_fragment: "Прокладка / padding",
+  boundary_zone: "Конструктивная зона",
+  boundary_lining: "Подкладка / lining",
+  boundary_interlining: "Флизелин / interlining",
+  fill_interlining: "Штриховка прокладки",
+  fill_fabric: "Штриховка ткани",
+  fill_fabric_gray: "Серая ткань / нейтральная заливка",
+  fill_dark_fabric: "Темная ткань / темная деталь",
+  fill_contrast: "Контрастная деталь",
+  fill_tape: "Тесьма / лента",
+  fill_binding: "Окантовка / binding",
+  fill_elastic: "Резинка / elastic band",
+  fill_cord: "Шнур / cord",
+  fill_material_mask: "Маска материала",
+  fill_pu_tape: "PU tape / полиуретановая лента",
+  fill_piping: "Кант / piping",
+  fill_glue: "Клеевая зона / glue",
+  fill_gradient: "Градиентная заливка / shading",
+  fill_fur: "Меховая градиентная заливка / fur fill",
+  fill_shadow: "Теневая / металлическая градиентная заливка",
+  fill_pink_light: "Светлая розовая заливка",
+  fill_pink_dark: "Темная розово-фиолетовая заливка",
+  construction_aux: "Вспомогательная линия",
+  fill_shape: "Заливка / прочее",
+  hw_zipper: "Молния",
+  hw_zipper_tape: "Тесьма молнии",
+  hw_zipper_tape_edge: "Контур тесьмы молнии",
+  hw_buckle: "Пряжка / buckle",
+  hw_buckle_fill: "Заливка пряжки",
+  hw_button: "Пуговица / button",
+  hw_buttonhole: "Петля / buttonhole",
+  hw_snap: "Кнопка / люверс",
+  hw_other: "Фурнитура / прочее",
+  callout_line: "Выноска",
+  callout_zoom: "Выноска к увеличению",
+  break_line: "Линия обрыва",
+  dim_line: "Размерная линия",
+  guide_line: "Вспомогательная направляющая",
+  line_reference: "Справочная смысловая линия",
+  line_elastic: "Резинка / эластичная линия",
+  line_fur: "Мех / ворсовая линия",
+  line_velcro: "Обводка липучки / Velcro outline",
+  line_mesh: "Сетка / mesh",
+  line_decorative: "Декоративная линия",
+  line_photo_trace: "Линия с фото / неуверенная",
+  line_gathered_edge: "Мятый / сборенный край материала",
+  arrow: "Стрелка",
+  stitch_symbol: "Символ строчки",
+  unknown: "Неизвестно",
+  _skip: "— не выводить —",
+};
+
+const roleLabel = role => ROLE_LABELS_UI[role] || role;
+
+for (const groups of [ROLE_GROUPS, ROLE_GROUPS_UI]) {
+  const fillGroup = groups.find(group => Array.isArray(group.roles) && group.roles.includes("fill_material_mask"));
+  if (fillGroup && !fillGroup.roles.includes("fill_white_detail")) {
+    fillGroup.roles.splice(fillGroup.roles.indexOf("fill_material_mask") + 1, 0, "fill_white_detail");
+  }
+}
+
+ROLE_LABELS.fill_white_detail = "Видимая белая деталь";
+ROLE_LABELS_CLEAN.fill_white_detail = "Видимая белая деталь";
+ROLE_LABELS_UI.fill_white_detail = "Видимая белая деталь";
+
 function RoleOptions() {
-  return ROLE_GROUPS.map(g => (
+  return ROLE_GROUPS_UI.map(g => (
     <optgroup key={g.label} label={g.label}>
-      {g.roles.map(r => <option key={r} value={r}>{ROLE_LABELS[r] || r}</option>)}
+      {g.roles.map(r => <option key={r} value={r}>{roleLabel(r)}</option>)}
     </optgroup>
   ));
 }
@@ -218,7 +433,9 @@ function applyHighlight(container, targetColor, targetWidth, mode, targetRole, k
     .filter(el => !el.closest("defs"));
   els.forEach(el => {
     let match = false;
-    if (mode === "std") {
+    // Always use data-role for matching — both orig and std SVGs carry the attribute.
+    // This ensures the same semantic elements are highlighted in both panels.
+    if (targetRole) {
       match = !!el.closest(`[data-role="${targetRole}"]`);
     } else if (keyStrs && keyStrs.length > 0) {
       const sk = el.getAttribute("data-sk");
@@ -248,6 +465,62 @@ function sanitizeSvg(svgText, prefix) {
     .replace(/\bhref="#([^"]+)"/g,           (_, id) => `href="#${prefix}_${id}"`)
     // xlink:href is deprecated — convert to href so browsers render <use> font glyphs
     .replace(/\bxlink:href="#([^"]+)"/g,     (_, id) => `href="#${prefix}_${id}"`);
+}
+
+function tryGetBBox(el) {
+  try {
+    return typeof el.getBBox === "function" ? el.getBBox() : null;
+  } catch {
+    return null;
+  }
+}
+
+function bboxNear(a, b, pad = 6) {
+  if (!a || !b) return false;
+  return !(
+    a.x + a.width < b.x - pad ||
+    b.x + b.width < a.x - pad ||
+    a.y + a.height < b.y - pad ||
+    b.y + b.height < a.y - pad
+  );
+}
+
+function collectRelatedStdIndices(els, baseIndices, hoveredRole) {
+  if (baseIndices.size === 0) return baseIndices;
+
+  const velcroClusterRoles = new Set([
+    "fill_velcro",
+    "fill_white_detail",
+    "line_velcro",
+    "contour_outer",
+    "stitch_edge",
+    "stitch_thru",
+  ]);
+  const genericFillClusterRoles = new Set(["fill_cord", "fill_binding", "fill_elastic"]);
+
+  let relatedRoles = null;
+  if (velcroClusterRoles.has(hoveredRole)) {
+    relatedRoles = velcroClusterRoles;
+  } else if (genericFillClusterRoles.has(hoveredRole)) {
+    relatedRoles = new Set(["contour_outer", "stitch_edge", "stitch_thru", hoveredRole]);
+  } else {
+    return baseIndices;
+  }
+
+  const targetBBoxes = [...baseIndices].map(idx => tryGetBBox(els[idx])).filter(Boolean);
+  if (!targetBBoxes.length) return baseIndices;
+
+  const expanded = new Set(baseIndices);
+  els.forEach((el, idx) => {
+      const role = el.getAttribute("data-role") || el.closest("[data-role]")?.getAttribute("data-role");
+      if (!relatedRoles.has(role)) return;
+      const bbox = tryGetBBox(el);
+      if (!bbox) return;
+      if (targetBBoxes.some(target => bboxNear(target, bbox, 5))) {
+        expanded.add(idx);
+      }
+  });
+  return expanded;
 }
 
 // Zoomable SVG panel — plain <img> for display, CSS overlay for highlight
@@ -326,7 +599,7 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix 
       <div className={`vse-panel-hdr ${hdrClass}`}>
         {label}
         <button className="vse-zoom-reset" onClick={reset} title="Сбросить">↺</button>
-        <span className="vse-zoom-hint">{Math.round(scale * 100)}% · scroll = zoom · drag = pan</span>
+        <span className="vse-zoom-hint">{Math.round(scale * 100)}% · колесо = масштаб · перетаскивание = сдвиг</span>
       </div>
       <div ref={hlRef} style={{ display: "none" }} />
       <div ref={wrapRef} className="vse-zoom-viewport"
@@ -384,44 +657,235 @@ function groupNodeStyles(nodeStyles) {
   return [...map.values()];
 }
 
-// ── Tab 1: Annotate originals ─────────────────────────────────────────────────
+function nodeSection(node) {
+  const label = (node?.label || "").trim();
+  const first = label.split("/")[0]?.trim();
+  return first || "Без раздела";
+}
+
+function roleGroupsFromSvg(svgText) {
+  if (!svgText) return [];
+  const doc = new DOMParser().parseFromString(svgText, "image/svg+xml");
+  const els = [...doc.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
+    .filter(el => !el.closest("defs"));
+  const map = new Map();
+  els.forEach(el => {
+    const role = el.getAttribute("data-role") || el.closest("[data-role]")?.getAttribute("data-role") || "unknown";
+    const key = el.getAttribute("data-sk") || "";
+    const stroke = normalizeHex(resolveAttr(el, "stroke")) || "none";
+    const fill = normalizeHex(resolveAttr(el, "fill")) || "none";
+    const width = parseFloat(resolveAttr(el, "stroke-width") || "0") || 0;
+    const dash = resolveAttr(el, "stroke-dasharray") || "";
+    const dashed = dash !== "" && dash !== "none" && dash !== "0" && dash !== "[] 0";
+    const groupDashed = role === "stitch_thru" ? true : dashed;
+    const mapKey = `${role}|${stroke}|${fill}|${width}|${groupDashed}`;
+    if (!map.has(mapKey)) {
+      map.set(mapKey, {
+        entry: { role, stroke, fill, width, dashed },
+        indices: [],
+        key_strs: key ? [key] : [],
+        count: 0,
+      });
+    }
+    const group = map.get(mapKey);
+    group.count += 1;
+    if (role === "stitch_thru" && dashed) group.entry.dashed = true;
+    if (key && !group.key_strs.includes(key)) group.key_strs.push(key);
+  });
+  // Merge groups with the same role + similar color (hexDistance < 40)
+  // Keeps the representative with the highest count; sums counts.
+  const COLOR_MERGE_THRESHOLD = 90;
+  const groups = [...map.values()].sort((a, b) => b.count - a.count);
+  const merged = [];
+  for (const g of groups) {
+    const rep = merged.find(m =>
+      m.entry.role === g.entry.role &&
+      m.entry.fill === g.entry.fill &&
+      m.entry.dashed === g.entry.dashed &&
+      Math.abs(m.entry.width - g.entry.width) < 0.6 &&
+      hexDistance(m.entry.stroke, g.entry.stroke) < COLOR_MERGE_THRESHOLD
+    );
+    if (rep) {
+      rep.count += g.count;
+      g.key_strs.forEach(k => { if (!rep.key_strs.includes(k)) rep.key_strs.push(k); });
+    } else {
+      merged.push(g);
+    }
+  }
+  return merged.sort((a, b) => {
+    if (a.entry.role === b.entry.role) return b.count - a.count;
+    if (a.entry.role === "unknown") return 1;
+    if (b.entry.role === "unknown") return -1;
+    return a.entry.role.localeCompare(b.entry.role);
+  });
+}
+
+// в"Ђв"Ђ Tab 1: Annotate originals в"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђ
 function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, saving, buildTs }) {
   const [activeId, setActiveId] = useState(manifest[0]?.id);
   const [hoveredIdx, setHoveredIdx] = useState(null);
+  const [nodeQuery, setNodeQuery] = useState("");
+  const [activeSection, setActiveSection] = useState("");
+  const [actualGroups, setActualGroups] = useState([]);
 
   useEffect(() => { setHoveredIdx(null); }, [activeId]);
+  const entryMatchesNode = (entry, nodeId) =>
+    entry.nodeIds?.includes(nodeId) || entry.files?.includes(nodeId);
+
+  useEffect(() => {
+    if (!manifest.length) return;
+    if (!activeId || !manifest.some(n => n.id === activeId)) {
+      setActiveId(manifest[0]?.id);
+    }
+  }, [manifest, activeId]);
+
   const node = manifest.find(n => n.id === activeId);
 
-  const nodeStyles = registry
-    .map((entry, i) => ({ entry, i }))
-    .filter(({ entry }) => entry.files?.includes(activeId));
+  useEffect(() => {
+    if (!activeSection && node) setActiveSection(nodeSection(node));
+  }, [activeSection, node]);
 
-  const groups = groupNodeStyles(nodeStyles);
+  useEffect(() => {
+    if (!node?.origSvg) {
+      setActualGroups([]);
+      return;
+    }
+    let alive = true;
+    fetch((node.stdSvg || node.origSvg) + "?t=" + buildTs)
+      .then(r => r.text())
+      .then(text => { if (alive) setActualGroups(roleGroupsFromSvg(text)); })
+      .catch(() => { if (alive) setActualGroups([]); });
+    return () => { alive = false; };
+  }, [node?.origSvg, buildTs]);
+
+  const registryMetaByNode = useMemo(() => {
+    const map = new Map();
+    const add = (nodeId, assigned) => {
+      if (!nodeId) return;
+      const prev = map.get(nodeId) || { count: 0, assigned: 0 };
+      prev.count += 1;
+      if (assigned) prev.assigned += 1;
+      map.set(nodeId, prev);
+    };
+    registry.forEach(entry => {
+      const assigned = !!entry.role && entry.role !== "?";
+      const ids = entry.nodeIds?.length ? entry.nodeIds : entry.files || [];
+      ids.forEach(id => add(id, assigned));
+    });
+    return map;
+  }, [registry]);
+
+  const sections = useMemo(() => {
+    const map = new Map();
+    manifest.forEach(n => {
+      const key = nodeSection(n);
+      const item = map.get(key) || { key, label: key, count: 0 };
+      item.count += 1;
+      map.set(key, item);
+    });
+    return [...map.values()].sort((a, b) => a.label.localeCompare(b.label, "ru"));
+  }, [manifest]);
+
+  const visibleNodes = useMemo(() => {
+    const q = nodeQuery.trim().toLowerCase();
+    const sectionNodes = activeSection === "all" || !activeSection
+      ? manifest
+      : manifest.filter(n => nodeSection(n) === activeSection);
+    const filtered = q
+      ? manifest.filter(n => `${n.label} ${n.code} ${n.id} ${n.sourceFile || ""}`.toLowerCase().includes(q))
+      : sectionNodes;
+    const limited = filtered.slice(0, 140);
+    if (!q && node && !limited.some(n => n.id === node.id)) {
+      return [node, ...limited];
+    }
+    return limited;
+  }, [manifest, node, nodeQuery, activeSection]);
+
+  const chooseSection = key => {
+    setActiveSection(key);
+    setNodeQuery("");
+    const next = key === "all" ? manifest[0] : manifest.find(n => nodeSection(n) === key);
+    if (next) {
+      setActiveId(next.id);
+      setHoveredIdx(null);
+    }
+  };
+
+  const registryNodeStyles = registry
+    .map((entry, i) => ({ entry, i }))
+    .filter(({ entry }) => entryMatchesNode(entry, activeId));
+
+  const groups = actualGroups.length > 0 ? actualGroups : groupNodeStyles(registryNodeStyles);
 
   const safeIdx = hoveredIdx !== null && hoveredIdx < groups.length ? hoveredIdx : null;
   const hoveredGroup = safeIdx !== null ? groups[safeIdx] ?? null : null;
   // hoveredGroup passed to ZoomableSvgPanel — contains key_strs[] and role
   const hoveredEntry = hoveredGroup ? { ...hoveredGroup.entry, key_strs: hoveredGroup.key_strs } : null;
 
-  const allAssigned = groups.length > 0 && groups.every(g => g.entry.role && g.entry.role !== "?");
-  const assignedCount = groups.filter(g => g.entry.role && g.entry.role !== "?").length;
+  const allAssigned = groups.length > 0 && groups.every(g => g.entry.role && g.entry.role !== "?" && g.entry.role !== "unknown");
+  const assignedCount = groups.filter(g => g.entry.role && g.entry.role !== "?" && g.entry.role !== "unknown").length;
 
   return (
     <div className="vse-compare">
-      <div className="vse-node-tabs">
-        {manifest.map(n => {
-          const ns = registry.filter(e => e.files?.includes(n.id));
-          const done = ns.length > 0 && ns.every(e => e.role && e.role !== "?");
-          return (
+      <div className="vse-node-picker">
+        <div className="vse-node-picker-head">
+          <input
+            className="vse-node-search"
+            type="search"
+            value={nodeQuery}
+            onChange={e => setNodeQuery(e.target.value)}
+            placeholder="Поиск узла: код, название, id..."
+          />
+          <span className="vse-node-count">
+            показано {visibleNodes.length} из {manifest.length}
+          </span>
+        </div>
+        <div className="vse-node-catalog">
+          <div className="vse-node-sections" aria-label="Разделы схем">
             <button
-              key={n.id}
-              className={`vse-node-tab${activeId === n.id ? " active" : ""}${done ? " vse-node-tab-done" : ""}`}
-              onClick={() => { setActiveId(n.id); setHoveredIdx(null); }}
+              type="button"
+              className={`vse-section-btn${activeSection === "all" ? " active" : ""}`}
+              onClick={() => chooseSection("all")}
             >
-              {done ? "✓ " : ""}{n.label} <span className="vse-code">{n.code}</span>
+              <span>Все схемы</span>
+              <b>{manifest.length}</b>
             </button>
-          );
-        })}
+            {sections.map(section => (
+              <button
+                type="button"
+                key={section.key}
+                className={`vse-section-btn${activeSection === section.key ? " active" : ""}`}
+                onClick={() => chooseSection(section.key)}
+                title={section.label}
+              >
+                <span>{section.label}</span>
+                <b>{section.count}</b>
+              </button>
+            ))}
+          </div>
+          <div className="vse-node-tabs">
+          {visibleNodes.map(n => {
+            const meta = registryMetaByNode.get(n.id);
+            const done = meta && meta.count > 0 && meta.assigned === meta.count;
+            const hasStyles = !!meta?.count;
+            return (
+              <button
+                key={n.id}
+                className={`vse-node-tab${activeId === n.id ? " active" : ""}${done ? " vse-node-tab-done" : ""}${hasStyles ? " vse-node-tab-has-styles" : ""}`}
+                onClick={() => { setActiveId(n.id); setHoveredIdx(null); }}
+                title={`${n.label} ${n.code}`}
+              >
+                <span className="vse-node-tab-main">
+                  <span className="vse-node-tab-title">{n.label}</span>
+                  <span className="vse-code">{n.code}</span>
+                </span>
+                {done && <span className="vse-node-done-mark">готово</span>}
+                {hasStyles && <span className="vse-node-style-count">{meta.count}</span>}
+              </button>
+            );
+          })}
+          </div>
+        </div>
       </div>
 
       {node && (
@@ -441,7 +905,7 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                 url={node.stdSvg + "?t=" + buildTs}
                 label="СТАНДАРТ"
                 hdrClass="std"
-                hoveredEntry={null}
+                hoveredEntry={hoveredEntry}
                 mode="std"
                 svgPrefix={`${activeId}_std`}
               />
@@ -451,10 +915,11 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
           {/* RIGHT: annotation table */}
           <div className="vse-annotate-right-sticky">
           <div className="vse-annotate-right">
-            {nodeStyles.length > 0 && (
+            {groups.length > 0 ? (
               <div className="vse-node-styles">
                 <div className="vse-node-styles-hdr">
-                  Наведи на строку → подсветка на оригинале · назначь роль каждому стилю
+                  <span>Наведи на строку → подсветка на оригинале и стандарте</span>
+                  <span>Роли из фактического SVG</span>
                   <span className="vse-assign-progress">{assignedCount} / {groups.length}</span>
                 </div>
                 <table className="vse-table">
@@ -462,8 +927,9 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                     <tr>
                       <th style={{width:"64px"}}>Превью</th>
                       <th style={{width:"80px"}}>Цвет</th>
-                      <th style={{width:"44px"}}>Толщ.</th>
-                      <th>Роль</th>
+                      <th style={{width:"48px"}}>Толщ.</th>
+                      <th style={{width:"44px"}}>Кол.</th>
+                      <th style={{width:"220px"}}>Роль</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -484,13 +950,34 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                             <ColorDot hex={g.entry.stroke} /><code>{g.entry.stroke}</code>
                           </td>
                           <td className="vse-tc vse-muted">{g.entry.width}</td>
+                          <td className="vse-tc vse-muted">{g.count ?? g.indices.length}</td>
                           <td>
                             <select
                               className="vse-role-sel-sm"
                               value={g.entry.role || "?"}
                               onChange={e => {
                                 const next = [...registry];
-                                g.indices.forEach(i => { next[i] = { ...next[i], role: e.target.value }; });
+                                const keys = g.key_strs || [];
+                                if (keys.length > 0) {
+                                  next.forEach((entry, i) => {
+                                    if (keys.includes(entry.key_str)) {
+                                      next[i] = { ...entry, role: e.target.value };
+                                    }
+                                  });
+                                } else {
+                                  // Path not in registry yet — create new entry from group style
+                                  const { stroke, fill, width, dashed } = g.entry;
+                                  const syntheticKey = `${stroke}|${fill}|${width}|${String(dashed)}`;
+                                  next.push({
+                                    stroke, fill, width: width || 0,
+                                    dashed: Boolean(dashed),
+                                    is_line: false, is_filled: false,
+                                    is_tiny: false, is_closed: false,
+                                    near_text: false, orient: "-", sz: "M",
+                                    role: e.target.value,
+                                    key_str: syntheticKey,
+                                  });
+                                }
                                 setRegistry(next);
                               }}
                             >
@@ -503,6 +990,11 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                   </tbody>
                 </table>
               </div>
+            ) : (
+              <div className="vse-empty-roles">
+                <strong>Для этого узла пока нет строк ролей.</strong>
+                <span>В сгенерированном SVG нет элементов с data-role. Проверь экспорт или выбери другой узел.</span>
+              </div>
             )}
 
             {/* Generate button */}
@@ -512,16 +1004,16 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                 onClick={onSave}
                 disabled={saving}
               >
-                {saving ? "Генерация…" : allAssigned ? "Сгенерировать стандарт →" : `Сгенерировать (${assignedCount}/${nodeStyles.length} назначено)`}
+                {saving ? "Генерация..." : allAssigned ? "Сгенерировать стандарт →" : `Сгенерировать (${assignedCount}/${groups.length} ролей распознано)`}
               </button>
               {buildStatus.state === "ok" && (
-                <span className="vse-build-ok">✓ {buildStatus.message}</span>
+                <span className="vse-build-ok">OK: {buildStatus.message}</span>
               )}
               {buildStatus.state === "error" && (
-                <span className="vse-build-error">✗ {buildStatus.message}</span>
+                <span className="vse-build-error">Ошибка: {buildStatus.message}</span>
               )}
               {buildStatus.state === "building" && (
-                <span className="vse-muted">⏳ {buildStatus.message}</span>
+                <span className="vse-muted">Генерация: {buildStatus.message}</span>
               )}
             </div>
           </div>
@@ -532,7 +1024,7 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
   );
 }
 
-// ── Tab 2: Callout meanings ───────────────────────────────────────────────────
+// в"Ђв"Ђ Tab 2: Callout meanings в"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђ
 function TabCallouts({ calloutGraph, meanings, setMeanings }) {
   const rows = [];
   for (const [nodeId, items] of Object.entries(calloutGraph)) {
@@ -590,11 +1082,11 @@ function TabCallouts({ calloutGraph, meanings, setMeanings }) {
   );
 }
 
-// ── Tab 3: Style registry ─────────────────────────────────────────────────────
+// в"Ђв"Ђ Tab 3: Style registry в"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђ
 function TabRegistry({ registry, setRegistry, manifest }) {
   const filled = registry.filter(r => r.role !== "?").length;
 
-  // node_id → origSvg url
+  // node_id в†' origSvg url
   const svgByNodeId = Object.fromEntries(manifest.map(n => [n.id, n.origSvg]));
 
   return (
@@ -620,7 +1112,7 @@ function TabRegistry({ registry, setRegistry, manifest }) {
                     {entry.is_filled ? " · заливка" : ""}
                     {entry.is_tiny ? " · мелкий" : ""}
                   </span>
-                  <span className="vse-muted">×{entry.count}</span>
+                  <span className="vse-muted">Г—{entry.count}</span>
                 </span>
               </div>
               <select
@@ -710,7 +1202,7 @@ function TabInspector_REMOVED({ manifest, registry, setRegistry }) {
         el.style.filter  = inRole ? "drop-shadow(0 0 3px #C8A84B)" : "";
       });
     } else {
-      // Original SVG: match by stroke color (± tolerance)
+      // Original SVG: match by stroke color (В± tolerance)
       paths.forEach(el => {
         const elColor = parseStroke(el);
         const elWidth = parseStrokeWidth(el);
@@ -809,7 +1301,7 @@ function TabInspector_REMOVED({ manifest, registry, setRegistry }) {
   );
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
+// в"Ђв"Ђ Main в"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђ
 export default function VseReview() {
   const [tab, setTab]               = useState("compare");
   const [manifest, setManifest]     = useState([]);
@@ -911,7 +1403,7 @@ export default function VseReview() {
         )}
         {buildStatus && buildStatus.state !== "building" && (
           <span className={`vse-build-status vse-build-${buildStatus.state}`}>
-            {buildStatus.state === "ok" ? "✓ " : "✗ "}{buildStatus.message}
+            {buildStatus.state === "ok" ? "OK: " : "Ошибка: "}{buildStatus.message}
           </span>
         )}
       </div>
@@ -924,3 +1416,4 @@ export default function VseReview() {
     </div>
   );
 }
+

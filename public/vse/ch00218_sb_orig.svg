@@ -5,7 +5,7 @@
   <path d="M 152.23 136.66 L 143.81 136.66 L 143.81 161.66 L 165.69 161.66" style="stroke:#221f1f;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="contour_outer" data-sk="#1a1a1a|none|1.0|false"/>
   <path d="M 106.26 178.35 L 95.13 178.35 L 94.84 203.35 L 151.72 203.35 L 151.72 192.68 L 106.37 192.68 L 106.26 178.35 Z" style="stroke:none;stroke-width:1.00;fill:#e794b4;stroke-linecap:butt;stroke-linejoin:miter;" data-role="fill_pu_tape" data-sk="none|#e794b4|0|false"/>
   <path d="M 106.26 178.35 L 94.84 178.35 L 94.84 203.35 L 151.72 203.35" style="stroke:#221f1f;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="contour_outer" data-sk="#1a1a1a|none|1.0|false"/>
-  <path d="M 8.90 13.45 H 430.05 V 260.07 H 8.90 Z" style="stroke:#221f1f;stroke-width:0.50;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="contour_outer" data-sk="#1a1a1a|none|0.5|false"/>
+  <path d="M 8.90 13.45 H 430.05 V 260.07 H 8.90 Z" style="stroke:#221f1f;stroke-width:0.50;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="break_line" data-sk="#1a1a1a|none|0.5|false"/>
   <path d="M 268.26 21.55 L 268.26 247.27 L 152.39 247.27" style="stroke:#221f1f;stroke-width:0.75;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="break_line" data-sk="#1a1a1a|none|0.75|false|D"/>
   <path d="M 335.89 71.71 L 410.95 71.71 L 410.95 184.18" style="stroke:#221f1f;stroke-width:0.75;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="break_line" data-sk="#1a1a1a|none|0.75|false|D"/>
   <path d="M 313.30 136.70 L 301.88 136.70 L 301.89 128.83 C 301.92 127.65 301.21 124.50 297.30 124.50 C 292.97 124.50 293.00 129.09 293.00 129.09 L 293.00 172.72 C 293.00 172.72 293.39 184.31 312.30 184.31 C 329.89 184.31 335.74 176.85 335.89 173.98 L 335.89 71.71" style="stroke:#221f1f;stroke-width:1.50;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="contour_outer" data-sk="#1a1a1a|none|1.5|false"/>
@@ -47,7 +47,7 @@
   <path d="M 112.49 142.21 L 121.78 142.18" style="stroke:#1d1d1b;stroke-width:1.50;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="contour_outer" data-sk="#1a1a1a|none|1.5|false"/>
   <path d="M 160.67 142.18 C 205.55 142.21 237.06 152.92 265.39 191.83" style="stroke:#1d1d1b;stroke-width:1.50;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="contour_outer" data-sk="#1a1a1a|none|1.5|false|D"/>
   <path d="M 170.25 148.03 C 208.62 149.30 232.90 159.82 258.34 191.83" style="stroke:#e11013;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:7 7;" data-role="boundary_lining" data-sk="#e02020|none|1.0|true|D"/>
-  <path d="M 139.00 135.09 H 143.33 V 163.50 H 139.00 Z Z" style="stroke:none;stroke-width:1.00;fill:#ffffff;stroke-linecap:butt;stroke-linejoin:miter;" data-role="unknown" data-sk="none|#ffffff|0|false"/>
+  <path d="M 139.00 135.09 H 143.33 V 163.50 H 139.00 Z Z" style="stroke:none;stroke-width:1.00;fill:#ffffff;stroke-linecap:butt;stroke-linejoin:miter;" data-role="fill_material_mask" data-sk="none|#ffffff|0|false"/>
   <text x="277.5" y="109.4" font-family="Arial,sans-serif" font-size="10.0" fill="#222">Interlining</text>
   <text x="282.2" y="200.6" font-family="Arial,sans-serif" font-size="10.0" fill="#222">Snap-button</text>
   <text x="362.5" y="101.0" font-family="Arial,sans-serif" font-size="14.0" fill="#222">Hood</text>

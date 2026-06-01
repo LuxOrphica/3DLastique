@@ -1,24 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="272.20 144.01 298.60 245.84">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-contour_outer" data-role="contour_outer">
+    <path d="M 292.20 182.15 H 550.81 V 369.26 H 292.20 Z" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+  </g>
   <g id="role-fill_interlining" data-role="fill_interlining">
     <path d="M 369.30 237.84 H 488.24 V 307.95 H 369.30 Z Z" style="stroke:#888888;stroke-width:0.5;stroke-dasharray:none;fill:#DDDDDD;opacity:0.5" data-role="fill_interlining"/>
   </g>
-  <g id="role-contour_outer" data-role="contour_outer">
-    <path d="M 292.20 182.15 H 550.81 V 369.26 H 292.20 Z" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-    <path d="M 369.30 237.84 H 488.24 V 307.95 H 369.30 Z" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
+  <g id="role-stitch_edge" data-role="stitch_edge">
+    <path d="M 483.76 210.08 L 468.65 173.44" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-fill_contrast" data-role="fill_contrast">
+    <path d="M 482.39 206.76 L 474.06 205.46 L 474.00 205.75 L 482.79 214.83 C 485.19 218.27 487.58 221.71 489.97 225.15 C 489.24 221.03 488.52 216.90 487.79 212.77 L 487.62 200.13 L 487.42 199.95 L 482.39 206.76 Z" style="stroke:#B54422;stroke-width:0.5;stroke-dasharray:none;fill:#E56B5D;opacity:0.62" data-role="fill_contrast"/>
   </g>
   <g id="role-boundary_interlining" data-role="boundary_interlining">
     <path d="M 294.23 274.58 L 549.23 274.58" style="stroke:#29B473;stroke-width:1.0;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="boundary_interlining"/>
   </g>
-  <g id="role-stitch_edge" data-role="stitch_edge">
-    <path d="M 483.76 210.08 L 468.65 173.44" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-  </g>
   <g id="role-break_line" data-role="break_line">
     <path d="M 489.97 181.83 L 489.97 369.85" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
     <path d="M 487.73 182.50 L 487.73 369.52" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
-  </g>
-  <g id="role-fill_contrast" data-role="fill_contrast">
-    <path d="M 482.39 206.76 L 474.06 205.46 L 474.00 205.75 L 482.79 214.83 C 485.19 218.27 487.58 221.71 489.97 225.15 C 489.24 221.03 488.52 216.90 487.79 212.77 L 487.62 200.13 L 487.42 199.95 L 482.39 206.76 Z" style="stroke:#B54422;stroke-width:0.5;stroke-dasharray:none;fill:#E56B5D;opacity:0.62" data-role="fill_contrast"/>
+    <path d="M 369.30 237.84 H 488.24 V 307.95 H 369.30 Z" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
   </g>
   <g id="role-label" data-role="label">
     <text x="298.5" y="200.4" font-family="Arial, sans-serif" font-size="12.0" fill="#1A1A1A">Lining of Left side pocket</text>

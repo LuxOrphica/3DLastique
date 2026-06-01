@@ -1,24 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="18.92 8.85 203.44 226.25">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-fill_elastic" data-role="fill_elastic">
+    <path d="M 202.37 112.61 L 94.47 130.97 C 90.32 132.81 89.07 135.53 88.78 136.34 C 88.72 136.48 88.00 140.55 88.00 142.13 L 88.09 150.64 L 79.36 151.56 L 79.38 49.07 L 202.35 28.85 Z" style="stroke:#666666;stroke-width:0.5;stroke-dasharray:none;fill:#8F9092;opacity:0.75" data-role="fill_elastic"/>
+  </g>
   <g id="role-fill_interlining" data-role="fill_interlining">
-    <path d="M 202.37 112.61 L 94.47 130.97 C 90.32 132.81 89.07 135.53 88.78 136.34 C 88.72 136.48 88.00 140.55 88.00 142.13 L 88.09 150.64 L 79.36 151.56 L 79.38 49.07 L 202.35 28.85 Z" style="stroke:#888888;stroke-width:0.5;stroke-dasharray:none;fill:#DDDDDD;opacity:0.5" data-role="fill_interlining"/>
     <path d="M 202.35 28.85 L 202.33 197.15 Z" style="stroke:#888888;stroke-width:0.5;stroke-dasharray:none;fill:#DDDDDD;opacity:0.5" data-role="fill_interlining"/>
   </g>
   <g id="role-contour_outer" data-role="contour_outer">
-    <path d="M 104.23 215.10 L 104.23 141.86 C 104.23 126.69 87.84 128.14 87.84 141.42 L 87.84 151.20 L 103.78 149.10" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
-    <path d="M 95.36 130.97 L 202.30 112.47" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
+    <path d="M 104.23 215.10 L 104.23 141.86 C 104.23 126.69 87.84 128.14 87.84 141.42 L 87.84 151.20 L 103.78 149.10" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+    <path d="M 95.36 130.97 L 202.30 112.47" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
-    <path d="M 63.67 153.28 L 98.65 153.24" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-    <path d="M 63.80 140.05 L 98.78 140.02" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-    <path d="M 69.91 156.52 L 69.88 136.00" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-    <path d="M 98.78 137.49 L 73.87 137.49" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-  </g>
-  <g id="role-callout_line" data-role="callout_line">
-    <path d="M 71.98 86.32 L 95.36 79.43" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line"/>
+    <path d="M 63.67 153.28 L 98.65 153.24" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+    <path d="M 63.80 140.05 L 98.78 140.02" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+    <path d="M 69.91 156.52 L 69.88 136.00" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+    <path d="M 98.78 137.49 L 73.87 137.49" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
   </g>
   <g id="role-break_line" data-role="break_line">
     <path d="M 202.17 197.51 L 104.23 215.10" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
+  </g>
+  <g id="role-callout_line" data-role="callout_line">
+    <path d="M 71.98 86.32 L 95.36 79.43" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line"/>
   </g>
   <g id="role-label" data-role="label">
     <text x="38.9" y="93.5" font-family="Arial, sans-serif" font-size="10.4" fill="#1A1A1A">Elastic</text>

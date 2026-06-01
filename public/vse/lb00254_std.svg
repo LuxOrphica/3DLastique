@@ -1,22 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="273.87 157.03 298.60 283.29">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-contour_outer" data-role="contour_outer">
+    <path d="M 293.87 194.63 H 552.47 V 381.74 H 293.87 Z" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+  </g>
   <g id="role-fill_interlining" data-role="fill_interlining">
     <path d="M 377.07 237.43 H 496.00 V 307.54 H 377.07 Z Z" style="stroke:#888888;stroke-width:0.5;stroke-dasharray:none;fill:#DDDDDD;opacity:0.5" data-role="fill_interlining"/>
   </g>
-  <g id="role-contour_outer" data-role="contour_outer">
-    <path d="M 293.87 194.63 H 552.47 V 381.74 H 293.87 Z" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:1" data-role="contour_outer"/>
+  <g id="role-stitch_edge" data-role="stitch_edge">
+    <path d="M 491.51 229.15 L 491.51 243.36" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+    <path d="M 491.51 302.01 L 491.51 316.22" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
   </g>
-  <g id="role-boundary_lining" data-role="boundary_lining">
-    <path d="M 492.18 229.15 L 492.18 314.89" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:12 4;fill:none;stroke-linecap:butt;opacity:1" data-role="boundary_lining"/>
+  <g id="role-contour_outer" data-role="contour_outer">
+    <path d="M 293.87 355.65 L 552.12 355.65" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
-    <path d="M 491.51 229.15 L 491.51 243.36" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-    <path d="M 491.51 302.01 L 491.51 316.22" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-    <path d="M 460.38 313.41 L 460.38 349.78" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
-    <path d="M 483.76 215.19 L 468.50 184.72" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_edge"/>
+    <path d="M 460.38 313.41 L 460.38 349.78" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-hw_zipper_tape" data-role="hw_zipper_tape">
+    <path d="M 499.47 332.41 L 511.58 345.08" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:none;stroke-linecap:square;opacity:1" data-role="hw_zipper_tape"/>
+  </g>
+  <g id="role-stitch_edge" data-role="stitch_edge">
+    <path d="M 483.76 215.19 L 468.50 184.72" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-fill_contrast" data-role="fill_contrast">
+    <path d="M 482.16 211.98 L 473.75 211.29 L 473.71 211.58 L 483.15 220.00 C 485.79 223.25 488.43 226.51 491.07 229.77 C 490.04 225.70 489.01 221.64 487.98 217.58 L 486.89 204.98 L 486.67 204.81 L 482.16 211.98 Z" style="stroke:#B54422;stroke-width:0.5;stroke-dasharray:none;fill:#E56B5D;opacity:0.62" data-role="fill_contrast"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 490.85 235.85 L 490.85 309.12" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:round;opacity:1" data-role="stitch_thru"/>
+    <path d="M 490.85 235.85 L 490.85 309.12" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+    <path d="M 492.18 229.15 L 492.18 314.89" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-break_line" data-role="break_line">
     <path d="M 490.85 194.63 L 490.85 355.65" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
@@ -27,13 +38,6 @@
   <g id="role-arrow" data-role="arrow">
     <path d="M 460.38 314.70 L 462.97 316.28 L 463.03 316.19 L 461.35 311.96 C 461.03 310.49 460.70 309.02 460.38 307.54 C 460.05 309.02 459.73 310.49 459.40 311.96 L 457.73 316.19 L 457.77 316.28 L 460.38 314.70 Z" style="stroke:none;stroke-width:0;stroke-dasharray:none;fill:#1A1A1A;opacity:1" data-role="arrow"/>
     <path d="M 460.38 348.49 L 462.97 346.91 L 463.03 347.00 L 461.35 351.23 C 461.03 352.70 460.70 354.18 460.38 355.65 C 460.05 354.18 459.73 352.70 459.40 351.23 L 457.73 347.00 L 457.77 346.91 L 460.38 348.49 Z" style="stroke:none;stroke-width:0;stroke-dasharray:none;fill:#1A1A1A;opacity:1" data-role="arrow"/>
-  </g>
-  <g id="role-hw_zipper_tape" data-role="hw_zipper_tape">
-    <path d="M 293.87 355.65 L 552.12 355.65" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:none;stroke-linecap:square;opacity:1" data-role="hw_zipper_tape"/>
-    <path d="M 499.47 332.41 L 511.58 345.08" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:none;stroke-linecap:square;opacity:1" data-role="hw_zipper_tape"/>
-  </g>
-  <g id="role-fill_contrast" data-role="fill_contrast">
-    <path d="M 482.16 211.98 L 473.75 211.29 L 473.71 211.58 L 483.15 220.00 C 485.79 223.25 488.43 226.51 491.07 229.77 C 490.04 225.70 489.01 221.64 487.98 217.58 L 486.89 204.98 L 486.67 204.81 L 482.16 211.98 Z" style="stroke:#B54422;stroke-width:0.5;stroke-dasharray:none;fill:#E56B5D;opacity:0.62" data-role="fill_contrast"/>
   </g>
   <g id="role-label" data-role="label">
     <text x="303.2" y="211.1" font-family="Arial, sans-serif" font-size="10.0" fill="#1A1A1A">Back inside</text>

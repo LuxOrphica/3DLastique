@@ -8,6 +8,7 @@ import fitz
 from roles import classify_path, near_any_text
 from visual_standard import style_attr, get_style, ROLE_STYLES
 from bbox import get_content_bbox
+from hardware_symbols import render_zipper_clusters
 
 REGISTRY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "style_registry.json")
 
@@ -24,6 +25,9 @@ def _rgb_to_hex(c):
     if not c:
         return "none"
     return "#{:02x}{:02x}{:02x}".format(int(c[0]*255), int(c[1]*255), int(c[2]*255))
+
+def _is_blue_stroke(p):
+    return _normalize_color(p.get("color")) == "#1b4fa8" and p.get("fill") is None
 
 def _normalize_color(c):
     if not c:
@@ -160,6 +164,16 @@ def classify_with_registry(p, text_words, registry_lookup):
                       and not is_closed)
     key = _path_style_key(p, text_words)
     if _simple_stroke:
+        # Thin simple strokes are semantic lines first, not generic contours:
+        # e.g. black 0.75 long strokes in Yoke nodes are break lines, while
+        # real part contours start at heavier widths.
+        heur = classify_path(p, text_words)
+        if heur in ("callout_line", "break_line"):
+            return heur
+        if heur == "stitch_Bt":
+            return heur
+        if heur == "contour_outer" and key in registry_lookup and registry_lookup[key] == "hw_zipper_tape":
+            return heur
         # Registry takes absolute priority for non-line roles
         if key in registry_lookup:
             reg_role = registry_lookup[key]
@@ -171,12 +185,869 @@ def classify_with_registry(p, text_words, registry_lookup):
         _, length = _path_angle_and_length(items)
         if key in registry_lookup and registry_lookup[key] == "break_line" and length < 40:
             return "hw_zipper_tape"
-        heur = classify_path(p, text_words)
-        if heur in ("callout_line", "break_line"):
-            return heur
+    heur = classify_path(p, text_words)
+    if heur in ("line_gathered_edge", "fill_elastic", "fill_cord", "fill_material_mask"):
+        return heur
+    if heur == "stitch_Bt":
+        return heur
     if key in registry_lookup:
         return registry_lookup[key]
-    return classify_path(p, text_words)
+    return heur
+
+
+def apply_node_role_override(ai_path, p, role):
+    """Per-source corrections for ambiguous drawings that cannot be solved by style alone."""
+    name = os.path.basename(str(ai_path)).lower()
+    rect = p.get("rect")
+    if not rect:
+        return role
+    w = round(p.get("width") or 0, 2)
+    items = p.get("items", [])
+    is_simple_line = len(items) == 1 and items[0][0] == "l"
+    slender_ratio = max(rect.width / max(rect.height, 0.001), rect.height / max(rect.width, 0.001))
+
+    if name == "ac00207_cap_s half-belt.ai":
+        # Tiny filled black dots on the plastic strap are hardware marks, not arrows.
+        if (p.get("fill") is not None and rect.width <= 12 and rect.height <= 12
+                and 145 <= rect.x0 <= 223 and 86 <= rect.y0 <= 108):
+            p["_vse_preserve_fill"] = True
+            return "hw_other"
+
+    if role in ("_skip", "unknown", "boundary_zone") and _is_blue_stroke(p):
+        # Blue construction callouts are magnification circles/connectors in the
+        # reviewed workmanship diagrams. Some legacy registry entries marked
+        # them as _skip, which drops zoom callouts from the standardized view.
+        if 0.7 <= w <= 1.5 and (rect.width >= 6 or rect.height >= 6):
+            return "callout_zoom"
+
+    if name == "ac00004.ai" and role == "contour_outer" and is_simple_line and w == 1.5:
+        # Top and right crop edges are break lines; the lower horizontal edge is a real contour.
+        if rect.y0 < 20 or (rect.x0 > 150 and rect.height > 100):
+            return "break_line"
+
+    if name == "ac00002.ai" and role == "contour_outer" and is_simple_line and w == 1.0:
+        # Shell fabric top/right crop edges are break lines in this node.
+        if rect.y0 < 40 or (rect.x0 > 180 and rect.height > 100):
+            return "break_line"
+
+    if name == "ac00007.ai" and role == "contour_outer" and 0.65 <= w <= 0.8:
+        # Thin vertical edge crossing the zipper start is the zipper tape edge,
+        # not the garment contour.
+        if 120 <= rect.x0 <= 132 and rect.x1 <= 132 and rect.y0 < 150 and rect.y1 > 190:
+            return "hw_zipper_tape_edge"
+
+    if name.startswith("ac00203") and role == "arrow" and rect and rect.width < 12 and rect.height < 12:
+        # Tiny filled diagonal = callout pointer, not a directional arrow
+        return "callout_line"
+
+    if name == "ac00007.ai" and role == "callout_line" and 1.35 <= w <= 1.5:
+        # Short parallel bars inside the zipper pull are part contours, not callouts.
+        if 90 <= rect.x0 <= 116 and 88 <= rect.y0 <= 110 and rect.width <= 20 and rect.height <= 4:
+            return "contour_outer"
+
+    if name.startswith("ac0020"):
+        if role == "line_velcro" and name in {
+            "ac00201_cap_s half-belt.ai",
+            "ac00202_cap_s half-belt.ai",
+            "ac00203_cap_s half-belt.ai",
+            "ac00204_cap_s half-belt.ai",
+        }:
+            # Registry may carry the outer material frame as Velcro.
+            # Keep the large frame as garment contour.
+            if (
+                rect.width >= 128
+                and 26 <= rect.height <= 32
+                and 88 <= rect.x0 <= 91
+                and 32 <= rect.y0 <= 35
+                and 218 <= rect.x1 <= 221
+                and 60 <= rect.y1 <= 63
+            ):
+                return "contour_outer"
+        if role == "contour_outer" and name in {
+            "ac00201_cap_s half-belt.ai",
+            "ac00202_cap_s half-belt.ai",
+            "ac00203_cap_s half-belt.ai",
+            "ac00204_cap_s half-belt.ai",
+        }:
+            # The inset top rectangle is the Velcro patch itself.
+            # The larger outer frame remains the garment/material contour.
+            if (
+                0.9 <= w <= 1.1
+                and 110 <= rect.width <= 130
+                and 22 <= rect.height <= 28
+                and 90 <= rect.x0 <= 130
+                and 30 <= rect.y0 <= 80
+                and 215 <= rect.x1 <= 246
+                and 58 <= rect.y1 <= 104
+            ):
+                return "line_velcro"
+        if role == "fill_material_mask" and name in {
+            "ac00202_cap_s half-belt.ai",
+            "ac00203_cap_s half-belt.ai",
+            "ac00204_cap_s half-belt.ai",
+        }:
+            # One white helper shape in these nodes incorrectly covers the hanging
+            # gray reverse side of the folded strap. The visible white face should
+            # only cover the horizontal band behind, not replace the hanging velcro patch.
+            if (
+                20 <= rect.width <= 36
+                and 50 <= rect.height <= 80
+                and 95 <= rect.x0 <= 150
+                and 50 <= rect.y0 <= 110
+                and rect.y1 <= 170
+            ):
+                return "_skip"
+            # In these velcro half-belt nodes the white shapes are not service masks:
+            # they are visible upper material layers that must remain readable.
+            return "fill_white_detail"
+        if role == "fill_material_mask" and name in {
+            "ac00201_cap_s half-belt.ai",
+            "ac00205_cap_s half-belt.ai",
+            "ac00206_cap_s half-belt.ai",
+            "ac00207_cap_s half-belt.ai",
+        }:
+            # In these accessory nodes the white occluders should stay plain masks
+            # without adding a new visible contour in the standardized view.
+            p["_vse_plain_mask"] = True
+        if role == "fill_velcro" and name in {
+            "ac00201_cap_s half-belt.ai",
+            "ac00202_cap_s half-belt.ai",
+            "ac00203_cap_s half-belt.ai",
+            "ac00204_cap_s half-belt.ai",
+        }:
+            # Some "filled" Velcro helpers are actually degenerate leader lines /
+            # skinny triangles near the label. Keep only real areas as fill_velcro.
+            if len(items) <= 2 or rect.width < 6 or rect.height < 6 or rect.width * rect.height < 90 or slender_ratio >= 3.2:
+                return "callout_line"
+    if name.startswith("ac00200"):
+        if role == "stitch_edge" and rect and rect.height < 5.0 and rect.width < 5.0:
+            # Very short stitch marks at seam endpoints are through-stitches, not edge stitches
+            return "stitch_thru"
+        if role == "contour_outer" and 0.7 <= w <= 0.8:
+            # Closed thin outline called out as Buckle. Render it as opaque hardware.
+            if 185 <= rect.x0 <= 190 and 85 <= rect.y0 <= 90 and 215 <= rect.x1 <= 220 and 108 <= rect.y1 <= 113:
+                return "hw_buckle"
+        if role == "contour_outer" and 0.9 <= w <= 1.1:
+            # D-ring buckle body: near-closed curved path x≈204-258, y≈168-224
+            if rect.x0 >= 200 and rect.y0 >= 163 and rect.x1 <= 265 and rect.y1 <= 228 and rect.width > 30:
+                return "hw_buckle"
+            # Buckle bar (horizontal crossbar) x≈216-247, y≈171-178
+            if rect.x0 >= 213 and rect.y0 >= 168 and rect.x1 <= 250 and rect.y1 <= 182 and rect.width > 15:
+                return "hw_buckle"
+            # Buckle pin hole circle x≈210-214, y≈170-174 (small circle ~3x3pt)
+            if rect.x0 >= 208 and rect.y0 >= 168 and rect.x1 <= 216 and rect.y1 <= 176 and rect.width <= 6:
+                return "hw_buckle"
+        if role in ("arrow", "fill_interlining"):
+            # Buckle / Bt / Tunnel callouts are stored as filled degenerate paths.
+            if ((170 <= rect.x0 <= 252 and 60 <= rect.y0 <= 90)
+                    or (228 <= rect.x0 <= 293 and 84 <= rect.y0 <= 168)):
+                return "callout_line"
+
+    return role
+
+
+def _path_start_end(p):
+    """Return (start_point, end_point) of a path, or None."""
+    items = p.get("items", [])
+    if not items:
+        return None
+    first = items[0]
+    if first[0] == "l" and len(first) >= 3:
+        start = first[1]
+    elif first[0] == "c" and len(first) >= 5:
+        start = first[1]
+    else:
+        return None
+    last = items[-1]
+    if last[0] == "l" and len(last) >= 3:
+        end = last[2]
+    elif last[0] == "c" and len(last) >= 5:
+        end = last[4]
+    else:
+        return None
+    return start, end
+
+
+def _pt_dist(a, b):
+    return ((a.x - b.x) ** 2 + (a.y - b.y) ** 2) ** 0.5
+
+
+def _reverse_items(items):
+    """Reverse path items so the path runs in opposite direction."""
+    rev = []
+    for item in reversed(items):
+        if item[0] == "l" and len(item) >= 3:
+            rev.append(("l", item[2], item[1]))
+        elif item[0] == "c" and len(item) >= 5:
+            rev.append(("c", item[4], item[3], item[2], item[1]))
+        else:
+            rev.append(item)
+    return rev
+
+
+def _path_exit_direction(items):
+    """Return the direction vector of the last segment of a path."""
+    if not items:
+        return None
+    last = items[-1]
+    if last[0] == "l" and len(last) >= 3:
+        a, b = last[1], last[2]
+        return (b.x - a.x, b.y - a.y)
+    if last[0] == "c" and len(last) >= 5:
+        a, b = last[3], last[4]
+        return (b.x - a.x, b.y - a.y)
+    return None
+
+
+def _path_entry_direction(items):
+    """Return the direction vector of the first segment of a path."""
+    if not items:
+        return None
+    first = items[0]
+    if first[0] == "l" and len(first) >= 3:
+        a, b = first[1], first[2]
+        return (b.x - a.x, b.y - a.y)
+    if first[0] == "c" and len(first) >= 5:
+        a, b = first[1], first[4]
+        return (b.x - a.x, b.y - a.y)
+    return None
+
+
+def _directions_compatible(d1, d2, max_angle_deg=50.0):
+    """True if two direction vectors are within max_angle_deg of each other."""
+    if not d1 or not d2:
+        return True
+    import math
+    def norm(v):
+        l = math.sqrt(v[0]**2 + v[1]**2)
+        return (v[0]/l, v[1]/l) if l > 0.01 else None
+    n1, n2 = norm(d1), norm(d2)
+    if not n1 or not n2:
+        return True
+    dot = max(-1.0, min(1.0, n1[0]*n2[0] + n1[1]*n2[1]))
+    return math.degrees(math.acos(dot)) <= max_angle_deg
+
+
+def merge_stitch_chains(candidates, threshold=8.0, contour_segs=None):
+    """Chain stitch_thru paths by endpoint proximity and concatenate items.
+
+    Only chains segments whose joining direction is compatible with both
+    the exiting direction of the chain and the entering direction of the next
+    segment — prevents zig-zag false merges across unrelated stitch rows.
+    """
+    if not candidates:
+        return []
+    entries = []
+    for p in candidates:
+        ep = _path_start_end(p)
+        entries.append({"path": p, "ep": ep, "used": False})
+
+    result = []
+    for i, entry in enumerate(entries):
+        if entry["used"]:
+            continue
+        if not entry["ep"]:
+            result.append(("stitch_thru", entry["path"]))
+            entry["used"] = True
+            continue
+
+        chain = [{"path": entry["path"], "items": list(entry["path"].get("items", [])),
+                  "start": entry["ep"][0], "end": entry["ep"][1]}]
+        entry["used"] = True
+
+        MAX_CHAIN_W = 120.0  # pt — don't create chains wider than this
+        MAX_CHAIN_H = 100.0  # pt — or taller than this
+
+        def _chain_bbox_ok(chain, candidate_path):
+            """True if adding candidate keeps chain within MAX bounds."""
+            all_rects = [link["path"].get("rect") for link in chain] + [candidate_path.get("rect")]
+            all_rects = [r for r in all_rects if r]
+            if not all_rects:
+                return True
+            min_x = min(r.x0 for r in all_rects)
+            max_x = max(r.x1 for r in all_rects)
+            min_y = min(r.y0 for r in all_rects)
+            max_y = max(r.y1 for r in all_rects)
+            return (max_x - min_x) <= MAX_CHAIN_W and (max_y - min_y) <= MAX_CHAIN_H
+
+        changed = True
+        while changed:
+            changed = False
+            chain_end = chain[-1]["end"]
+            chain_exit = _path_exit_direction(chain[-1]["items"])
+            best = (threshold + 1, -1, False)
+            for j, other in enumerate(entries):
+                if other["used"] or not other["ep"]:
+                    continue
+                d_s = _pt_dist(chain_end, other["ep"][0])
+                d_e = _pt_dist(chain_end, other["ep"][1])
+                other_entry_items = list(other["path"].get("items", []))
+                # Check direction compatibility for forward connection
+                if d_s < best[0]:
+                    gap_dir = (other["ep"][0].x - chain_end.x, other["ep"][0].y - chain_end.y)
+                    entry_dir = _path_entry_direction(other_entry_items)
+                    # Small gaps (≤ 6pt) are always chained — stub beyond contour edge
+                    if d_s <= 6.0:
+                        if (_directions_compatible(chain_exit, gap_dir) and
+                                _directions_compatible(gap_dir, entry_dir) and
+                                _chain_bbox_ok(chain, other["path"])):
+                            best = (d_s, j, False)
+                        continue
+                    gap_blocked = bool(contour_segs) and _segment_crosses_h_strip(
+                        chain_end.x, chain_end.y, other["ep"][0].x, other["ep"][0].y,
+                        min(chain_end.x, other["ep"][0].x), max(chain_end.x, other["ep"][0].x),
+                        (chain_end.y + other["ep"][0].y) / 2, abs(chain_end.y - other["ep"][0].y) / 2 + 4,
+                    ) if contour_segs else False
+                    # simpler gap contour check: any contour seg crossing the gap line
+                    if not gap_blocked and contour_segs:
+                        gap_blocked = any(
+                            _segment_crosses_h_strip(cx1, cy1, cx2, cy2,
+                                min(chain_end.x, other["ep"][0].x) - 2,
+                                max(chain_end.x, other["ep"][0].x) + 2,
+                                (chain_end.y + other["ep"][0].y) / 2,
+                                abs(chain_end.y - other["ep"][0].y) / 2 + 4)
+                            for cx1, cy1, cx2, cy2 in contour_segs
+                        )
+                    if (not gap_blocked and
+                            _directions_compatible(chain_exit, gap_dir) and
+                            _directions_compatible(gap_dir, entry_dir) and
+                            _chain_bbox_ok(chain, other["path"])):
+                        best = (d_s, j, False)
+                # Check direction compatibility for reversed connection
+                if d_e < best[0]:
+                    gap_dir = (other["ep"][1].x - chain_end.x, other["ep"][1].y - chain_end.y)
+                    rev_entry = _path_exit_direction(other_entry_items)
+                    if d_e <= 6.0:
+                        if (_directions_compatible(chain_exit, gap_dir) and
+                                _directions_compatible(gap_dir, rev_entry)):
+                            best = (d_e, j, True)
+                        continue
+                    gap_blocked = bool(contour_segs) and any(
+                        _segment_crosses_h_strip(cx1, cy1, cx2, cy2,
+                            min(chain_end.x, other["ep"][1].x) - 2,
+                            max(chain_end.x, other["ep"][1].x) + 2,
+                            (chain_end.y + other["ep"][1].y) / 2,
+                            abs(chain_end.y - other["ep"][1].y) / 2 + 4)
+                        for cx1, cy1, cx2, cy2 in contour_segs
+                    ) if contour_segs else False
+                    if (not gap_blocked and
+                            _directions_compatible(chain_exit, gap_dir) and
+                            _directions_compatible(gap_dir, rev_entry) and
+                            _chain_bbox_ok(chain, other["path"])):
+                        best = (d_e, j, True)
+            if best[1] >= 0:
+                nxt = entries[best[1]]
+                nxt["used"] = True
+                raw_items = list(nxt["path"].get("items", []))
+                if best[2]:
+                    raw_items = _reverse_items(raw_items)
+                    s, e = nxt["ep"][1], nxt["ep"][0]
+                else:
+                    s, e = nxt["ep"][0], nxt["ep"][1]
+                chain.append({"path": nxt["path"], "items": raw_items, "start": s, "end": e})
+                changed = True
+
+        if len(chain) == 1:
+            result.append(("stitch_thru", chain[0]["path"]))
+            continue
+
+        BRIDGE_GAP = 10.0
+        merged_items = []
+        for i, link in enumerate(chain):
+            if i > 0:
+                prev_end = chain[i-1]["end"]
+                cur_start = link["start"]
+                gap = _pt_dist(prev_end, cur_start)
+                if gap > 0.5 and gap < BRIDGE_GAP:
+                    # Bridge small gap with L so dash pattern flows continuously
+                    merged_items.append(("l", prev_end, cur_start))
+            merged_items.extend(link["items"])
+        source = dict(chain[0]["path"])
+        source["items"] = merged_items
+        source["closePath"] = False
+        source["fill"] = None
+        xs, ys = [], []
+        for link in chain:
+            r = link["path"].get("rect")
+            if r:
+                xs += [r.x0, r.x1]
+                ys += [r.y0, r.y1]
+        if xs:
+            source["rect"] = fitz.Rect(min(xs), min(ys), max(xs), max(ys))
+        result.append(("stitch_thru", source))
+
+    return result
+
+
+def _is_simple_horizontal_stroke(p, min_len=6):
+    items = p.get("items", [])
+    if len(items) != 1 or items[0][0] != "l":
+        return False
+    a, b = items[0][1], items[0][2]
+    return abs(a.y - b.y) <= 1.5 and abs(a.x - b.x) >= min_len
+
+
+def _is_simple_vertical_stroke(p, min_len=6):
+    items = p.get("items", [])
+    if len(items) != 1 or items[0][0] != "l":
+        return False
+    a, b = items[0][1], items[0][2]
+    return abs(a.x - b.x) <= 1.5 and abs(a.y - b.y) >= min_len
+
+
+def _line_span(p):
+    items = p.get("items", [])
+    a, b = items[0][1], items[0][2]
+    return min(a.x, b.x), max(a.x, b.x), (a.y + b.y) / 2
+
+
+def _vertical_line_span(p):
+    items = p.get("items", [])
+    a, b = items[0][1], items[0][2]
+    return (a.x + b.x) / 2, min(a.y, b.y), max(a.y, b.y)
+
+
+def _near_rect(a, b, pad=8):
+    return not (
+        a.x1 < b.x0 - pad or a.x0 > b.x1 + pad
+        or a.y1 < b.y0 - pad or a.y0 > b.y1 + pad
+    )
+
+
+def normalize_fragmented_stitches(classified):
+    """Merge only small solid fragments into nearby through-stitch rows.
+
+    Source drawings often split one through stitch into a dashed segment and
+    short solid fragments where the line crosses a small construction detail.
+    Keep this conservative: long solid edge-stitch rows must stay edge stitches.
+    """
+    thru_rows = []
+    thru_columns = []
+    thru_rects = []
+    for role, p in classified:
+        if role != "stitch_thru":
+            continue
+        if _is_simple_horizontal_stroke(p):
+            x0, x1, y = _line_span(p)
+            thru_rows.append((x0, x1, y, round(p.get("width") or 0, 2)))
+        elif _is_simple_vertical_stroke(p):
+            x, y0, y1 = _vertical_line_span(p)
+            thru_columns.append((x, y0, y1, round(p.get("width") or 0, 2)))
+        if p.get("rect"):
+            thru_rects.append((fitz.Rect(p.get("rect")), round(p.get("width") or 0, 2)))
+
+    if not thru_rows and not thru_columns and not thru_rects:
+        return classified
+
+    normalized = []
+    for role, p in classified:
+        if role != "stitch_edge":
+            normalized.append((role, p))
+            continue
+        width = round(p.get("width") or 0, 2)
+        should_merge = False
+        if _is_simple_horizontal_stroke(p):
+            x0, x1, y = _line_span(p)
+            should_merge = (x1 - x0) <= 8 and any(
+                abs(y - ty) <= 2.5
+                and abs(width - tw) <= 0.1
+                and not (x1 < tx0 - 90 or x0 > tx1 + 90)
+                for tx0, tx1, ty, tw in thru_rows
+            )
+        elif _is_simple_vertical_stroke(p):
+            x, y0, y1 = _vertical_line_span(p)
+            should_merge = (y1 - y0) <= 25 and any(
+                abs(x - tx) <= 3.5
+                and abs(width - tw) <= 0.1
+                and not (y1 < ty0 - 30 or y0 > ty1 + 30)
+                for tx, ty0, ty1, tw in thru_columns
+            )
+        elif p.get("rect"):
+            rect = fitz.Rect(p.get("rect"))
+            short_fragment = rect.width <= 8 and rect.height <= 8
+            should_merge = short_fragment and any(
+                abs(width - tw) <= 0.1 and _near_rect(rect, tr, pad=8)
+                for tr, tw in thru_rects
+            )
+        normalized.append(("stitch_thru" if should_merge else role, p))
+    return normalized
+
+
+_CONTOUR_ROLES = frozenset(("contour_outer", "contour_cut", "contour_fold", "contour_hidden"))
+
+
+def _collect_contour_segments(render_classified):
+    """Extract segments from contour paths as (x1,y1,x2,y2) tuples.
+
+    Straight lines ("l") are taken as-is.
+    Cubic beziers ("c") are approximated by their chord (start→end) plus two
+    sub-chords (start→cp2, cp2→end) for better intersection coverage on curves.
+    """
+    segs = []
+    for role, p in render_classified:
+        if role not in _CONTOUR_ROLES:
+            continue
+        for item in p.get("items", []):
+            if item[0] == "l" and len(item) >= 3:
+                a, b = item[1], item[2]
+                segs.append((a.x, a.y, b.x, b.y))
+            elif item[0] == "c" and len(item) >= 5:
+                # p1=start, p2=cp1, p3=cp2, p4=end
+                p1, p2, p3, p4 = item[1], item[2], item[3], item[4]
+                # Chord
+                segs.append((p1.x, p1.y, p4.x, p4.y))
+                # Sub-chords for better coverage
+                segs.append((p1.x, p1.y, p3.x, p3.y))
+                segs.append((p3.x, p3.y, p4.x, p4.y))
+    return segs
+
+
+def _segment_crosses_h_strip(x1, y1, x2, y2, x_lo, x_hi, y_mid, tol_y=4.0):
+    """True if segment (x1,y1)-(x2,y2) crosses vertical strip x∈[x_lo,x_hi] at y≈y_mid."""
+    if min(y1, y2) > y_mid + tol_y or max(y1, y2) < y_mid - tol_y:
+        return False
+    if min(x1, x2) > x_hi or max(x1, x2) < x_lo:
+        return False
+    dy = y2 - y1
+    if abs(dy) < 0.01:
+        return False  # horizontal segment — doesn't separate stitches vertically
+    t = (y_mid - y1) / dy
+    if not (0.0 <= t <= 1.0):
+        return False
+    x_at_y = x1 + t * (x2 - x1)
+    return x_lo <= x_at_y <= x_hi
+
+
+def _segment_crosses_v_strip(x1, y1, x2, y2, y_lo, y_hi, x_mid, tol_x=4.0):
+    """True if segment crosses horizontal strip y∈[y_lo,y_hi] at x≈x_mid."""
+    if min(x1, x2) > x_mid + tol_x or max(x1, x2) < x_mid - tol_x:
+        return False
+    if min(y1, y2) > y_hi or max(y1, y2) < y_lo:
+        return False
+    dx = x2 - x1
+    if abs(dx) < 0.01:
+        return False
+    t = (x_mid - x1) / dx
+    if not (0.0 <= t <= 1.0):
+        return False
+    y_at_x = y1 + t * (y2 - y1)
+    return y_lo <= y_at_x <= y_hi
+
+
+def _contour_blocks_h_gap(x_gap0, x_gap1, y, contour_segs, tol_y=4.0):
+    """True if any contour segment crosses the horizontal gap [x_gap0..x_gap1] at height y."""
+    if x_gap0 >= x_gap1:
+        return False
+    for x1, y1, x2, y2 in contour_segs:
+        if _segment_crosses_h_strip(x1, y1, x2, y2, x_gap0, x_gap1, y, tol_y):
+            return True
+    return False
+
+
+def _contour_blocks_v_gap(x, y_gap0, y_gap1, contour_segs, tol_x=4.0):
+    """True if any contour segment crosses the vertical gap [y_gap0..y_gap1] at column x."""
+    if y_gap0 >= y_gap1:
+        return False
+    for x1, y1, x2, y2 in contour_segs:
+        if _segment_crosses_v_strip(x1, y1, x2, y2, y_gap0, y_gap1, x, tol_x):
+            return True
+    return False
+
+
+def _point_near_seg(px, py, cx1, cy1, cx2, cy2, tol):
+    """True if point (px,py) is within tol of segment (cx1,cy1)-(cx2,cy2)."""
+    dx, dy = cx2 - cx1, cy2 - cy1
+    seg_len2 = dx*dx + dy*dy
+    if seg_len2 < 0.001:
+        return (px - cx1)**2 + (py - cy1)**2 <= tol*tol
+    t = max(0.0, min(1.0, ((px - cx1)*dx + (py - cy1)*dy) / seg_len2))
+    nx, ny = cx1 + t*dx, cy1 + t*dy
+    return (px - nx)**2 + (py - ny)**2 <= tol*tol
+
+
+def _path_crosses_contour(p, contour_segs):
+    """True if any 'l'-segment of path p strictly crosses a contour segment.
+
+    'Strictly' means both intersection parameters t and u are in (0, 1) —
+    the crossing must be in the interior of both segments, not at endpoints.
+    This avoids false positives for long through-stitches that merely start or
+    end on the contour boundary.
+    """
+    EPS = 1e-6
+    for item in p.get("items", []):
+        if item[0] != "l" or len(item) < 3:
+            continue
+        ax, ay = item[1].x, item[1].y
+        bx, by = item[2].x, item[2].y
+        dx, dy = bx - ax, by - ay
+        for cx1, cy1, cx2, cy2 in contour_segs:
+            denom = dx * (cy2 - cy1) - dy * (cx2 - cx1)
+            if abs(denom) < 0.001:
+                continue
+            t = ((cx1 - ax) * (cy2 - cy1) - (cy1 - ay) * (cx2 - cx1)) / denom
+            u = ((cx1 - ax) * dy - (cy1 - ay) * dx) / denom
+            if EPS < t < 1.0 - EPS and EPS < u < 1.0 - EPS:
+                return True
+    return False
+
+
+_STITCH_ROLES = frozenset((
+    "stitch_edge", "stitch_thru", "stitch_topstitch", "stitch_double",
+    "stitch_hidden", "stitch_cover", "stitch_overlock", "stitch_zigzag",
+    "stitch_L", "stitch_C", "stitch_O", "stitch_F", "stitch_Bt",
+))
+_BOUNDARY_ROLES = frozenset((
+    "boundary_lining", "boundary_interlining", "boundary_fragment", "boundary_zone",
+))
+
+def _is_red_stroke(p):
+    c = _normalize_color(p.get("color"))
+    return c.startswith("#e") or c.startswith("#c8") or c in ("#eb2123", "#e11f25", "#c8102e")
+
+
+def scale_stitch_bt_height(render_classified, scale_y=0.5):
+    """Scale bar tack and stitch symbol paths to half height around their vertical center."""
+    result = []
+    for role, p in render_classified:
+        if role != "stitch_symbol":
+            result.append((role, p))
+            continue
+        rect = p.get("rect")
+        if not rect:
+            result.append((role, p))
+            continue
+        cy = (rect.y0 + rect.y1) / 2.0
+        new_items = []
+        for item in p.get("items", []):
+            def sy(pt):
+                return fitz.Point(pt.x, cy + (pt.y - cy) * scale_y)
+            if item[0] == "l" and len(item) >= 3:
+                new_items.append(("l", sy(item[1]), sy(item[2])))
+            elif item[0] == "c" and len(item) >= 5:
+                new_items.append(("c", sy(item[1]), sy(item[2]), sy(item[3]), sy(item[4])))
+            else:
+                new_items.append(item)
+        new_p = dict(p)
+        new_p["items"] = new_items
+        new_h = (rect.y1 - rect.y0) * scale_y
+        new_p["rect"] = fitz.Rect(rect.x0, cy - new_h / 2, rect.x1, cy + new_h / 2)
+        result.append((role, new_p))
+    return result
+
+
+def sanitize_color_role_conflicts(render_classified):
+    """Fix registry assignments that contradict path color.
+
+    Known impossible combinations:
+    - RED dashed stroke → cannot be boundary_lining / boundary_interlining
+      (red = stitch; green = boundary)
+    - RED stroke → cannot be fill_* roles
+    """
+    result = []
+    for role, p in render_classified:
+        fixed = role
+        if role in _BOUNDARY_ROLES and _is_red_stroke(p):
+            # Red dashed = stitch_thru; red solid = stitch_edge
+            dashes = p.get("dashes")
+            is_dashed = bool(dashes) and str(dashes) not in ("[] 0", "[]", "")
+            fixed = "stitch_thru" if is_dashed else "stitch_edge"
+        result.append((fixed, p))
+    return result
+
+
+_STITCH_EDGE_MAX_LEN = 80.0  # pt — paths longer than this stay stitch_thru even if crossing
+
+
+def reclassify_stitch_thru_crossing_contour(render_classified):
+    """stitch_thru paths that cross a contour boundary → stitch_edge.
+
+    Only SHORT paths (bounding box < 80pt) are reclassified.
+    Long through-stitches that cross internal zone-separator lines (e.g. Shell/Sweat band
+    horizontal divider) must remain stitch_thru — those separators are also contour_outer
+    but they are not the garment cut edge.
+    """
+    contour_segs = _collect_contour_segments(render_classified)
+    if not contour_segs:
+        return render_classified
+    result = []
+    for role, p in render_classified:
+        if role == "stitch_thru":
+            rect = p.get("rect")
+            is_short = (not rect) or (
+                rect.width <= _STITCH_EDGE_MAX_LEN and rect.height <= _STITCH_EDGE_MAX_LEN
+            )
+            if is_short and _path_crosses_contour(p, contour_segs):
+                result.append(("stitch_edge", p))
+                continue
+        result.append((role, p))
+    return result
+
+
+def merge_stitch_thru_rows_for_render(render_classified):
+    """Render aligned through-stitch fragments as one continuous dashed path.
+
+    Two fragments are merged only if no contour path crosses the gap between them.
+    """
+    rows = []
+    columns = []
+    curved = []
+    passthrough = []
+    contour_segs = _collect_contour_segments(render_classified)
+
+    for role, p in render_classified:
+        if role == "stitch_thru" and _is_simple_horizontal_stroke(p, min_len=1):
+            x0, x1, y = _line_span(p)
+            rows.append({
+                "x0": x0,
+                "x1": x1,
+                "y": y,
+                "width": round(p.get("width") or 0, 2),
+                "path": p,
+            })
+        elif role == "stitch_thru" and _is_simple_vertical_stroke(p, min_len=1):
+            x, y0, y1 = _vertical_line_span(p)
+            columns.append({
+                "x": x,
+                "y0": y0,
+                "y1": y1,
+                "width": round(p.get("width") or 0, 2),
+                "path": p,
+            })
+        elif role == "stitch_thru":
+            curved.append(p)
+        else:
+            passthrough.append((role, p))
+
+    if not rows and not columns:
+        return render_classified
+
+    rows.sort(key=lambda r: (round(r["y"] / 2.5), r["width"], r["x0"]))
+    merged_groups = []
+    for row in rows:
+        placed = False
+        for group in merged_groups:
+            if abs(row["y"] - group["y"]) <= 2.5 and abs(row["width"] - group["width"]) <= 0.1:
+                last_x1 = max(item["x1"] for item in group["items"])
+                gap = row["x0"] - last_x1
+                if 0 <= gap <= 25 and (gap <= 15 or not _contour_blocks_h_gap(last_x1, row["x0"], group["y"], contour_segs)):
+                    group["items"].append(row)
+                    group["x0"] = min(group["x0"], row["x0"])
+                    group["x1"] = max(group["x1"], row["x1"])
+                    group["y"] = sum(item["y"] for item in group["items"]) / len(group["items"])
+                    placed = True
+                    break
+        if not placed:
+            merged_groups.append({
+                "x0": row["x0"],
+                "x1": row["x1"],
+                "y": row["y"],
+                "width": row["width"],
+                "items": [row],
+            })
+
+    for group in merged_groups:
+        if len(group["items"]) == 1:
+            item = group["items"][0]
+            passthrough.append(("stitch_thru", item["path"]))
+            continue
+
+        source = dict(group["items"][0]["path"])
+        y = group["y"]
+        p0 = fitz.Point(group["x0"], y)
+        p1 = fitz.Point(group["x1"], y)
+        source["items"] = [("l", p0, p1)]
+        source["rect"] = fitz.Rect(group["x0"], y, group["x1"], y)
+        source["closePath"] = False
+        source["fill"] = None
+        passthrough.append(("stitch_thru", source))
+
+    columns.sort(key=lambda r: (round(r["x"] / 3.5), r["width"], r["y0"]))
+    merged_groups = []
+    for column in columns:
+        placed = False
+        for group in merged_groups:
+            if abs(column["x"] - group["x"]) <= 3.5 and abs(column["width"] - group["width"]) <= 0.1:
+                last_y1 = max(item["y1"] for item in group["items"])
+                gap = column["y0"] - last_y1
+                if 0 <= gap <= 30 and (gap <= 10 or not _contour_blocks_v_gap(group["x"], last_y1, column["y0"], contour_segs)):
+                    group["items"].append(column)
+                    group["y0"] = min(group["y0"], column["y0"])
+                    group["y1"] = max(group["y1"], column["y1"])
+                    group["x"] = sum(item["x"] for item in group["items"]) / len(group["items"])
+                    placed = True
+                    break
+        if not placed:
+            merged_groups.append({
+                "x": column["x"],
+                "y0": column["y0"],
+                "y1": column["y1"],
+                "width": column["width"],
+                "items": [column],
+            })
+
+    for group in merged_groups:
+        if len(group["items"]) == 1:
+            item = group["items"][0]
+            passthrough.append(("stitch_thru", item["path"]))
+            continue
+
+        source = dict(group["items"][0]["path"])
+        x = group["x"]
+        p0 = fitz.Point(x, group["y0"])
+        p1 = fitz.Point(x, group["y1"])
+        source["items"] = [("l", p0, p1)]
+        source["rect"] = fitz.Rect(x, group["y0"], x, group["y1"])
+        source["closePath"] = False
+        source["fill"] = None
+        passthrough.append(("stitch_thru", source))
+
+    passthrough.extend(merge_stitch_chains(curved, threshold=12.0, contour_segs=contour_segs))
+    return passthrough
+
+
+def add_buckle_fills_for_render(render_classified):
+    """Add opaque hardware fills under closed buckle outlines."""
+    result = []
+
+    def point_close(a, b, tol=0.25):
+        return abs(a.x - b.x) <= tol and abs(a.y - b.y) <= tol
+
+    def item_start_end(item):
+        if item[0] == "l":
+            return item[1], item[2]
+        if item[0] == "c":
+            return item[1], item[4]
+        if item[0] == "re":
+            r = item[1]
+            return fitz.Point(r.x0, r.y0), fitz.Point(r.x0, r.y0)
+        if item[0] == "qu":
+            q = item[1]
+            return q.ul, q.ul
+        return None, None
+
+    for role, p in render_classified:
+        if role != "hw_buckle":
+            continue
+        items = p.get("items") or []
+        if len(items) < 3:
+            continue
+        # Skip tiny closed paths (pin holes, rivets) — they should stay transparent
+        rect = p.get("rect")
+        if rect and rect.width <= 6 and rect.height <= 6:
+            continue
+        start, _ = item_start_end(items[0])
+        _, end = item_start_end(items[-1])
+        if not start or not end or not point_close(start, end):
+            continue
+        fill_path = dict(p)
+        fill_path["closePath"] = True
+        fill_path["fill"] = (1, 1, 1)
+        fill_path["width"] = 0
+        fill_path["color"] = None
+        result.append(("hw_buckle_fill", fill_path))
+
+    result.extend(render_classified)
+    return result
 
 
 def items_to_svg_d(items, close=False):
@@ -248,6 +1119,47 @@ def items_to_svg_d(items, close=False):
     return " ".join(d)
 
 
+def trim_simple_line_items(items, ratio=0.10):
+    """Shorten a single straight segment from both ends."""
+    if len(items) != 1 or items[0][0] != "l":
+        return items
+    start, end = items[0][1], items[0][2]
+    dx = end.x - start.x
+    dy = end.y - start.y
+    length = math.sqrt(dx * dx + dy * dy)
+    if length < 6:
+        return items
+    trim = min(length * ratio, 3.0)
+    ux = dx / length
+    uy = dy / length
+    p1 = fitz.Point(start.x + ux * trim, start.y + uy * trim)
+    p2 = fitz.Point(end.x - ux * trim, end.y - uy * trim)
+    return [("l", p1, p2)]
+
+
+def _rect_contains_with_tolerance(outer, inner, pad=4.0):
+    if not outer or not inner:
+        return False
+    return (
+        outer.x0 <= inner.x0 + pad
+        and outer.y0 <= inner.y0 + pad
+        and outer.x1 >= inner.x1 - pad
+        and outer.y1 >= inner.y1 - pad
+    )
+
+
+def original_dasharray(p):
+    dashes = p.get("dashes", "[] 0")
+    if not dashes or dashes == "[] 0":
+        return "none"
+    import re
+    m = re.search(r"\[([^\]]*)\]", dashes)
+    if not m:
+        return "none"
+    nums = m.group(1).split()
+    return " ".join(nums) if nums else "none"
+
+
 def standardize(ai_path, svg_out):
     doc = fitz.open(ai_path)
     page = doc[0]
@@ -266,20 +1178,27 @@ def standardize(ai_path, svg_out):
             spans = line.get("spans", [])
             if not spans:
                 continue
+            stitch_span_count = 0
+            text_span_count = 0
             for s in spans:
                 txt = s["text"].strip()
                 if not txt:
                     continue
-                # Detect stitch glyph: all same char, small font (≤5pt)
-                if len(set(txt.lower())) == 1 and s.get("size", 99) <= 5:
+                text_span_count += 1
+                # Detect stitch glyph: repeated V marks in small text are bar-tack /
+                # stitch symbols, not readable labels.
+                if len(set(txt.lower())) == 1 and txt.lower()[0] == "v" and len(txt) >= 2:
                     x0, y0, x1, y1 = s["bbox"]
                     c = s.get("color", 0)
                     r = ((c >> 16) & 0xFF) / 255
                     g = ((c >> 8)  & 0xFF) / 255
                     b = (c         & 0xFF) / 255
                     hex_c = "#{:02x}{:02x}{:02x}".format(int(r*255), int(g*255), int(b*255))
-                    stitch_symbols.append((x0, y1, txt, s.get("size", 3), hex_c))
+                    stitch_symbols.append((x0, y0, x1, y1, txt, s.get("size", 3), hex_c))
+                    stitch_span_count += 1
                     continue
+            if text_span_count and stitch_span_count == text_span_count:
+                continue
             full_text = " ".join(s["text"] for s in spans).strip()
             if not full_text:
                 continue
@@ -291,36 +1210,48 @@ def standardize(ai_path, svg_out):
     bb = get_content_bbox(page)
     W, H = bb.width, bb.height
     vb = f"{bb.x0:.2f} {bb.y0:.2f} {bb.width:.2f} {bb.height:.2f}"
+    node_name = os.path.basename(str(ai_path)).lower()
 
     # Classify all paths (registry overrides heuristics)
     classified = []
     for p in paths:
         role = classify_with_registry(p, text_words, registry_lookup)
+        role = apply_node_role_override(ai_path, p, role)
         classified.append((role, p))
+    classified = normalize_fragmented_stitches(classified)
 
     render_classified = []
+    zipper_paths = []
+    zipper_tape_paths = []
     for role, p in classified:
         if role == "_skip":
             pass
+        elif role == "hw_zipper":
+            zipper_paths.append(p)
+        elif role == "hw_zipper_tape":
+            # Zipper tapes/stops often already encode the source tooth rhythm and
+            # exact stop geometry. Preserve them instead of synthesizing a loose bbox symbol.
+            render_classified.append((role, p))
         else:
             render_classified.append((role, p))
 
-    # Render order: backgrounds first, foreground last
-    LAYER_ORDER = [
-        "boundary_zone", "fill_shape", "fill_interlining", "fill_fabric",
-        "contour_outer", "seam_line", "contour_cut",
-        "construction_aux", "contour_fold", "seam_allowance",
-        "boundary_interlining", "boundary_lining", "boundary_fragment",
-        "stitch_edge", "stitch_thru", "stitch_topstitch", "stitch_double",
-        "stitch_hidden", "stitch_cover", "stitch_overlock",
-        "stitch_L", "stitch_C", "stitch_O", "stitch_F", "stitch_zigzag", "stitch_Bt",
-        "guide_line", "line_reference", "line_elastic", "line_fur", "line_velcro",
-        "line_mesh", "line_decorative", "line_photo_trace",
-        "callout_line", "callout_zoom", "break_line", "dim_line",
-        "hw_button", "hw_buttonhole", "hw_snap", "hw_other",
-        "arrow", "unknown",
-    ]
-    render_classified.sort(key=lambda x: LAYER_ORDER.index(x[0]) if x[0] in LAYER_ORDER else 99)
+    render_classified = sanitize_color_role_conflicts(render_classified)
+    render_classified = scale_stitch_bt_height(render_classified)
+    render_classified = merge_stitch_thru_rows_for_render(render_classified)
+    # reclassify_stitch_thru_crossing_contour: disabled — too many false positives.
+    # The contour_outer role is used for both external cut edges and internal zone
+    # separators, so automated crossing-based reclassification is unreliable.
+    # Use workbench registry assignments to fix individual cases.
+
+    render_classified = add_buckle_fills_for_render(render_classified)
+
+    # Preserve original AI draw order — this is the designer's intentional z-order.
+    # Only push annotation roles to the top so they're never obscured by content.
+    _ANNOTATION_ROLES = frozenset({
+        "callout_line", "callout_zoom", "dim_line", "arrow",
+        "stitch_symbol", "label", "break_line", "unknown",
+    })
+    render_classified.sort(key=lambda e: 1 if e[0] in _ANNOTATION_ROLES else 0)
 
     lines = []
     lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W:.0f}" height="{H:.0f}" viewBox="{vb}">')
@@ -335,25 +1266,125 @@ def standardize(ai_path, svg_out):
             current_role = role
 
         items = p.get("items", [])
+        if role == "stitch_Bt":
+            items = trim_simple_line_items(items)
         close = p.get("closePath", False)
         fill  = p.get("fill")
         if fill is not None:
             close = True
+        if role in ("callout_line", "dim_line", "callout_zoom"):
+            close = False
+            fill = None
 
         d = items_to_svg_d(items, close)
         if d:
-            style = style_attr(role)
+            if role == "hw_zipper_tape":
+                if p.get("fill") is not None:
+                    style = "stroke:none;stroke-width:0;stroke-dasharray:none;fill:#1A1A1A;opacity:1"
+                elif (p.get("width") or 0) >= 5:
+                    dash = original_dasharray(p)
+                    dash_attr = f";stroke-dasharray:{dash}" if dash != "none" else ";stroke-dasharray:none"
+                    style = (
+                        f"stroke:#1A1A1A;stroke-width:{p.get('width') or 1:.2f}"
+                        f"{dash_attr};fill:none;stroke-linecap:butt;opacity:1"
+                    )
+                else:
+                    style = style_attr(role)
+            elif role == "line_velcro":
+                style = (
+                    "stroke:#1A1A1A;stroke-width:0.75;stroke-dasharray:none;"
+                    "fill:none;stroke-linecap:butt;opacity:1"
+                )
+            elif role == "fill_material_mask":
+                if (
+                    node_name not in {
+                        "ac00201_cap_s half-belt.ai",
+                        "ac00202_cap_s half-belt.ai",
+                        "ac00203_cap_s half-belt.ai",
+                        "ac00204_cap_s half-belt.ai",
+                        "ac00205_cap_s half-belt.ai",
+                        "ac00206_cap_s half-belt.ai",
+                        "ac00207_cap_s half-belt.ai",
+                    }
+                    and not p.get("_vse_plain_mask")
+                    and p.get("color") is not None
+                    and (p.get("width") or 0) > 0
+                ):
+                    style = (
+                        f"stroke:#1A1A1A;stroke-width:{p.get('width') or 1:.2f};"
+                        "stroke-dasharray:none;fill:#FFFFFF;stroke-linecap:butt;"
+                        "stroke-linejoin:round;opacity:1"
+                    )
+                else:
+                    style = style_attr(role)
+            elif role == "fill_white_detail":
+                rect = p.get("rect")
+                if (
+                    node_name in {
+                        "ac00202_cap_s half-belt.ai",
+                        "ac00203_cap_s half-belt.ai",
+                        "ac00204_cap_s half-belt.ai",
+                    }
+                    and rect
+                    and rect.x1 < 180
+                    and rect.y1 < 140
+                ):
+                    style = (
+                        "stroke:#1A1A1A;stroke-width:1.5;"
+                        "stroke-dasharray:none;fill:#FFFFFF;stroke-linecap:butt;"
+                        "stroke-linejoin:round;opacity:1"
+                    )
+                elif p.get("color") is not None and (p.get("width") or 0) > 0:
+                    style = (
+                        f"stroke:#1A1A1A;stroke-width:{p.get('width') or 1:.2f};"
+                        "stroke-dasharray:none;fill:#FFFFFF;stroke-linecap:butt;"
+                        "stroke-linejoin:round;opacity:1"
+                    )
+                else:
+                    style = style_attr(role)
+            elif role == "hw_other" and p.get("_vse_preserve_fill"):
+                fill_hex = _normalize_color(p.get("fill")) if p.get("fill") is not None else _normalize_color(p.get("color"))
+                style = (
+                    "stroke:none;stroke-width:0;stroke-dasharray:none;"
+                    f"fill:{fill_hex};opacity:1"
+                )
+            else:
+                style = style_attr(role)
             lines.append(f'    <path d="{d}" style="{style}" data-role="{role}"/>')
 
     if current_role is not None:
         lines.append('  </g>')
 
+    zipper_snippets = render_zipper_clusters(zipper_paths, zipper_tape_paths)
+    if zipper_snippets:
+        lines.append('  <g id="role-hw_zipper" data-role="hw_zipper">')
+        for snippet in zipper_snippets:
+            lines.append(f'    <g data-role="hw_zipper">\n    {snippet}\n    </g>')
+        lines.append('  </g>')
+
     # Stitch symbol glyphs (e.g. vvvvv in small font = stitch marking)
     if stitch_symbols:
         lines.append('  <g id="role-stitch_symbol" data-role="stitch_symbol">')
-        for (x, y, txt, size, color) in stitch_symbols:
-            safe = txt.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
-            lines.append(f'    <text x="{x:.1f}" y="{y:.1f}" font-family="Arial,sans-serif" font-size="{size:.1f}" fill="{color}" data-role="stitch_symbol">{safe}</text>')
+        for (x0, y0, x1, y1, txt, size, color) in stitch_symbols:
+            count = max(1, len(txt.strip()))
+            width = max(x1 - x0, size * count * 0.55)
+            height = max(y1 - y0, size * 0.75)
+            step = width / count
+            # Keep bottom at original position (aligns with stitch line).
+            # Amplitude = 0.225 * height (half of the previous 0.45).
+            y_bottom = y0 + height * 0.9
+            y_top = y_bottom - height * 0.225
+            pts = []
+            for i in range(count):
+                left = x0 + i * step
+                mid = left + step * 0.5
+                right = left + step
+                if not pts:
+                    pts.append((left, y_top))
+                pts.append((mid, y_bottom))
+                pts.append((right, y_top))
+            d = "M " + " L ".join(f"{px:.2f} {py:.2f}" for px, py in pts)
+            lines.append(f'    <path d="{d}" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:1" data-role="stitch_symbol"/>')
         lines.append('  </g>')
 
     # Text labels — full lines, not individual words
