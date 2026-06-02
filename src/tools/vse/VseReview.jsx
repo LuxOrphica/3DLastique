@@ -681,6 +681,7 @@ function roleGroupsFromSvg(svgText) {
     const mapKey = `${role}|${stroke}|${fill}|${width}|${groupDashed}`;
     if (!map.has(mapKey)) {
       map.set(mapKey, {
+        mapKey,
         entry: { role, stroke, fill, width, dashed },
         indices: [],
         key_strs: key ? [key] : [],
@@ -721,14 +722,41 @@ function roleGroupsFromSvg(svgText) {
 }
 
 // в"Ђв"Ђ Tab 1: Annotate originals в"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђ
+const API = "http://localhost:7070";
+
 function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, saving, buildTs }) {
   const [activeId, setActiveId] = useState(manifest[0]?.id);
   const [hoveredIdx, setHoveredIdx] = useState(null);
   const [nodeQuery, setNodeQuery] = useState("");
   const [activeSection, setActiveSection] = useState("");
   const [actualGroups, setActualGroups] = useState([]);
+  const [roleOverrides, setRoleOverrides] = useState({}); // mapKey → role
+  const [nodeStatuses, setNodeStatuses] = useState({ approved: [], complex: [] });
 
-  useEffect(() => { setHoveredIdx(null); }, [activeId]);
+  useEffect(() => {
+    fetch(`${API}/api/node-status`).then(r => r.json()).then(setNodeStatuses).catch(() => {});
+  }, []);
+
+  const setNodeStatus = (nodeId, status) => {
+    fetch(`${API}/api/node-status`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ node_id: nodeId, status }),
+    }).then(r => r.json()).then(data => {
+      if (data.ok) {
+        setNodeStatuses(prev => {
+          const next = { approved: [...(prev.approved||[])], complex: [...(prev.complex||[])] };
+          next.approved = next.approved.filter(id => id !== nodeId);
+          next.complex  = next.complex.filter(id => id !== nodeId);
+          if (status === "approved") next.approved.push(nodeId);
+          if (status === "complex")  next.complex.push(nodeId);
+          return next;
+        });
+      }
+    }).catch(() => {});
+  };
+
+  useEffect(() => { setHoveredIdx(null); setRoleOverrides({}); }, [activeId]);
   const entryMatchesNode = (entry, nodeId) =>
     entry.nodeIds?.includes(nodeId) || entry.files?.includes(nodeId);
 
@@ -751,10 +779,43 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
       return;
     }
     let alive = true;
-    fetch((node.stdSvg || node.origSvg) + "?t=" + buildTs)
-      .then(r => r.text())
-      .then(text => { if (alive) setActualGroups(roleGroupsFromSvg(text)); })
-      .catch(() => { if (alive) setActualGroups([]); });
+    const stdUrl  = (node.stdSvg  || node.origSvg) + "?t=" + buildTs;
+    const origUrl = node.origSvg + "?t=" + buildTs;
+    Promise.all([
+      fetch(stdUrl).then(r => r.text()),
+      fetch(origUrl).then(r => r.text()).catch(() => ""),
+    ]).then(([stdText, origText]) => {
+      if (!alive) return;
+      const groups = roleGroupsFromSvg(stdText);
+      // Merge key_strs from origSvg so registry assignments work
+      if (origText) {
+        const origDoc = new DOMParser().parseFromString(origText, "image/svg+xml");
+        const origEls = [...origDoc.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
+          .filter(el => !el.closest("defs"));
+        const origKeyMap = new Map();
+        origEls.forEach(el => {
+          const role = el.getAttribute("data-role") || el.closest("[data-role]")?.getAttribute("data-role") || "unknown";
+          const sk   = el.getAttribute("data-sk") || "";
+          const stroke = normalizeHex(resolveAttr(el, "stroke")) || "none";
+          const fill   = normalizeHex(resolveAttr(el, "fill"))   || "none";
+          const width  = parseFloat(resolveAttr(el, "stroke-width") || "0") || 0;
+          const dash   = resolveAttr(el, "stroke-dasharray") || "";
+          const dashed = dash !== "" && dash !== "none" && dash !== "0";
+          const mapKey = `${role}|${stroke}|${fill}|${Math.round(width * 10) / 10}|${dashed}`;
+          if (sk) {
+            if (!origKeyMap.has(mapKey)) origKeyMap.set(mapKey, []);
+            if (!origKeyMap.get(mapKey).includes(sk)) origKeyMap.get(mapKey).push(sk);
+          }
+        });
+        groups.forEach(g => {
+          const { role, stroke, fill, width, dashed } = g.entry;
+          const mapKey = `${role}|${stroke}|${fill}|${Math.round((width||0) * 10) / 10}|${Boolean(dashed)}`;
+          const origKeys = origKeyMap.get(mapKey) || [];
+          if (origKeys.length > 0) g.key_strs = origKeys;
+        });
+      }
+      setActualGroups(groups);
+    }).catch(() => { if (alive) setActualGroups([]); });
     return () => { alive = false; };
   }, [node?.origSvg, buildTs]);
 
@@ -865,13 +926,12 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
           </div>
           <div className="vse-node-tabs">
           {visibleNodes.map(n => {
-            const meta = registryMetaByNode.get(n.id);
-            const done = meta && meta.count > 0 && meta.assigned === meta.count;
-            const hasStyles = !!meta?.count;
+            const isApproved = nodeStatuses.approved?.includes(n.id);
+            const isComplex  = nodeStatuses.complex?.includes(n.id);
             return (
               <button
                 key={n.id}
-                className={`vse-node-tab${activeId === n.id ? " active" : ""}${done ? " vse-node-tab-done" : ""}${hasStyles ? " vse-node-tab-has-styles" : ""}`}
+                className={`vse-node-tab${activeId === n.id ? " active" : ""}${isApproved ? " vse-node-tab-done" : ""}${isComplex ? " vse-node-tab-has-styles" : ""}`}
                 onClick={() => { setActiveId(n.id); setHoveredIdx(null); }}
                 title={`${n.label} ${n.code}`}
               >
@@ -879,8 +939,8 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                   <span className="vse-node-tab-title">{n.label}</span>
                   <span className="vse-code">{n.code}</span>
                 </span>
-                {done && <span className="vse-node-done-mark">готово</span>}
-                {hasStyles && <span className="vse-node-style-count">{meta.count}</span>}
+                {isApproved && <span className="vse-node-done-mark">готово</span>}
+                {isComplex  && <span className="vse-node-done-mark" style={{background:"#C8A84B"}}>сложный</span>}
               </button>
             );
           })}
@@ -954,29 +1014,31 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                           <td>
                             <select
                               className="vse-role-sel-sm"
-                              value={g.entry.role || "?"}
+                              value={roleOverrides[g.mapKey] ?? g.entry.role ?? "?"}
                               onChange={e => {
+                                const newRole = e.target.value;
+                                // Update local display immediately
+                                setRoleOverrides(prev => ({ ...prev, [g.mapKey]: newRole }));
+                                // Update registry
                                 const next = [...registry];
                                 const keys = g.key_strs || [];
                                 if (keys.length > 0) {
+                                  let found = false;
                                   next.forEach((entry, i) => {
                                     if (keys.includes(entry.key_str)) {
-                                      next[i] = { ...entry, role: e.target.value };
+                                      next[i] = { ...entry, role: newRole };
+                                      found = true;
                                     }
                                   });
+                                  if (!found) {
+                                    keys.forEach(k => next.push({ key_str: k, role: newRole }));
+                                  }
                                 } else {
-                                  // Path not in registry yet — create new entry from group style
                                   const { stroke, fill, width, dashed } = g.entry;
                                   const syntheticKey = `${stroke}|${fill}|${width}|${String(dashed)}`;
-                                  next.push({
-                                    stroke, fill, width: width || 0,
-                                    dashed: Boolean(dashed),
-                                    is_line: false, is_filled: false,
-                                    is_tiny: false, is_closed: false,
-                                    near_text: false, orient: "-", sz: "M",
-                                    role: e.target.value,
-                                    key_str: syntheticKey,
-                                  });
+                                  next.push({ stroke, fill, width: width || 0, dashed: Boolean(dashed),
+                                    is_line: false, is_filled: false, is_tiny: false, is_closed: false,
+                                    near_text: false, orient: "-", sz: "M", role: newRole, key_str: syntheticKey });
                                 }
                                 setRegistry(next);
                               }}
@@ -1015,6 +1077,26 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
               {buildStatus.state === "building" && (
                 <span className="vse-muted">Генерация: {buildStatus.message}</span>
               )}
+              {activeId && (() => {
+                const isApproved = nodeStatuses.approved?.includes(activeId);
+                const isComplex  = nodeStatuses.complex?.includes(activeId);
+                return (
+                  <div style={{ display:"flex", gap:6, marginTop:8 }}>
+                    <button
+                      onClick={() => setNodeStatus(activeId, isApproved ? "pending" : "approved")}
+                      style={{ flex:1, padding:"5px 0", borderRadius:4, border:"1px solid #29b473",
+                               background: isApproved ? "#29b473" : "transparent",
+                               color: isApproved ? "#fff" : "#29b473", cursor:"pointer", fontSize:12, fontWeight:600 }}
+                    >{isApproved ? "✓ Утверждён" : "✓ Утвердить"}</button>
+                    <button
+                      onClick={() => setNodeStatus(activeId, isComplex ? "pending" : "complex")}
+                      style={{ flex:1, padding:"5px 0", borderRadius:4, border:"1px solid #C8A84B",
+                               background: isComplex ? "#C8A84B" : "transparent",
+                               color: isComplex ? "#fff" : "#C8A84B", cursor:"pointer", fontSize:12, fontWeight:600 }}
+                    >{isComplex ? "⚠ Сложный" : "⚠ Отметить сложным"}</button>
+                  </div>
+                );
+              })()}
             </div>
           </div>
           </div>{/* vse-annotate-right-sticky */}

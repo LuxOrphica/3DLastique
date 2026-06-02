@@ -8,7 +8,7 @@ Output: F:/Projects/lekala-site/public/vse/
   - callout_graph.json     callout → target mappings
 """
 import os, re, json, fitz
-from engine import standardize, _normalize_color, _path_style_key, items_to_svg_d, _build_registry_lookup, classify_with_registry
+from engine import standardize, _normalize_color, _path_style_key, items_to_svg_d, _build_registry_lookup, classify_with_registry, apply_node_role_override, normalize_fragmented_stitches
 from bbox import get_content_bbox
 from callout_graph import analyze
 from roles import near_any_text
@@ -20,14 +20,47 @@ os.makedirs(OUT_DIR, exist_ok=True)
 
 # Source AI files root — override with env var VSE_SAMPLES_DIR
 SAMPLES_DIR = os.environ.get("VSE_SAMPLES_DIR", "C:/temp").replace("\\", "/")
+NODE_DIR_FILTER = os.environ.get("VSE_NODE_DIR_FILTER", "").replace("\\", "/").strip("/")
+CODE_PREFIX_FILTER = os.environ.get("VSE_CODE_PREFIX_FILTER", "").strip().upper()
 
 with open(os.path.join(HERE, "nodes.json"), encoding="utf-8") as _f:
     _nodes = json.load(_f)
 
+FILE_TO_NODE_ID = {
+    os.path.basename(n["file"]).lower(): n["id"]
+    for n in _nodes
+    if n.get("file")
+}
+
+_enabled_nodes = [n for n in _nodes if n.get("enabled", True)]
+if NODE_DIR_FILTER:
+    _prefix = NODE_DIR_FILTER.lower().rstrip("/") + "/"
+    _enabled_nodes = [
+        n for n in _enabled_nodes
+        if (n.get("file") or "").replace("\\", "/").lower().startswith(_prefix)
+    ]
+if CODE_PREFIX_FILTER:
+    _enabled_nodes = [
+        n for n in _enabled_nodes
+        if (n.get("code") or "").upper().startswith(CODE_PREFIX_FILTER)
+    ]
+
 SAMPLES = [
     (f"{SAMPLES_DIR}/{n['file']}", n["id"], n["label"], n["code"])
-    for n in _nodes if n.get("enabled", True)
+    for n in _enabled_nodes
 ]
+
+# Skip-approved support: read approved_nodes.json
+_SKIP_APPROVED = os.environ.get("VSE_SKIP_APPROVED", "").lower() in ("1", "true", "yes")
+_APPROVED_PATH = os.path.join(HERE, "approved_nodes.json")
+_approved_ids = set()
+if _SKIP_APPROVED and os.path.exists(_APPROVED_PATH):
+    try:
+        _ap = json.load(open(_APPROVED_PATH, encoding="utf-8"))
+        _approved_ids = set(_ap.get("approved", []))
+        print(f"[skip-approved] Skipping {len(_approved_ids)} approved nodes")
+    except Exception:
+        pass
 
 def key_to_str(key):
     return "|".join(str(v) for v in key)
@@ -78,9 +111,17 @@ def build_annotated_orig_svg(ai_path, text_words, bb):
 
     lines = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{vb}">']
 
+    classified = []
     for p in paths:
         key = _path_style_key(p, text_words)
         role = classify_with_registry(p, text_words, registry_lookup)
+        role = apply_node_role_override(ai_path, p, role)
+        classified.append((role, p, key))
+
+    normalized_roles = normalize_fragmented_stitches([(role, p) for role, p, _ in classified])
+    classified = [(role, p, key) for (role, p), (_, _, key) in zip(normalized_roles, classified)]
+
+    for role, p, key in classified:
         items = p.get("items", [])
         close = p.get("closePath", False) or (p.get("fill") is not None)
         d = items_to_svg_d(items, close)
@@ -132,6 +173,9 @@ for path, node_id, label, code in SAMPLES:
     if not os.path.exists(path):
         print(f"SKIP: {path}")
         continue
+    if _SKIP_APPROVED and node_id in _approved_ids:
+        print(f"APPROVED (skip): {label} {code}")
+        continue
     print(f"Exporting: {label} {code}")
 
     doc  = fitz.open(path)
@@ -161,6 +205,7 @@ for path, node_id, label, code in SAMPLES:
         "id":      node_id,
         "label":   label,
         "code":    code,
+        "sourceFile": os.path.basename(path),
         "origSvg": f"/vse/{node_id}_orig.svg",
         "stdSvg":  f"/vse/{node_id}_std.svg",
         "width":   round(bb.width),
@@ -186,12 +231,39 @@ for e in registry:
         e.get("sz", "M"),
     )
     e["key_str"] = display_key_str(key)
+    node_ids = []
+    for fname in e.get("files", []) or []:
+        node_id = FILE_TO_NODE_ID.get(os.path.basename(fname).lower())
+        if node_id and node_id not in node_ids:
+            node_ids.append(node_id)
+    e["nodeIds"] = node_ids
+
+if NODE_DIR_FILTER or CODE_PREFIX_FILTER:
+    manifest_path = f"{OUT_DIR}/manifest.json"
+    existing_manifest = []
+    if os.path.exists(manifest_path):
+        with open(manifest_path, encoding="utf-8") as f:
+            existing_manifest = json.load(f)
+    exported_ids = {item["id"] for item in manifest}
+    merged_manifest = [item for item in existing_manifest if item.get("id") not in exported_ids]
+    merged_manifest.extend(manifest)
+    merged_manifest.sort(key=lambda item: item.get("id", ""))
+    manifest = merged_manifest
 
 with open(f"{OUT_DIR}/manifest.json", "w", encoding="utf-8") as f:
     json.dump(manifest, f, ensure_ascii=False, indent=2)
 
 with open(f"{OUT_DIR}/style_registry.json", "w", encoding="utf-8") as f:
     json.dump(registry, f, ensure_ascii=False, indent=2)
+
+if NODE_DIR_FILTER or CODE_PREFIX_FILTER:
+    callout_path = f"{OUT_DIR}/callout_graph.json"
+    existing_callouts = {}
+    if os.path.exists(callout_path):
+        with open(callout_path, encoding="utf-8") as f:
+            existing_callouts = json.load(f)
+    existing_callouts.update(callout_all)
+    callout_all = existing_callouts
 
 with open(f"{OUT_DIR}/callout_graph.json", "w", encoding="utf-8") as f:
     json.dump(callout_all, f, ensure_ascii=False, indent=2)
