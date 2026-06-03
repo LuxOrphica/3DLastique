@@ -466,6 +466,11 @@
   display: block;
   user-select: none;
 }
+.vse-zoom-img svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 .vse-zoom-overlay {
   position: absolute;
   top: 0; left: 0;

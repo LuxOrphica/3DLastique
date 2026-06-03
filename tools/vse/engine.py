@@ -206,6 +206,25 @@ def apply_node_role_override(ai_path, p, role):
     is_simple_line = len(items) == 1 and items[0][0] == "l"
     slender_ratio = max(rect.width / max(rect.height, 0.001), rect.height / max(rect.width, 0.001))
 
+    # RE00004: zoom callout elements — large circle, small oval, diagonal line
+    if name.startswith("re00004"):
+        # All filled arrow shapes in RE00004 = cord hardware (not directional arrows)
+        if role == "arrow":
+            return "fill_cord"
+        if role == "stitch_edge" and rect.x0 >= 215 and rect.x1 >= 340 and rect.y0 <= 30:
+            return "callout_zoom"  # large zoom detail circle (right side)
+        if role == "stitch_edge" and 138 <= rect.x0 <= 148 and 165 <= rect.y0 <= 175:
+            return "callout_zoom"  # small oval indicator (bottom area)
+        if role == "stitch_edge" and 158 <= rect.x0 <= 168 and 122 <= rect.y0 <= 132 and rect.width > 50:
+            return "callout_zoom"  # diagonal connecting line
+
+    # RE (усиление/reinforcement) nodes: tiny solid red stubs (≤6pt) at the ends
+    # of the arc seam are part of the through-stitch, not edge stitches.
+    # Longer paths (>6pt) that cross the bottom contour stay as stitch_edge.
+    if name.lower().startswith("re") and role == "stitch_edge" and w <= 1.1:
+        if max(rect.width, rect.height) <= 6:
+            return "stitch_thru"
+
     if name == "ac00207_cap_s half-belt.ai":
         # Tiny filled black dots on the plastic strap are hardware marks, not arrows.
         if (p.get("fill") is not None and rect.width <= 12 and rect.height <= 12
@@ -455,8 +474,8 @@ def merge_stitch_chains(candidates, threshold=8.0, contour_segs=None):
                   "start": entry["ep"][0], "end": entry["ep"][1]}]
         entry["used"] = True
 
-        MAX_CHAIN_W = 120.0  # pt — don't create chains wider than this
-        MAX_CHAIN_H = 100.0  # pt — or taller than this
+        MAX_CHAIN_W = 150.0  # pt — don't create chains wider than this
+        MAX_CHAIN_H = 130.0  # pt — or taller than this
 
         def _chain_bbox_ok(chain, candidate_path):
             """True if adding candidate keeps chain within MAX bounds."""
@@ -906,19 +925,23 @@ def merge_stitch_thru_rows_for_render(render_classified):
             })
         elif role == "stitch_thru" and _is_simple_vertical_stroke(p, min_len=1):
             x, y0, y1 = _vertical_line_span(p)
-            columns.append({
-                "x": x,
-                "y0": y0,
-                "y1": y1,
-                "width": round(p.get("width") or 0, 2),
-                "path": p,
-            })
+            if y1 - y0 <= 5:
+                # Tiny vertical stub — send to curved bucket so it can chain with arcs
+                curved.append(p)
+            else:
+                columns.append({
+                    "x": x,
+                    "y0": y0,
+                    "y1": y1,
+                    "width": round(p.get("width") or 0, 2),
+                    "path": p,
+                })
         elif role == "stitch_thru":
             curved.append(p)
         else:
             passthrough.append((role, p))
 
-    if not rows and not columns:
+    if not rows and not columns and not curved:
         return render_classified
 
     rows.sort(key=lambda r: (round(r["y"] / 2.5), r["width"], r["x0"]))

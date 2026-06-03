@@ -139,12 +139,34 @@ def save_registry():
     global last_status
     data = request.get_json(silent=True) or {}
     registry = data.get("registry")
+    node_id = data.get("node_id", "")  # if provided, export only this node
     if not isinstance(registry, list):
         return jsonify({"ok": False, "error": "registry must be a list"}), 400
 
     _write_json(REGISTRY_PATH, registry)
-    last_status = {"state": "building", "message": "Реестр сохранен, запущена пересборка SVG...", "ts": time.time()}
-    threading.Thread(target=_export_static_background, daemon=True).start()
+
+    def _export_node_bg():
+        global last_status
+        last_status = {"state": "building", "message": f"Обновление нода {node_id}...", "ts": time.time()}
+        try:
+            env = dict(**__import__("os").environ)
+            env["VSE_NODE_ID_FILTER"] = node_id
+            result = __import__("subprocess").run(
+                [__import__("sys").executable, str(EXPORT_SCRIPT)],
+                capture_output=True, text=True, timeout=120, env=env, cwd=str(HERE)
+            )
+            out = (result.stdout or "").strip()
+            message = out.splitlines()[-1] if out else "done"
+            last_status = {"state": "ok", "message": message, "ts": time.time()}
+        except Exception as exc:
+            last_status = {"state": "error", "message": str(exc), "ts": time.time()}
+
+    if node_id:
+        last_status = {"state": "building", "message": f"Реестр сохранён, обновляем нод {node_id}...", "ts": time.time()}
+        threading.Thread(target=_export_node_bg, daemon=True).start()
+    else:
+        last_status = {"state": "building", "message": "Реестр сохранён, пересборка всех SVG...", "ts": time.time()}
+        threading.Thread(target=_export_static_background, daemon=True).start()
     return jsonify({"ok": True, "saved": len(registry), "message": last_status["message"]})
 
 

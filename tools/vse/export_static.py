@@ -8,7 +8,7 @@ Output: F:/Projects/lekala-site/public/vse/
   - callout_graph.json     callout → target mappings
 """
 import os, re, json, fitz
-from engine import standardize, _normalize_color, _path_style_key, items_to_svg_d, _build_registry_lookup, classify_with_registry, apply_node_role_override, normalize_fragmented_stitches
+from engine import standardize, _normalize_color, _path_style_key, items_to_svg_d, _build_registry_lookup, classify_with_registry, apply_node_role_override, normalize_fragmented_stitches, sanitize_color_role_conflicts
 from bbox import get_content_bbox
 from callout_graph import analyze
 from roles import near_any_text
@@ -22,6 +22,7 @@ os.makedirs(OUT_DIR, exist_ok=True)
 SAMPLES_DIR = os.environ.get("VSE_SAMPLES_DIR", "C:/temp").replace("\\", "/")
 NODE_DIR_FILTER = os.environ.get("VSE_NODE_DIR_FILTER", "").replace("\\", "/").strip("/")
 CODE_PREFIX_FILTER = os.environ.get("VSE_CODE_PREFIX_FILTER", "").strip().upper()
+NODE_ID_FILTER = os.environ.get("VSE_NODE_ID_FILTER", "").strip()
 
 with open(os.path.join(HERE, "nodes.json"), encoding="utf-8") as _f:
     _nodes = json.load(_f)
@@ -44,6 +45,9 @@ if CODE_PREFIX_FILTER:
         n for n in _enabled_nodes
         if (n.get("code") or "").upper().startswith(CODE_PREFIX_FILTER)
     ]
+
+if NODE_ID_FILTER:
+    _enabled_nodes = [n for n in _enabled_nodes if n.get("id") == NODE_ID_FILTER]
 
 SAMPLES = [
     (f"{SAMPLES_DIR}/{n['file']}", n["id"], n["label"], n["code"])
@@ -118,8 +122,10 @@ def build_annotated_orig_svg(ai_path, text_words, bb):
         role = apply_node_role_override(ai_path, p, role)
         classified.append((role, p, key))
 
-    normalized_roles = normalize_fragmented_stitches([(role, p) for role, p, _ in classified])
-    classified = [(role, p, key) for (role, p), (_, _, key) in zip(normalized_roles, classified)]
+    pairs = [(role, p) for role, p, _ in classified]
+    pairs = sanitize_color_role_conflicts(pairs)   # fix red paths wrongly classified as boundary
+    pairs = normalize_fragmented_stitches(pairs)   # merge small stitch fragments
+    classified = [(role, p, classified[i][2]) for i, (role, p) in enumerate(pairs)]
 
     for role, p, key in classified:
         items = p.get("items", [])
@@ -250,8 +256,11 @@ if NODE_DIR_FILTER or CODE_PREFIX_FILTER:
     merged_manifest.sort(key=lambda item: item.get("id", ""))
     manifest = merged_manifest
 
-with open(f"{OUT_DIR}/manifest.json", "w", encoding="utf-8") as f:
-    json.dump(manifest, f, ensure_ascii=False, indent=2)
+if manifest:  # never overwrite manifest with empty list
+    with open(f"{OUT_DIR}/manifest.json", "w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2)
+else:
+    print("WARNING: 0 nodes exported — manifest.json preserved")
 
 with open(f"{OUT_DIR}/style_registry.json", "w", encoding="utf-8") as f:
     json.dump(registry, f, ensure_ascii=False, indent=2)

@@ -524,9 +524,37 @@ function collectRelatedStdIndices(els, baseIndices, hoveredRole) {
 }
 
 // Zoomable SVG panel — plain <img> for display, CSS overlay for highlight
-function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix }) {
+function applyRoleOverridesToSvg(svgText, roleOverrides) {
+  if (!svgText || !roleOverrides || Object.keys(roleOverrides).length === 0) return svgText;
+  let result = svgText;
+  Object.entries(roleOverrides).forEach(([mapKey, newRole]) => {
+    const oldRole = mapKey.split('|')[0];
+    if (!oldRole || oldRole === newRole) return;
+    const newStyle = ROLE_STYLES[newRole];
+    if (!newStyle) return;
+    // Replace style attr for elements with data-role="oldRole"
+    // SVG format: style="..." data-role="oldRole"
+    result = result.replace(
+      new RegExp(`(style=")([^"]*)(")([^/\\n>]*data-role="${oldRole}")`, 'g'),
+      (match, s, oldSty, e, rest) => {
+        let sty = oldSty;
+        if (newStyle.stroke) sty = sty.replace(/stroke:[^;]+/, `stroke:${newStyle.stroke}`);
+        if (newStyle["stroke-width"]) sty = sty.replace(/stroke-width:[^;]+/, `stroke-width:${newStyle["stroke-width"]}`);
+        if (newStyle["stroke-dasharray"]) {
+          const da = newStyle["stroke-dasharray"] === "none" ? "none" : newStyle["stroke-dasharray"];
+          sty = sty.replace(/stroke-dasharray:[^;]+/, `stroke-dasharray:${da}`);
+        }
+        return `${s}${sty}${e}${rest}`;
+      }
+    );
+  });
+  return result;
+}
+
+function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides }) {
   const wrapRef  = useRef(null);
-  const hlRef    = useRef(null); // hidden inline SVG for highlight queries
+  const hlRef    = useRef(null); // ref to query SVG elements
+  const [svgHtml, setSvgHtml] = useState(""); // SVG content managed by React
   const [ready, setReady]     = useState(false);
   const [scale, setScale]     = useState(1);
   const [pan,   setPan]       = useState({ x: 0, y: 0 });
@@ -538,10 +566,9 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix 
   useEffect(() => {
     if (!url) return;
     setScale(1); setPan({ x: 0, y: 0 }); setReady(false); setMatchedIndices(null);
-    fetch(url + "?t=" + Date.now())
-      .then(r => r.text())
+    cachedFetch(url)
       .then(text => {
-        if (hlRef.current) hlRef.current.innerHTML = sanitizeSvg(text, svgPrefix);
+        setSvgHtml(sanitizeSvg(text, svgPrefix));
         setReady(true);
       });
   }, [url]);
@@ -601,7 +628,6 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix 
         <button className="vse-zoom-reset" onClick={reset} title="Сбросить">↺</button>
         <span className="vse-zoom-hint">{Math.round(scale * 100)}% · колесо = масштаб · перетаскивание = сдвиг</span>
       </div>
-      <div ref={hlRef} style={{ display: "none" }} />
       <div ref={wrapRef} className="vse-zoom-viewport"
         onMouseDown={onMouseDown} onMouseMove={onMouseMove}
         onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
@@ -609,11 +635,12 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix 
         <div className="vse-zoom-content"
           style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})` }}
         >
-          <img
-            src={url}
+          <div
+            ref={hlRef}
             className="vse-zoom-img"
             draggable={false}
             style={{ opacity: dimmed ? 0.15 : 1, transition: "opacity .15s" }}
+            dangerouslySetInnerHTML={{ __html: mode === "std" ? applyRoleOverridesToSvg(svgHtml, roleOverrides) : svgHtml }}
           />
           {dimmed && ready && matchedIndices && (() => {
             const hidden = hlRef.current;
@@ -724,6 +751,13 @@ function roleGroupsFromSvg(svgText) {
 // в"Ђв"Ђ Tab 1: Annotate originals в"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђ
 const API = "http://localhost:7070";
 
+// Module-level SVG text cache — survives re-renders, cleared only on explicit buildTs change
+const _svgTextCache = new Map();
+function cachedFetch(url) {
+  if (_svgTextCache.has(url)) return Promise.resolve(_svgTextCache.get(url));
+  return fetch(url).then(r => r.text()).then(t => { _svgTextCache.set(url, t); return t; });
+}
+
 function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, saving, buildTs }) {
   const [activeId, setActiveId] = useState(manifest[0]?.id);
   const [hoveredIdx, setHoveredIdx] = useState(null);
@@ -731,29 +765,48 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
   const [activeSection, setActiveSection] = useState("");
   const [actualGroups, setActualGroups] = useState([]);
   const [roleOverrides, setRoleOverrides] = useState({}); // mapKey → role
-  const [nodeStatuses, setNodeStatuses] = useState({ approved: [], complex: [] });
+  const NS_KEY = "vse_node_statuses_v2";
 
+  const [nodeStatuses, setNodeStatuses] = useState(() => {
+    // Primary: localStorage (always available)
+    try { return JSON.parse(localStorage.getItem(NS_KEY)) || { approved: [], complex: [] }; }
+    catch { return { approved: [], complex: [] }; }
+  });
+
+  // On startup: also try API and merge (API file survives browser clears)
   useEffect(() => {
-    fetch(`${API}/api/node-status`).then(r => r.json()).then(setNodeStatuses).catch(() => {});
+    fetch(`${API}/api/node-status`)
+      .then(r => r.json())
+      .then(apiData => {
+        setNodeStatuses(prev => {
+          // Merge: union of localStorage + file
+          const approved = [...new Set([...(prev.approved||[]), ...(apiData.approved||[])])];
+          const complex  = [...new Set([...(prev.complex||[]),  ...(apiData.complex||[])])];
+          const merged = { approved, complex };
+          try { localStorage.setItem(NS_KEY, JSON.stringify(merged)); } catch {}
+          return merged;
+        });
+      })
+      .catch(() => {}); // API unavailable — localStorage is enough
   }, []);
 
   const setNodeStatus = (nodeId, status) => {
-    fetch(`${API}/api/node-status`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ node_id: nodeId, status }),
-    }).then(r => r.json()).then(data => {
-      if (data.ok) {
-        setNodeStatuses(prev => {
-          const next = { approved: [...(prev.approved||[])], complex: [...(prev.complex||[])] };
-          next.approved = next.approved.filter(id => id !== nodeId);
-          next.complex  = next.complex.filter(id => id !== nodeId);
-          if (status === "approved") next.approved.push(nodeId);
-          if (status === "complex")  next.complex.push(nodeId);
-          return next;
-        });
-      }
-    }).catch(() => {});
+    setNodeStatuses(prev => {
+      const next = { approved: [...(prev.approved||[])], complex: [...(prev.complex||[])] };
+      next.approved = next.approved.filter(id => id !== nodeId);
+      next.complex  = next.complex.filter(id => id !== nodeId);
+      if (status === "approved") next.approved.push(nodeId);
+      if (status === "complex")  next.complex.push(nodeId);
+      // Save to localStorage immediately (always works)
+      try { localStorage.setItem(NS_KEY, JSON.stringify(next)); } catch {}
+      // Also sync to API file (for cross-browser/backup)
+      fetch(`${API}/api/node-status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ node_id: nodeId, status }),
+      }).catch(() => {});
+      return next;
+    });
   };
 
   useEffect(() => { setHoveredIdx(null); setRoleOverrides({}); }, [activeId]);
@@ -782,8 +835,8 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
     const stdUrl  = (node.stdSvg  || node.origSvg) + "?t=" + buildTs;
     const origUrl = node.origSvg + "?t=" + buildTs;
     Promise.all([
-      fetch(stdUrl).then(r => r.text()),
-      fetch(origUrl).then(r => r.text()).catch(() => ""),
+      cachedFetch(stdUrl),
+      cachedFetch(origUrl).catch(() => ""),
     ]).then(([stdText, origText]) => {
       if (!alive) return;
       const groups = roleGroupsFromSvg(stdText);
@@ -968,6 +1021,7 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                 hoveredEntry={hoveredEntry}
                 mode="std"
                 svgPrefix={`${activeId}_std`}
+                roleOverrides={roleOverrides}
               />
             </div>
           </div>
@@ -1017,8 +1071,10 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                               value={roleOverrides[g.mapKey] ?? g.entry.role ?? "?"}
                               onChange={e => {
                                 const newRole = e.target.value;
+                                const oldRole = g.entry.role;
                                 // Update local display immediately
                                 setRoleOverrides(prev => ({ ...prev, [g.mapKey]: newRole }));
+                                // Live preview handled via roleOverrides → applyRoleOverridesToSvg
                                 // Update registry
                                 const next = [...registry];
                                 const keys = g.key_strs || [];
@@ -1063,7 +1119,7 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
             <div className="vse-generate-bar">
               <button
                 className={`vse-generate-btn${saving ? " vse-save-btn-busy" : ""}${!allAssigned ? " vse-generate-btn-partial" : ""}`}
-                onClick={onSave}
+                onClick={() => onSave(activeId)}
                 disabled={saving}
               >
                 {saving ? "Генерация..." : allAssigned ? "Сгенерировать стандарт →" : `Сгенерировать (${assignedCount}/${groups.length} ролей распознано)`}
@@ -1422,13 +1478,13 @@ export default function VseReview() {
     return () => clearInterval(id);
   }, [buildStatus?.state]);
 
-  const saveAndRegen = async () => {
-    setBuildStatus({ state: "building", message: "Сохранение реестра..." });
+  const saveAndRegen = async (nodeId) => {
+    setBuildStatus({ state: "building", message: nodeId ? `Обновляем нод...` : "Сохранение реестра..." });
     try {
       const r = await fetch(`${API}/api/save-registry`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ registry }),
+        body: JSON.stringify({ registry, node_id: nodeId || "" }),
       });
       const data = await r.json();
       if (!r.ok) throw new Error(data.error);
