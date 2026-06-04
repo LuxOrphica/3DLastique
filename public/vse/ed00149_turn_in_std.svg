@@ -1,9 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="158.67 168.83 155.24 180.90">
   <!-- VSE — Visual Standardization Engine -->
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 239.52 250.07 L 293.91 242.31" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-    <path d="M 239.52 263.52 L 293.68 255.75" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 197.05 249.01 L 224.74 244.63" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 197.05 248.19 L 197.05 314.47 C 197.05 329.27 211.00 329.73 211.00 314.00 L 211.01 300.95 L 229.67 297.63" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
@@ -22,6 +18,10 @@
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 218.88 308.05 C 218.88 314.26 216.24 319.29 212.98 319.29 C 209.72 319.29 207.08 314.26 207.08 308.05 C 207.08 301.83 209.72 296.80 212.98 296.80 C 216.24 296.80 218.88 301.83 218.88 308.05" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 239.52 250.07 L 293.91 242.31" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+    <path d="M 239.52 263.52 L 293.68 255.75" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-label" data-role="label">
     <text x="178.7" y="216.1" font-family="Arial, sans-serif" font-size="12.0" fill="#1A1A1A">Lining</text>

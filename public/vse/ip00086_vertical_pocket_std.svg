@@ -31,9 +31,6 @@
     <path d="M 205.21 68.02 L 205.21 102.69" style="stroke:#1A1A1A;stroke-width:7.40;stroke-dasharray:2.776;fill:none;stroke-linecap:butt;opacity:1" data-role="hw_zipper_tape"/>
     <path d="M 207.21 101.36 L 207.21 69.69" style="stroke:#1A1A1A;stroke-width:7.40;stroke-dasharray:2.776;fill:none;stroke-linecap:butt;opacity:1" data-role="hw_zipper_tape"/>
   </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 154.69 139.68 L 154.69 201.30 L 251.32 201.30 L 251.32 230.30" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 154.69 135.49 L 154.69 82.37" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 150.29 118.05 L 150.29 82.37" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
@@ -45,6 +42,9 @@
     <path d="M 184.48 85.16 L 184.48 51.53" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 250.46 107.68 L 250.46 124.99" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 247.06 95.68 L 247.06 124.99" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 154.69 139.68 L 154.69 201.30 L 251.32 201.30 L 251.32 230.30" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-break_line" data-role="break_line">
     <path d="M 21.17 20.70 L 21.17 233.36 L 273.21 233.36 L 273.21 90.79" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>

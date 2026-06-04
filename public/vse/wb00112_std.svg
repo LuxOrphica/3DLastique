@@ -1,10 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="7.24 0.00 219.28 249.05">
   <!-- VSE — Visual Standardization Engine -->
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 117.66 125.80 L 205.25 112.56" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-    <path d="M 118.33 104.41 L 204.99 91.19" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-    <path d="M 118.11 53.27 L 205.15 40.17" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 205.71 4.91 L 81.58 24.23" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 105.86 106.35 L 86.72 107.71 L 86.72 107.91 L 86.72 229.05" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
@@ -16,11 +11,6 @@
     <path d="M 64.17 126.07 L 113.43 126.05" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 64.47 104.90 L 113.73 104.87" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 76.45 130.65 L 98.86 130.65" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
-  </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 118.61 77.64 L 205.27 64.42" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
-  <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 64.75 78.13 L 114.01 78.10" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 106.37 161.61 C 105.31 161.43 105.54 160.37 106.50 158.46 C 107.09 157.30 107.75 156.65 108.27 156.96 C 108.90 157.33 108.78 158.58 107.91 159.66 C 107.23 160.50 106.37 160.75 105.44 160.80" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 107.62 161.40 C 107.12 161.62 106.64 161.70 106.30 161.60" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
@@ -197,6 +187,12 @@
   </g>
   <g id="role-fill_cord" data-role="fill_cord">
     <path d="M 105.45 92.19 L 61.75 98.31 C 57.99 99.02 53.94 98.59 53.94 95.19 C 53.94 91.86 57.80 90.52 61.75 90.06 L 105.51 83.78 Z" style="stroke:#333333;stroke-width:0.5;stroke-dasharray:none;fill:#57585B;opacity:1" data-role="fill_cord"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 117.66 125.80 L 205.25 112.56" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+    <path d="M 118.33 104.41 L 204.99 91.19" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+    <path d="M 118.11 53.27 L 205.15 40.17" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+    <path d="M 118.61 77.64 L 205.27 64.42" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-break_line" data-role="break_line">
     <path d="M 86.72 229.05 L 205.53 212.45 L 205.71 212.37 L 205.71 4.91" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>

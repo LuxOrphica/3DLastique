@@ -12,11 +12,6 @@
     <path d="M 166.07 50.87 L 166.07 60.81" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 227.37 201.48 L 170.22 201.48 L 170.22 94.25" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 227.37 53.74 L 227.53 229.66" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
-  </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 163.85 114.95 L 163.85 206.85 L 226.85 206.85" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
-  <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 302.62 63.42 L 236.35 63.42 C 223.51 62.68 225.26 46.43 236.35 46.02 L 252.74 46.02 L 252.74 58.75" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-boundary_fragment" data-role="boundary_fragment">
@@ -43,6 +38,9 @@
   </g>
   <g id="role-boundary_fragment" data-role="boundary_fragment">
     <path d="M 231.30 60.28 L 303.14 60.28" style="stroke:#27A6DE;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="boundary_fragment"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 163.85 114.95 L 163.85 206.85 L 226.85 206.85" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-callout_line" data-role="callout_line">
     <path d="M 57.62 35.76 L 55.90 51.49 L 67.68 48.53" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line"/>

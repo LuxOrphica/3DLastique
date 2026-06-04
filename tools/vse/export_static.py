@@ -19,7 +19,7 @@ OUT_DIR = os.path.join(ROOT, "public", "vse").replace("\\", "/")
 os.makedirs(OUT_DIR, exist_ok=True)
 
 # Source AI files root — override with env var VSE_SAMPLES_DIR
-SAMPLES_DIR = os.environ.get("VSE_SAMPLES_DIR", "C:/temp").replace("\\", "/")
+SAMPLES_DIR = os.environ.get("VSE_SAMPLES_DIR", "F:/Projects/lekala-site/INFO/unzip/1.Узлы and Workmanship").replace("\\", "/")
 NODE_DIR_FILTER = os.environ.get("VSE_NODE_DIR_FILTER", "").replace("\\", "/").strip("/")
 CODE_PREFIX_FILTER = os.environ.get("VSE_CODE_PREFIX_FILTER", "").strip().upper()
 NODE_ID_FILTER = os.environ.get("VSE_NODE_ID_FILTER", "").strip()

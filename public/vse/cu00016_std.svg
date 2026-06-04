@@ -8,9 +8,6 @@
     <path d="M 72.63 41.90 L 206.28 21.38" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 65.11 176.75 L 220.23 152.16" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 111.78 67.05 L 218.88 51.10" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
   <g id="role-boundary_interlining" data-role="boundary_interlining">
     <path d="M 67.71 174.78 L 67.71 53.09 C 67.36 40.16 78.36 40.58 78.36 53.13 L 78.36 68.13" style="stroke:#29B473;stroke-width:1.0;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="boundary_interlining"/>
   </g>
@@ -18,6 +15,9 @@
     <path d="M 95.68 57.35 L 69.68 57.35" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 107.58 67.61 L 59.58 67.61" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 92.59 56.49 C 92.59 63.79 88.15 69.71 82.68 69.71 C 77.20 69.71 72.77 63.79 72.77 56.49 C 72.77 49.18 77.20 43.26 82.68 43.26 C 88.15 43.26 92.59 49.18 92.59 56.49" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 111.78 67.05 L 218.88 51.10" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-callout_line" data-role="callout_line">
     <path d="M 53.56 135.66 L 67.71 125.57" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line"/>

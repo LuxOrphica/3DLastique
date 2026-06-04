@@ -544,6 +544,10 @@
 .vse-table tr:hover td { background: #faf8f5; }
 .vse-row-filled td { background: #f0faf0; }
 .vse-row-filled:hover td { background: #e6f7e6; }
+.vse-row-override td { background: #fdf8ec; }
+.vse-row-override:hover td { background: #f9f0d8; }
+.vse-row-selected-el td { background: #2a2a1a !important; color: #C8A84B; }
+.vse-row-selected-el:hover td { background: #333320 !important; }
 
 .vse-tc { text-align: center; }
 .vse-muted { color: #999; font-size: 11px; }

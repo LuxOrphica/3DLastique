@@ -16,13 +16,15 @@
     <path d="M 87.12 98.90 L 129.85 98.90" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 121.47 160.21 L 235.11 160.21" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 88.27 159.94 L 104.88 159.94" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
-    <path d="M 130.20 42.49 L 235.25 42.49 L 235.25 241.78 L 104.25 241.78" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 104.86 110.00 L 129.20 110.00" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 78.55 156.03 L 121.47 156.07" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 97.98 130.91 L 121.41 130.95" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 119.99 130.93 C 119.99 143.98 115.41 154.55 109.76 154.55 C 104.11 154.55 99.53 143.98 99.53 130.93 C 99.53 117.88 104.11 107.30 109.76 107.30 C 115.41 107.30 119.99 117.88 119.99 130.93" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 130.20 42.49 L 235.25 42.49 L 235.25 241.78 L 104.25 241.78" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
   </g>
   <g id="role-label" data-role="label">
     <text x="30.4" y="109.4" font-family="Arial, sans-serif" font-size="10.4" fill="#1A1A1A">Tape</text>

@@ -5,7 +5,6 @@
     <path d="M 81.27 51.55 L 81.27 103.68 C 81.27 103.68 81.30 115.88 73.04 115.80 C 64.29 115.73 64.99 103.72 64.99 103.72 L 64.99 89.72" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 54.35 226.13 L 54.35 89.47 L 81.13 89.26" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 187.53 115.88 L 73.04 115.80" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
-    <path d="M 81.00 51.26 L 187.53 51.26 L 187.53 226.13 L 54.35 226.13" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 59.74 183.07 C 59.74 183.07 66.89 199.17 83.88 198.27 C 100.87 197.38 100.85 186.75 108.01 185.85 C 115.16 184.96 118.49 198.27 132.02 198.27 C 145.86 198.27 147.81 185.78 154.45 185.78 C 163.95 185.78 161.89 198.41 177.41 198.27 C 183.77 198.22 185.79 196.84 187.53 194.28" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
@@ -58,6 +57,9 @@
   <g id="role-stitch_thru" data-role="stitch_thru">
     <path d="M 93.51 95.30 L 187.17 95.30" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
     <path d="M 93.51 107.73 L 187.17 107.73" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+  </g>
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 81.00 51.26 L 187.53 51.26 L 187.53 226.13 L 54.35 226.13" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
   </g>
   <g id="role-label" data-role="label">
   </g>

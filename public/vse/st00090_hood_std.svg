@@ -42,9 +42,7 @@
     <path d="M 192.61 323.23 L 192.61 312.93" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="hw_button"/>
   </g>
   <g id="role-contour_outer" data-role="contour_outer">
-    <path d="M 106.08 297.84 C 103.10 297.84 100.97 297.84 98.00 297.84 C 87.46 297.87 82.09 293.53 82.09 289.04 C 82.08 281.38 100.05 281.06 100.05 281.06 L 209.92 281.41 C 209.92 281.41 209.93 281.40 209.93 281.40 L 209.75 93.00 L 82.25 93.35 L 82.09 289.04" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 106.05 294.83 C 106.05 294.83 105.92 294.75 103.40 294.75 C 92.37 294.75 85.42 292.35 85.42 289.09 C 85.41 285.77 94.76 283.54 103.84 283.65 C 133.44 284.02 140.12 283.61 202.02 283.65 C 202.80 283.65 211.70 283.71 212.07 283.71" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
-    <path d="M 212.37 273.61 L 205.85 273.61 C 193.00 273.63 191.49 271.49 191.48 268.05 C 191.47 262.20 215.36 262.96 215.36 262.96 L 373.96 263.02 C 373.96 263.02 373.97 263.04 373.97 263.04 L 373.76 93.10 C 373.76 93.10 373.76 93.10 373.76 93.10 C 373.05 93.10 191.34 93.35 191.34 93.35 C 191.34 93.35 191.34 119.15 191.34 119.15 L 191.51 267.83 C 191.51 263.23 207.50 263.06 211.31 263.06 C 216.46 263.06 219.82 262.97 219.52 262.97" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 195.30 258.24 L 195.30 332.96 Z" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
@@ -57,11 +55,14 @@
     <path d="M 89.50 289.13 L 89.50 317.63 Z" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 195.30 257.36 L 195.30 93.01" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-    <path d="M 197.67 268.50 L 197.67 290.67 Z" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+    <path d="M 196.48 93.01 L 196.48 290.67" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-unknown" data-role="unknown">
     <path d="M 140.24 196.26 C 140.24 197.62 140.24 198.97 140.23 200.33 C 140.22 201.07 139.80 201.66 139.30 201.66 C 138.78 201.65 138.36 201.02 138.37 200.27 L 138.37 196.24 Z" style="stroke:#AAAAAA;stroke-width:0.5;stroke-dasharray:none;fill:none;opacity:0.5" data-role="unknown"/>
+  </g>
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 106.08 297.84 C 103.10 297.84 100.97 297.84 98.00 297.84 C 87.46 297.87 82.09 293.53 82.09 289.04 C 82.08 281.38 100.05 281.06 100.05 281.06 L 209.92 281.41 C 209.92 281.41 209.93 281.40 209.93 281.40 L 209.75 93.00 L 82.25 93.35 L 82.09 289.04" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
+    <path d="M 212.37 273.61 L 205.85 273.61 C 193.00 273.63 191.49 271.49 191.48 268.05 C 191.47 262.20 215.36 262.96 215.36 262.96 L 373.96 263.02 C 373.96 263.02 373.97 263.04 373.97 263.04 L 373.76 93.10 C 373.76 93.10 373.76 93.10 373.76 93.10 C 373.05 93.10 191.34 93.35 191.34 93.35 C 191.34 93.35 191.34 119.15 191.34 119.15 L 191.51 267.83 C 191.51 263.23 207.50 263.06 211.31 263.06 C 216.46 263.06 219.82 262.97 219.52 262.97" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
   </g>
   <g id="role-arrow" data-role="arrow">
     <path d="M 197.83 308.00 L 197.83 323.00 Z" style="stroke:none;stroke-width:0;stroke-dasharray:none;fill:#1A1A1A;opacity:1" data-role="arrow"/>

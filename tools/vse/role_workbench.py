@@ -119,7 +119,7 @@ for row in report:
     item["_normalized_role"] = normalize_role(role)
     item["_role_status"] = role_status(role)
     item["_family_key"] = family_key(row)
-    item["_suggested_role"] = item.get("suggested_role") or suggest_semantic_role(item)
+    item["_suggested_role"] = suggest_semantic_role(item) or item.get("suggested_role")
     rows.append(item)
 
 status_counts = Counter(row["_role_status"] for row in rows)

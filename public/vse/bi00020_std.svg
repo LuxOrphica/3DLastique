@@ -6,12 +6,6 @@
     <path d="M 170.79 16.24 C 170.79 16.24 184.46 13.63 185.29 26.08 L 184.93 172.90 L 43.49 194.58" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 43.44 195.37 L 43.21 49.31 L 60.44 46.38" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 66.18 112.66 L 184.93 93.71" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
-  </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 79.40 106.38 L 183.49 89.77" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-    <path d="M 80.68 92.31 L 182.97 75.98" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
-  <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 52.03 35.20 L 170.79 16.24" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-fill_elastic" data-role="fill_elastic">
@@ -23,6 +17,10 @@
   </g>
   <g id="role-hw_zipper_tape" data-role="hw_zipper_tape">
     <path d="M 87.88 61.37 L 69.08 61.40" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:none;stroke-linecap:square;opacity:1" data-role="hw_zipper_tape"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 79.40 106.38 L 183.49 89.77" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+    <path d="M 80.68 92.31 L 182.97 75.98" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-label" data-role="label">
     <text x="91.0" y="59.7" font-family="Arial, sans-serif" font-size="11.4" fill="#1A1A1A">Elastic</text>

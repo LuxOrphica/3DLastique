@@ -7,7 +7,6 @@
     <path d="M 120.34 153.94 L 164.28 153.94 C 164.28 153.94 173.70 154.35 173.70 157.04 C 173.70 159.74 164.75 159.75 164.75 159.75 L 120.25 159.75 L 120.25 134.00" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 173.71 157.04 L 173.71 42.25" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 120.32 175.17 L 135.94 175.15 C 135.94 175.15 141.74 175.46 142.63 173.87 C 143.08 173.06 143.07 172.49 143.08 172.09 C 143.22 167.85 135.57 168.48 135.57 168.48 L 32.90 167.84 L 33.12 133.95" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
-    <path d="M 143.38 42.82 L 216.06 42.25 L 214.06 177.89 L 120.56 177.89 L 120.56 168.75" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 131.62 176.63 C 131.62 180.52 128.19 183.67 123.95 183.67 C 119.72 183.67 116.29 180.52 116.29 176.63 C 116.29 172.74 119.72 169.59 123.95 169.59 C 128.19 169.59 131.62 172.74 131.62 176.63" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
@@ -22,6 +21,9 @@
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
     <path d="M 139.00 115.67 L 139.00 42.83" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+  </g>
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 143.38 42.82 L 216.06 42.25 L 214.06 177.89 L 120.56 177.89 L 120.56 168.75" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
   </g>
   <g id="role-label" data-role="label">
     <text x="63.7" y="76.0" font-family="Arial, sans-serif" font-size="12.0" fill="#1A1A1A">tape</text>

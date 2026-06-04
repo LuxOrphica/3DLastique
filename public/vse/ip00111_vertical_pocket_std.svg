@@ -2,11 +2,6 @@
   <!-- VSE — Visual Standardization Engine -->
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 23.07 63.44 L 138.37 63.44 C 153.18 64.28 153.55 71.11 138.37 71.87 L 123.88 71.87 L 123.88 109.53" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
-  </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 202.24 213.54 L 143.65 213.54 L 143.65 123.47" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
-  <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 124.48 88.47 L 192.02 88.47 C 209.08 88.64 208.55 113.99 192.02 114.18 L 23.51 114.18" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 23.22 42.47 L 235.23 42.47" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 204.42 96.33 L 204.42 260.09" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
@@ -49,6 +44,9 @@
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 214.36 102.87 L 214.36 72.38" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 211.80 102.91 L 211.80 36.93" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 202.24 213.54 L 143.65 213.54 L 143.65 123.47" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-break_line" data-role="break_line">
     <path d="M 23.21 41.47 L 23.51 259.90" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>

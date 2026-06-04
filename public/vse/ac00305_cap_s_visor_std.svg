@@ -12,11 +12,6 @@
     <path d="M 178.97 132.47 L 178.97 121.35" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 186.49 106.46 C 186.49 106.46 189.22 39.67 179.35 9.23" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 180.30 80.36 C 180.40 58.84 178.14 26.77 172.46 9.23" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
-  </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 175.30 62.42 C 174.75 45.55 171.56 21.82 167.48 9.23" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
-  <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 154.67 121.13 L 178.62 121.13 C 188.24 122.00 189.78 94.45 178.62 94.22 L 154.67 94.22" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 154.34 110.57 L 154.34 127.26 L 169.17 127.26 C 181.69 126.78 182.63 137.48 169.15 137.48 L 19.07 137.48" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 154.17 85.46 L 170.85 85.46 C 183.36 85.94 184.31 75.25 170.84 75.25 L 19.76 75.25" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
@@ -24,6 +19,9 @@
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 175.31 66.11 L 175.31 99.48" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 175.31 132.93 L 175.31 114.39" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 175.30 62.42 C 174.75 45.55 171.56 21.82 167.48 9.23" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-break_line" data-role="break_line">
     <path d="M 19.53 138.20 L 19.53 9.23 L 178.97 9.23" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>

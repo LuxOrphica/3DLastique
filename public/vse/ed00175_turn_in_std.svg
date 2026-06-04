@@ -4,12 +4,6 @@
     <path d="M 67.96 62.21 L 82.41 59.97" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 88.76 83.07 C 89.18 81.28 89.32 79.92 89.32 76.12 L 89.39 20.04 L 83.42 20.69 L 83.42 83.93 L 88.76 83.07" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 80.18 129.43 L 176.22 114.54" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
-  </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 100.10 77.24 L 176.22 65.04" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-    <path d="M 100.10 64.39 L 175.70 52.76" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
-  <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 89.66 20.14 L 89.66 117.38 C 89.66 133.69 68.45 133.21 68.45 117.87 L 68.45 61.09" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 176.22 114.54 L 176.22 7.07 L 176.07 6.99 L 89.66 20.14" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
@@ -19,6 +13,10 @@
   </g>
   <g id="role-hw_zipper_tape" data-role="hw_zipper_tape">
     <path d="M 58.74 33.93 L 83.42 41.76" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:none;stroke-linecap:square;opacity:1" data-role="hw_zipper_tape"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 100.10 77.24 L 176.22 65.04" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+    <path d="M 100.10 64.39 L 175.70 52.76" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-label" data-role="label">
     <text x="27.5" y="34.4" font-family="Arial, sans-serif" font-size="12.0" fill="#1A1A1A">Lining</text>

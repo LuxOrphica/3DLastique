@@ -32,9 +32,6 @@
     <path d="M 215.42 87.61 L 215.42 122.27" style="stroke:#1A1A1A;stroke-width:7.40;stroke-dasharray:2.776;fill:none;stroke-linecap:butt;opacity:1" data-role="hw_zipper_tape"/>
     <path d="M 217.42 120.94 L 217.42 89.27" style="stroke:#1A1A1A;stroke-width:7.40;stroke-dasharray:2.776;fill:none;stroke-linecap:butt;opacity:1" data-role="hw_zipper_tape"/>
   </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 164.89 180.26 L 164.89 233.88 L 261.53 233.88 L 261.53 271.88" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 201.99 105.40 L 201.99 80.06" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 198.45 115.40 L 198.45 61.06" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
@@ -50,6 +47,9 @@
     <path d="M 160.49 177.61 L 160.49 101.95" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 156.97 177.61 L 156.97 115.95" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 154.74 177.61 L 154.74 152.28" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 164.89 180.26 L 164.89 233.88 L 261.53 233.88 L 261.53 271.88" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-arrow" data-role="arrow">
     <path d="M 180.62 160.01 C 180.62 159.26 180.06 158.64 179.38 158.64 C 178.69 158.64 178.14 159.26 178.14 160.01 C 178.14 160.77 178.69 161.38 179.38 161.38 C 180.06 161.38 180.62 160.77 180.62 160.01 Z" style="stroke:none;stroke-width:0;stroke-dasharray:none;fill:#1A1A1A;opacity:1" data-role="arrow"/>

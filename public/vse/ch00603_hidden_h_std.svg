@@ -38,11 +38,6 @@
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 341.47 132.51 L 369.93 100.03" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
-  </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 373.03 98.39 C 420.86 85.83 474.89 84.54 494.67 85.19 C 514.46 85.83 679.78 85.05 679.78 85.05" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
-  <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 373.91 337.72 L 427.93 337.74" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 394.89 344.48 L 427.93 344.50" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 257.73 397.88 L 325.40 398.17" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
@@ -57,6 +52,9 @@
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 413.64 359.99 L 407.02 360.10 L 407.20 371.60 L 413.82 371.49 Z" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 419.89 365.80 L 682.71 365.80" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 373.03 98.39 C 420.86 85.83 474.89 84.54 494.67 85.19 C 514.46 85.83 679.78 85.05 679.78 85.05" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-break_line" data-role="break_line">
     <path d="M 682.71 78.06 L 682.71 533.29 L 264.41 533.29" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>

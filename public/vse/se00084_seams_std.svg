@@ -11,7 +11,6 @@
     <path d="M 114.55 103.71 C 118.23 103.71 121.22 106.66 121.22 110.31 C 121.22 113.96 118.23 116.92 114.55 116.92 C 110.86 116.92 107.87 113.96 107.87 110.31 C 107.87 106.66 110.86 103.71 114.55 103.71" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
   </g>
   <g id="role-contour_outer" data-role="contour_outer">
-    <path d="M 116.78 16.68 L 20.57 16.68 L 20.57 160.70 L 106.01 160.70" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 93.46 98.28 L 87.40 98.28" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
@@ -20,6 +19,9 @@
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
     <path d="M 93.18 103.71 L 20.41 103.71" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+  </g>
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 116.78 16.68 L 20.57 16.68 L 20.57 160.70 L 106.01 160.70" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
   </g>
   <g id="role-label" data-role="label">
   </g>

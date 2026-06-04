@@ -99,7 +99,7 @@ for row in report:
         "files": row.get("files", [])[:5],
         "key_str": row.get("key_str"),
     }
-    item["suggested_role"] = row.get("suggested_role") or suggest_semantic_role({**row, "_role": role})
+    item["suggested_role"] = suggest_semantic_role({**row, "_role": role}) or row.get("suggested_role")
     signature = "|".join(
         str(v)
         for v in (

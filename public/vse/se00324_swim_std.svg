@@ -16,7 +16,6 @@
     <path d="M 114.15 97.75 L 162.88 97.75" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 154.49 159.06 L 268.14 159.06" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 116.30 158.79 L 137.90 158.79" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
-    <path d="M 163.22 41.35 L 268.28 41.35 L 268.28 216.64 L 137.28 216.64" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 137.88 108.85 L 162.22 108.85" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
@@ -27,6 +26,9 @@
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
     <path d="M 176.16 101.37 L 268.51 101.37" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
+  </g>
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 163.22 41.35 L 268.28 41.35 L 268.28 216.64 L 137.28 216.64" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
   </g>
   <g id="role-label" data-role="label">
     <text x="55.9" y="114.7" font-family="Arial, sans-serif" font-size="10.4" fill="#1A1A1A">Tape</text>

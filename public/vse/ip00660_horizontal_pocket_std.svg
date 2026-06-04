@@ -18,9 +18,6 @@
     <path d="M 155.22 129.74 L 173.88 129.74" style="stroke:#1A1A1A;stroke-width:7.40;stroke-dasharray:2.776;fill:none;stroke-linecap:butt;opacity:1" data-role="hw_zipper_tape"/>
     <path d="M 172.55 127.74 L 153.88 127.74" style="stroke:#1A1A1A;stroke-width:7.40;stroke-dasharray:2.776;fill:none;stroke-linecap:butt;opacity:1" data-role="hw_zipper_tape"/>
   </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 198.30 101.83 L 272.49 101.83 L 272.49 168.75" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 192.19 101.83 L 126.30 101.83" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 182.28 95.92 L 152.31 95.92" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
@@ -34,6 +31,9 @@
     <path d="M 166.99 151.96 L 146.94 151.96" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 166.99 146.71 L 137.30 146.71" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 166.99 143.89 L 153.04 143.89" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 198.30 101.83 L 272.49 101.83 L 272.49 168.75" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-break_line" data-role="break_line">
     <path d="M 132.71 261.54 L 314.55 261.78 L 314.55 29.74 L 184.99 29.74" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>

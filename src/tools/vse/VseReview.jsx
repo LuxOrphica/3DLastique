@@ -551,11 +551,66 @@ function applyRoleOverridesToSvg(svgText, roleOverrides) {
   return result;
 }
 
-function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides }) {
+function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides, selectedIdx, singleOverride, onElementClick }) {
   const wrapRef  = useRef(null);
   const hlRef    = useRef(null); // ref to query SVG elements
   const [svgHtml, setSvgHtml] = useState(""); // SVG content managed by React
   const [ready, setReady]     = useState(false);
+  // CSS-based live preview: inject <style> overrides that survive innerHTML resets
+  const overrideStyleId = `vse-override-${svgPrefix}`;
+  useEffect(() => {
+    if (mode !== "std" || !roleOverrides) return;
+    let el = document.getElementById(overrideStyleId);
+    if (!el) {
+      el = document.createElement('style');
+      el.id = overrideStyleId;
+      document.head.appendChild(el);
+    }
+    const rules = Object.entries(roleOverrides).map(([mapKey, newRole]) => {
+      const oldRole = mapKey.split('|')[0];
+      const ns = ROLE_STYLES[newRole];
+      if (!ns || !oldRole) return '';
+      const strokeRule = ns.stroke && ns.stroke !== 'none' ? `stroke: ${ns.stroke} !important;` : '';
+      const widthRule = ns['stroke-width'] ? `stroke-width: ${ns['stroke-width']} !important;` : '';
+      const dashRule = ns['stroke-dasharray']
+        ? `stroke-dasharray: ${ns['stroke-dasharray'] === 'none' ? 'none' : ns['stroke-dasharray']} !important;`
+        : '';
+      const sel = `.${svgPrefix.replace(/[^a-zA-Z0-9]/g, '_')} [data-role="${oldRole}"]`;
+      return `${sel}, ${sel} path, ${sel} line, ${sel} polyline, ${sel} polygon { ${strokeRule} ${widthRule} ${dashRule} opacity: 1 !important; }`;
+    }).join('\n');
+    // Single-element override via [data-selected]
+    if (singleOverride) {
+      const ns = ROLE_STYLES[singleOverride.newRole];
+      if (ns) {
+        const strokeRule = ns.stroke && ns.stroke !== 'none' ? `stroke: ${ns.stroke} !important;` : '';
+        const widthRule = ns['stroke-width'] ? `stroke-width: ${ns['stroke-width']} !important;` : '';
+        const dashRule = ns['stroke-dasharray']
+          ? `stroke-dasharray: ${ns['stroke-dasharray'] === 'none' ? 'none' : ns['stroke-dasharray']} !important;`
+          : '';
+        const selSingle = `.${svgPrefix.replace(/[^a-zA-Z0-9]/g, '_')} [data-selected="1"]`;
+        const singleRule = `${selSingle}, ${selSingle} path, ${selSingle} line, ${selSingle} polyline, ${selSingle} polygon { ${strokeRule} ${widthRule} ${dashRule} opacity: 1 !important; }`;
+        el.textContent = rules + '\n' + singleRule;
+      } else {
+        el.textContent = rules;
+      }
+    } else {
+      el.textContent = rules;
+    }
+    return () => { el.textContent = ''; };
+  }, [roleOverrides, singleOverride, mode, svgPrefix]);
+
+  // Apply data-selected attribute to the selected path after every render
+  useEffect(() => {
+    if (!hlRef.current || !ready) return;
+    const els = [...hlRef.current.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
+      .filter(el => !el.closest("defs"));
+    els.forEach((p, i) => {
+      if (i === selectedIdx) p.setAttribute("data-selected", "1");
+      else p.removeAttribute("data-selected");
+    });
+  }, [selectedIdx, svgHtml, ready]);
+
+  const displayHtml = svgHtml;
   const [scale, setScale]     = useState(1);
   const [pan,   setPan]       = useState({ x: 0, y: 0 });
   // Set of path indices that should be highlighted (index into `els` query)
@@ -614,10 +669,23 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
     return () => el.removeEventListener("wheel", h);
   }, []);
 
-  const onMouseDown = e => { if (e.button !== 0) return; dragging.current = { sx: e.clientX - pan.x, sy: e.clientY - pan.y }; };
-  const onMouseMove = e => { if (!dragging.current) return; setPan({ x: e.clientX - dragging.current.sx, y: e.clientY - dragging.current.sy }); };
+  const onMouseDown = e => { if (e.button !== 0) return; dragging.current = { sx: e.clientX - pan.x, sy: e.clientY - pan.y, moved: false }; };
+  const onMouseMove = e => { if (!dragging.current) return; dragging.current.moved = true; setPan({ x: e.clientX - dragging.current.sx, y: e.clientY - dragging.current.sy }); };
   const onMouseUp   = () => { dragging.current = null; };
   const reset       = () => { setScale(1); setPan({ x: 0, y: 0 }); };
+
+  const onViewportClick = e => {
+    if (!onElementClick || mode !== "std") return;
+    if (dragging.current?.moved) return; // was a drag, not a click
+    const path = e.target.closest("path, line, polyline, polygon, circle, ellipse, rect");
+    if (!path || !hlRef.current?.contains(path)) return;
+    const role = path.getAttribute("data-role") || path.closest("[data-role]")?.getAttribute("data-role");
+    if (!role) return;
+    const els = [...hlRef.current.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
+      .filter(el => !el.closest("defs"));
+    const idx = els.indexOf(path);
+    onElementClick({ role, idx });
+  };
 
   const dimmed = matchedIndices !== null;
 
@@ -631,16 +699,17 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
       <div ref={wrapRef} className="vse-zoom-viewport"
         onMouseDown={onMouseDown} onMouseMove={onMouseMove}
         onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
+        onClick={onViewportClick}
       >
         <div className="vse-zoom-content"
           style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})` }}
         >
           <div
             ref={hlRef}
-            className="vse-zoom-img"
+            className={`vse-zoom-img ${svgPrefix.replace(/[^a-zA-Z0-9]/g, '_')}`}
             draggable={false}
             style={{ opacity: dimmed ? 0.15 : 1, transition: "opacity .15s" }}
-            dangerouslySetInnerHTML={{ __html: mode === "std" ? applyRoleOverridesToSvg(svgHtml, roleOverrides) : svgHtml }}
+            dangerouslySetInnerHTML={{ __html: displayHtml }}
           />
           {dimmed && ready && matchedIndices && (() => {
             const hidden = hlRef.current;
@@ -657,6 +726,22 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
                   const clone = el.cloneNode(true);
                   clone.style.filter = "drop-shadow(0 0 3px #C8A84B)";
                   clone.style.opacity = "1";
+                  // Apply roleOverride styles to clone so overlay reflects live preview
+                  if (roleOverrides && mode === "std") {
+                    const applyOverride = (target) => {
+                      const elRole = target.getAttribute("data-role") || target.closest?.("[data-role]")?.getAttribute("data-role");
+                      if (!elRole) return;
+                      const entry = Object.entries(roleOverrides).find(([mk]) => mk.split("|")[0] === elRole);
+                      if (!entry) return;
+                      const ns = ROLE_STYLES[entry[1]];
+                      if (!ns) return;
+                      if (ns.stroke && ns.stroke !== "none") target.style.stroke = ns.stroke;
+                      if (ns["stroke-width"]) target.style.strokeWidth = ns["stroke-width"];
+                      if (ns["stroke-dasharray"]) target.style.strokeDasharray = ns["stroke-dasharray"] === "none" ? "none" : ns["stroke-dasharray"];
+                    };
+                    applyOverride(clone);
+                    clone.querySelectorAll?.("[data-role]").forEach(applyOverride);
+                  }
                   return <g key={i} dangerouslySetInnerHTML={{ __html: clone.outerHTML }} />;
                 })}
               </svg>
@@ -809,7 +894,9 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
     });
   };
 
-  useEffect(() => { setHoveredIdx(null); setRoleOverrides({}); }, [activeId]);
+  const [selectedEl, setSelectedEl] = useState(null);   // { role, idx }
+  const [singleOverride, setSingleOverride] = useState(null); // { role, newRole }
+  useEffect(() => { setHoveredIdx(null); setRoleOverrides({}); setSelectedEl(null); setSingleOverride(null); }, [activeId]);
   const entryMatchesNode = (entry, nodeId) =>
     entry.nodeIds?.includes(nodeId) || entry.files?.includes(nodeId);
 
@@ -1022,6 +1109,9 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                 mode="std"
                 svgPrefix={`${activeId}_std`}
                 roleOverrides={roleOverrides}
+                selectedIdx={selectedEl?.idx ?? null}
+                singleOverride={singleOverride}
+                onElementClick={el => { setSelectedEl(el); setSingleOverride(null); }}
               />
             </div>
           </div>
@@ -1050,20 +1140,28 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                     {groups.map((g, idx) => {
                       const isHov = safeIdx === idx;
                       const assigned = g.entry.role && g.entry.role !== "?";
+                      // Show overridden style if role was changed
+                      const overrideRole = roleOverrides[g.mapKey];
+                      const overrideStyle = overrideRole ? ROLE_STYLES[overrideRole] : null;
+                      const dispStroke = overrideStyle?.stroke || g.entry.stroke;
+                      const dispWidth  = overrideStyle?.["stroke-width"] ? parseFloat(overrideStyle["stroke-width"]) : g.entry.width;
+                      const dispDashed = overrideStyle?.["stroke-dasharray"]
+                        ? (overrideStyle["stroke-dasharray"] !== "none" && overrideStyle["stroke-dasharray"] !== "")
+                        : g.entry.dashed;
                       return (
                         <tr
                           key={g.indices[0]}
-                          className={`vse-inspector-row${isHov ? " hovered" : ""}${assigned ? " vse-row-filled" : ""}`}
+                          className={`vse-inspector-row${isHov ? " hovered" : ""}${assigned ? " vse-row-filled" : ""}${overrideRole ? " vse-row-override" : ""}`}
                           onMouseEnter={() => setHoveredIdx(idx)}
                           onMouseLeave={() => setHoveredIdx(null)}
                         >
                           <td className="vse-tc">
-                            <LineSwatch color={g.entry.stroke} width={g.entry.width} dashed={g.entry.dashed} />
+                            <LineSwatch color={dispStroke} width={dispWidth} dashed={dispDashed} />
                           </td>
                           <td>
-                            <ColorDot hex={g.entry.stroke} /><code>{g.entry.stroke}</code>
+                            <ColorDot hex={dispStroke} /><code>{dispStroke}</code>
                           </td>
-                          <td className="vse-tc vse-muted">{g.entry.width}</td>
+                          <td className="vse-tc vse-muted">{dispWidth}</td>
                           <td className="vse-tc vse-muted">{g.count ?? g.indices.length}</td>
                           <td>
                             <select
@@ -1105,6 +1203,30 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                         </tr>
                       );
                     })}
+                    {selectedEl && (
+                      <tr className="vse-inspector-row vse-row-selected-el" style={{background:"#2a2a1a"}}>
+                        <td className="vse-tc">
+                          <LineSwatch
+                            color={singleOverride ? (ROLE_STYLES[singleOverride.newRole]?.stroke || selectedEl.role) : "#C8A84B"}
+                            width={singleOverride ? parseFloat(ROLE_STYLES[singleOverride.newRole]?.["stroke-width"] || 1) : 1}
+                            dashed={false}
+                          />
+                        </td>
+                        <td colSpan={2} style={{fontSize:"11px",color:"#C8A84B"}}>
+                          ☞ {selectedEl.role}
+                        </td>
+                        <td className="vse-tc vse-muted">1</td>
+                        <td>
+                          <select
+                            className="vse-role-sel-sm"
+                            value={singleOverride?.newRole ?? selectedEl.role}
+                            onChange={e => setSingleOverride({ role: selectedEl.role, newRole: e.target.value })}
+                          >
+                            <RoleOptions />
+                          </select>
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>

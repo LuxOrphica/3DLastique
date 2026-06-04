@@ -17,9 +17,6 @@
     <path d="M 120.99 226.83 C 120.99 234.82 112.60 241.30 102.24 241.30 C 91.88 241.30 83.48 234.82 83.48 226.83 C 83.48 218.84 91.88 212.36 102.24 212.36 C 112.60 212.36 120.99 218.84 120.99 226.83" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 79.66 226.98 L 134.19 227.01" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
   </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 279.76 168.35 C 234.35 211.40 190.93 225.16 138.25 226.83" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 96.84 132.08 C 96.84 120.19 88.61 119.76 88.61 132.52" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 103.48 122.99 C 98.04 123.06 92.72 122.99 92.72 122.99" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
@@ -30,6 +27,9 @@
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 92.46 125.23 L 105.86 125.23" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 79.46 127.79 L 105.86 127.79" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 279.76 168.35 C 234.35 211.40 190.93 225.16 138.25 226.83" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-break_line" data-role="break_line">
     <path d="M 281.58 34.25 L 281.58 327.25 C 281.58 327.25 281.58 351.88 246.82 357.90 C 204.09 365.30 126.65 364.62 126.65 364.62" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>

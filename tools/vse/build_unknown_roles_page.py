@@ -115,9 +115,10 @@ def family_key(row):
 
 def swatch(color, size=20):
     if not color or color == "none":
-        return f'<span class="swatch swatch-empty" style="width:{size}px;height:{size}px"></span>'
+        return f'<span class="swatch swatch-empty" title="no color" style="width:{size}px;height:{size}px"></span>'
     safe = html.escape(color)
-    return f'<span class="swatch" style="width:{size}px;height:{size}px;background:{safe}"></span>'
+    cls = " swatch-light" if str(color).lower() in ("#fff", "#ffffff", "#fdfefd", "#d9dad9") else ""
+    return f'<span class="swatch{cls}" title="{safe}" style="width:{size}px;height:{size}px;background:{safe}"></span>'
 
 
 def line_preview(stroke, fill, width, dashed):
@@ -128,9 +129,40 @@ def line_preview(stroke, fill, width, dashed):
     except (TypeError, ValueError):
         sw = 0.5
     dash = "stroke-dasharray='5 3'" if dashed else ""
+    bg = "preview-checker" if f.lower() in ("#fff", "#ffffff", "#fdfefd", "#d9dad9") or s == "#999" else ""
+    outline = "#777" if s == "#999" else s
     if f != "none":
-        return f'<svg width="70" height="24"><rect x="3" y="3" width="64" height="18" fill="{f}" stroke="{s}" stroke-width="{sw}"/></svg>'
-    return f'<svg width="70" height="24"><line x1="4" y1="12" x2="66" y2="12" stroke="{s}" stroke-width="{sw}" {dash}/></svg>'
+        return f'<svg class="{bg}" width="92" height="30"><rect x="4" y="4" width="84" height="22" fill="{f}" stroke="{outline}" stroke-width="{max(sw, 0.8)}"/></svg>'
+    return f'<svg class="{bg}" width="92" height="30"><line x1="5" y1="15" x2="87" y2="15" stroke="{outline}" stroke-width="{sw}" {dash}/></svg>'
+
+
+def context_note(row):
+    files = " ".join(str(f).lower() for f in row.get("files", []))
+    fill = str(row.get("raw_fill") or "").lower()
+    stroke = str(row.get("raw_stroke") or "").lower()
+    bits = []
+    if fill in ("#ffffff", "#fdfefd", "#d9dad9") or (stroke == "none" and fill):
+        bits.append("белый/почти невидимый элемент")
+    if "glue" in files or "welding" in files:
+        bits.append("в примерах есть glue/welding")
+    if "velcro" in files:
+        bits.append("в примерах есть Velcro")
+    if "fur" in files or "fh" in files:
+        bits.append("похоже на мех/ворс")
+    if "elastic" in files:
+        bits.append("в примерах есть elastic")
+    suggested = row.get("_suggested_role")
+    if suggested == "contour_hidden":
+        bits.append("серый пунктир: невидимый контур")
+    if suggested == "fill_fur":
+        bits.append("градиент/заливка меха")
+    elif suggested == "fill_shadow":
+        bits.append("серая теневая/металлическая заливка")
+    elif suggested == "fill_gradient":
+        bits.append("градиентная заливка")
+    if row.get("_suggested_role"):
+        bits.append(f"подсказка: {row['_suggested_role']}")
+    return " · ".join(bits)
 
 
 def file_thumb(fname):
@@ -163,7 +195,7 @@ for row in rows:
     row["_normalized_role"] = normalize_role(role)
     row["_role_status"] = role_status(role)
     row["_family_key"] = family_key(row)
-    row["_suggested_role"] = row.get("suggested_role") or suggest_semantic_role(row)
+    row["_suggested_role"] = suggest_semantic_role(row) or row.get("suggested_role")
     key = row.get("key") or []
     row["_color_group"] = color_group(row.get("raw_stroke") or (key[0] if key else ""), row.get("raw_fill") or (key[1] if len(key) > 1 else ""))
 
@@ -194,6 +226,9 @@ quick_roles = [
     "fill_fabric",
     "fill_interlining",
     "fill_shape",
+    "fill_gradient",
+    "fill_fur",
+    "fill_shadow",
     "boundary_interlining",
     "stitch_edge",
     "stitch_thru",
@@ -201,6 +236,7 @@ quick_roles = [
     "stitch_double",
     "seam_line",
     "contour_outer",
+    "contour_hidden",
     "callout_line",
     "callout_zoom",
     "dim_line",
@@ -226,6 +262,7 @@ for i, row in enumerate(rows):
     near_text, orient, sz = key[8], key[9], key[10]
     geom = ("line" if is_line else "path") + (" filled" if is_filled else "") + (" tiny" if is_tiny else "")
     thumbs = "".join(file_thumb(str(fname)) for fname in row.get("files", [])[:4])
+    note = context_note(row)
     status = row["_role_status"]
     normalized = row["_normalized_role"]
     family_roles_label = ", ".join(row["_family_roles"][:4])
@@ -248,12 +285,12 @@ for i, row in enumerate(rows):
   <td class="tc">{html.escape(str(width))}</td>
   <td class="tc">{line_preview(str(stroke), str(fill), width, dashed)}</td>
   <td class="tc"><code>{html.escape(geom)}</code><br><small>{html.escape(str(orient))} {html.escape(str(sz))}</small><br><small>{'near text' if near_text else ''}</small><br><b>{html.escape(row.get('auto_role', ''))}</b></td>
+  <td class="context-cell">{thumbs}<div class="context-note">{html.escape(note)}</div></td>
   <td>
     <input class="role-inp" data-idx="{i}" list="role-options" type="text" value="{role_value}" placeholder="введи роль...">
     <div class="role-meta status-{status}">{status}{' · ' + html.escape(family_roles_label) if family_roles_label else ''}</div>
     {normalized_html}
   </td>
-  <td>{thumbs}</td>
 </tr>"""
     )
 
@@ -295,7 +332,10 @@ code {{ font-size: 10px; color: #666; }}
 small {{ font-size: 10px; color: #888; }}
 b {{ color: #9b741b; font-size: 10px; }}
 .swatch {{ display:inline-block; border:1px solid #999; border-radius:2px; vertical-align:middle; }}
+.swatch-light, .preview-checker {{ background-image: linear-gradient(45deg,#ddd 25%,transparent 25%), linear-gradient(-45deg,#ddd 25%,transparent 25%), linear-gradient(45deg,transparent 75%,#ddd 75%), linear-gradient(-45deg,transparent 75%,#ddd 75%); background-size: 8px 8px; background-position: 0 0,0 4px,4px -4px,-4px 0; }}
 .swatch-empty {{ border:1px dashed #bbb; background:#fff; }}
+.context-cell {{ min-width: 270px; max-width: 360px; }}
+.context-note {{ margin-top: 4px; font-size: 11px; line-height: 1.35; color: #6b604f; }}
 .role-inp {{ width: 210px; padding: 5px 8px; border: 1px solid #C8A84B; border-radius: 3px; font-size: 13px; }}
 .role-meta {{ margin-top: 4px; font-size: 10px; color: #777; }}
 .status-custom {{ color: #b54422; font-weight: 700; }}
@@ -324,7 +364,8 @@ b {{ color: #9b741b; font-size: 10px; }}
     <div class="stat">Вес без роли: <b>{unassigned_weight}</b></div>
   </div>
   <div class="controls">
-    <button class="save-btn" onclick="saveJSON()">Сохранить назначения</button>
+    <button class="save-btn" onclick="saveJSONApi()">Сохранить назначения</button>
+    <button class="bulk-btn" onclick="applyUnknownRoles()">Применить к стандарту</button>
     <input id="search" type="search" placeholder="поиск: роль, файл, цвет, геометрия">
     <input id="bulkRole" list="role-options" type="text" placeholder="роль для массового назначения">
     <button class="bulk-btn" onclick="bulkApplyVisible()">Применить к видимым без роли</button>
@@ -354,7 +395,7 @@ b {{ color: #9b741b; font-size: 10px; }}
 </datalist>
 <table>
 <thead><tr>
-  <th>Кол-во</th><th>Stroke</th><th>Fill</th><th>Width</th><th>Preview</th><th>Геометрия</th><th>Роль</th><th>Файлы</th>
+  <th>Кол-во</th><th>Stroke</th><th>Fill</th><th>Width</th><th>Preview</th><th>Геометрия</th><th>Контекст</th><th>Роль</th>
 </tr></thead>
 <tbody>
 {''.join(rows_html)}
@@ -456,6 +497,45 @@ function saveJSON() {{
   a.download = 'unknown_roles_assigned.json';
   a.click();
   document.getElementById('status').textContent = `Сохранено: ${{assigned.length}} назначений из {len(rows)}`;
+}}
+
+async function saveJSONApi() {{
+  document.querySelectorAll('.role-inp').forEach(inp => {{
+    data[Number(inp.dataset.idx)]._role = inp.value.trim();
+  }});
+  const assigned = data.filter(r => r._role);
+  const status = document.getElementById('status');
+  status.textContent = `Сохраняю ${{assigned.length}} назначений...`;
+  try {{
+    const res = await fetch('http://localhost:7070/api/save-unknown-roles', {{
+      method: 'POST',
+      headers: {{ 'Content-Type': 'application/json' }},
+      body: JSON.stringify({{ assignments: assigned }}),
+    }});
+    const payload = await res.json().catch(() => ({{}}));
+    if (!res.ok || !payload.ok) {{
+      throw new Error(payload.message || payload.error || `HTTP ${{res.status}}`);
+    }}
+    status.textContent = `Сохранено в проект: ${{payload.saved}} назначений, всего в базе ${{payload.total ?? payload.saved}}. Обнови страницу.`;
+  }} catch (err) {{
+    saveJSON();
+    status.textContent = `API не запущен, скачан JSON-файл: ${{assigned.length}} назначений. ${{err.message || err}}`;
+  }}
+}}
+
+async function applyUnknownRoles() {{
+  const status = document.getElementById('status');
+  status.textContent = 'Применяю назначения к style_registry и пересобираю SVG...';
+  try {{
+    const res = await fetch('http://localhost:7070/api/apply-unknown-roles', {{ method: 'POST' }});
+    const payload = await res.json().catch(() => ({{}}));
+    if (!res.ok || !payload.ok) {{
+      throw new Error(payload.message || payload.error || `HTTP ${{res.status}}`);
+    }}
+    status.textContent = 'Запущена пересборка стандартизированных SVG. Проверяй /tools/vse через минуту.';
+  }} catch (err) {{
+    status.textContent = `Не удалось применить к стандарту: ${{err.message || err}}`;
+  }}
 }}
 
 refreshVisible();

@@ -11,9 +11,6 @@
     <path d="M 132.16 8.02 L 113.34 98.29" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
     <path d="M 143.35 8.02 L 121.40 111.66" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
   </g>
-  <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 108.45 85.59 L 124.47 9.28" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
-  </g>
   <g id="role-boundary_fragment" data-role="boundary_fragment">
     <path d="M 18.75 94.65 L 104.47 94.65 C 104.47 94.65 111.26 94.73 111.26 97.94 C 111.26 101.09 107.22 101.94 104.49 101.94 L 86.10 101.94" style="stroke:#27A6DE;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="boundary_fragment"/>
   </g>
@@ -21,6 +18,9 @@
     <path d="M 109.64 117.01 L 109.64 98.01" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 103.55 128.92 L 103.58 96.93" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
     <path d="M 107.43 129.08 L 107.46 88.65" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge"/>
+  </g>
+  <g id="role-stitch_thru" data-role="stitch_thru">
+    <path d="M 108.45 85.59 L 124.47 9.28" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru"/>
   </g>
   <g id="role-arrow" data-role="arrow">
     <path d="M 118.30 111.15 C 118.30 111.70 117.90 112.16 117.39 112.16 C 116.89 112.16 116.48 111.70 116.48 111.15 C 116.48 110.59 116.89 110.14 117.39 110.14 C 117.90 110.14 118.30 110.59 118.30 111.15 Z" style="stroke:none;stroke-width:0;stroke-dasharray:none;fill:#1A1A1A;opacity:1" data-role="arrow"/>
