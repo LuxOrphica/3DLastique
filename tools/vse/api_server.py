@@ -221,6 +221,37 @@ def get_node_status():
     return jsonify(data)
 
 
+ELEM_OVERRIDES_PATH = HERE / "elem_overrides.json"
+
+@app.route("/api/elem-override", methods=["GET"])
+def get_elem_overrides():
+    try:
+        data = json.loads(ELEM_OVERRIDES_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        data = {}
+    return jsonify(data)
+
+@app.route("/api/elem-override", methods=["POST"])
+def set_elem_override():
+    body = request.get_json(force=True) or {}
+    node_id  = body.get("node_id", "")
+    path_d   = body.get("path_d", "")   # first ~40 chars of d attribute
+    new_role = body.get("new_role", "")
+    if not node_id or not path_d or not new_role:
+        return jsonify({"ok": False, "error": "node_id, path_d, new_role required"}), 400
+    try:
+        data = json.loads(ELEM_OVERRIDES_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        data = {}
+    node_overrides = data.get(node_id, [])
+    # Replace existing override for same path_d if present
+    node_overrides = [o for o in node_overrides if o.get("path_d") != path_d]
+    node_overrides.append({"path_d": path_d, "new_role": new_role})
+    data[node_id] = node_overrides
+    ELEM_OVERRIDES_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    return jsonify({"ok": True})
+
+
 @app.route("/api/node-status", methods=["POST"])
 def set_node_status():
     body = request.get_json(force=True) or {}
@@ -246,4 +277,4 @@ if __name__ == "__main__":
     print("  POST http://localhost:7070/api/save-unknown-roles")
     print("  POST http://localhost:7070/api/save-registry")
     print("  GET  http://localhost:7070/api/status")
-    app.run(host="127.0.0.1", port=7070, debug=False)
+    app.run(host="0.0.0.0", port=7070, debug=False)

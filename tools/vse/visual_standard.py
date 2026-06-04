@@ -25,6 +25,16 @@ ROLE_STYLES = {
         "opacity":          "1",
         "_label": "Контур детали (ISO 128-20 type B)",
     },
+    "construction_line": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "0.5",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "butt",
+        "stroke-linejoin":  "round",
+        "opacity":          "1",
+        "_label": "Конструктивная линия (внутренняя)",
+    },
     "contour_fold": {
         "stroke":           "#1A1A1A",
         "stroke-width":     "0.75",

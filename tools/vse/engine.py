@@ -1183,7 +1183,7 @@ def original_dasharray(p):
     return " ".join(nums) if nums else "none"
 
 
-def standardize(ai_path, svg_out):
+def standardize(ai_path, svg_out, elem_overrides=None):
     doc = fitz.open(ai_path)
     page = doc[0]
 
@@ -1301,6 +1301,13 @@ def standardize(ai_path, svg_out):
 
         d = items_to_svg_d(items, close)
         if d:
+            # Apply per-element override by path_d match
+            if elem_overrides:
+                d_prefix = d[:40]
+                for o in elem_overrides:
+                    if d.startswith(o.get("path_d", "")[:40]) or o.get("path_d", "").startswith(d_prefix):
+                        role = o["new_role"]
+                        break
             if role == "hw_zipper_tape":
                 if p.get("fill") is not None:
                     style = "stroke:none;stroke-width:0;stroke-dasharray:none;fill:#1A1A1A;opacity:1"

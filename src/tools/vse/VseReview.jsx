@@ -4,6 +4,7 @@ import "./VseReview.css";
 const ROLE_STYLES = {
   // Контуры
   contour_outer:       { stroke: "#1A1A1A", "stroke-width": "1.5",  "stroke-dasharray": "none" },
+  construction_line:   { stroke: "#1A1A1A", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   contour_fold:        { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "8 3 2 3" },
   contour_cut:         { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
   contour_hidden:      { stroke: "#8A8A8A", "stroke-width": "0.65", "stroke-dasharray": "4 2" },
@@ -84,7 +85,7 @@ const ROLE_STYLES = {
 
 const ROLE_GROUPS = [
   { label: "— не назначено —", roles: ["?"] },
-  { label: "Контуры",          roles: ["contour_outer", "contour_fold", "contour_cut", "contour_hidden"] },
+  { label: "Контуры",          roles: ["contour_outer", "construction_line", "contour_fold", "contour_cut", "contour_hidden"] },
   { label: "РЁРІС‹",              roles: ["seam_line", "seam_allowance"] },
   { label: "Строчки",          roles: ["stitch_edge", "stitch_thru", "stitch_topstitch", "stitch_double", "stitch_hidden", "stitch_cover", "stitch_overlock", "stitch_zigzag", "stitch_L", "stitch_C", "stitch_O", "stitch_F", "stitch_Bt", "stitch_symbol"] },
   { label: "Слои и зоны",           roles: ["boundary_fragment", "boundary_zone", "boundary_lining", "boundary_interlining"] },
@@ -103,6 +104,7 @@ const ROLE_LABELS = {
   "?":                   "— не назначено —",
   // Контуры
   "contour_outer":       "Контур детали",
+  "construction_line":   "Конструктивная линия",
   "contour_fold":        "Линия сгиба",
   "contour_cut":         "Линия разреза",
   "contour_hidden":      "Невидимый контур / пунктир",
@@ -267,7 +269,7 @@ const ROLE_LABELS_CLEAN = {
 
 const ROLE_GROUPS_UI = [
   { label: "— не назначено —", roles: ["?"] },
-  { label: "Контуры", roles: ["contour_outer", "contour_fold", "contour_cut", "contour_hidden"] },
+  { label: "Контуры", roles: ["contour_outer", "construction_line", "contour_fold", "contour_cut", "contour_hidden"] },
   { label: "Швы", roles: ["seam_line", "seam_allowance"] },
   { label: "Строчки", roles: ["stitch_edge", "stitch_thru", "stitch_topstitch", "stitch_double", "stitch_hidden", "stitch_cover", "stitch_overlock", "stitch_zigzag", "stitch_L", "stitch_C", "stitch_O", "stitch_F", "stitch_Bt"] },
   { label: "Слои и зоны", roles: ["boundary_fragment", "boundary_zone", "boundary_lining", "boundary_interlining"] },
@@ -282,6 +284,7 @@ const ROLE_GROUPS_UI = [
 const ROLE_LABELS_UI = {
   "?": "— не назначено —",
   contour_outer: "Контур детали",
+  construction_line: "Конструктивная линия",
   contour_fold: "Линия сгиба",
   contour_cut: "Линия разреза",
   contour_hidden: "Невидимый контур / пунктир",
@@ -551,7 +554,7 @@ function applyRoleOverridesToSvg(svgText, roleOverrides) {
   return result;
 }
 
-function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides, selectedIdx, singleOverride, onElementClick }) {
+function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides, elemOverrides, selectedIdx, singleOverride, onElementClick }) {
   const wrapRef  = useRef(null);
   const hlRef    = useRef(null); // ref to query SVG elements
   const [svgHtml, setSvgHtml] = useState(""); // SVG content managed by React
@@ -578,6 +581,17 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
       const sel = `.${svgPrefix.replace(/[^a-zA-Z0-9]/g, '_')} [data-role="${oldRole}"]`;
       return `${sel}, ${sel} path, ${sel} line, ${sel} polyline, ${sel} polygon { ${strokeRule} ${widthRule} ${dashRule} opacity: 1 !important; }`;
     }).join('\n');
+    // Per-element overrides via [data-sel-idx]
+    const elemRules = elemOverrides ? Object.entries(elemOverrides).map(([idx, newRole]) => {
+      const ns = ROLE_STYLES[newRole];
+      if (!ns) return '';
+      const strokeR = ns.stroke && ns.stroke !== 'none' ? `stroke: ${ns.stroke} !important;` : '';
+      const widthR = ns['stroke-width'] ? `stroke-width: ${ns['stroke-width']} !important;` : '';
+      const dashR = ns['stroke-dasharray'] ? `stroke-dasharray: ${ns['stroke-dasharray'] === 'none' ? 'none' : ns['stroke-dasharray']} !important;` : '';
+      const s = `.${svgPrefix.replace(/[^a-zA-Z0-9]/g, '_')} [data-sel-idx="${idx}"]`;
+      return `${s}, ${s} path { ${strokeR} ${widthR} ${dashR} opacity: 1 !important; }`;
+    }).join('\n') : '';
+
     // Single-element override via [data-selected]
     if (singleOverride) {
       const ns = ROLE_STYLES[singleOverride.newRole];
@@ -589,17 +603,17 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
           : '';
         const selSingle = `.${svgPrefix.replace(/[^a-zA-Z0-9]/g, '_')} [data-selected="1"]`;
         const singleRule = `${selSingle}, ${selSingle} path, ${selSingle} line, ${selSingle} polyline, ${selSingle} polygon { ${strokeRule} ${widthRule} ${dashRule} opacity: 1 !important; }`;
-        el.textContent = rules + '\n' + singleRule;
+        el.textContent = rules + '\n' + elemRules + '\n' + singleRule;
       } else {
-        el.textContent = rules;
+        el.textContent = rules + '\n' + elemRules;
       }
     } else {
-      el.textContent = rules;
+      el.textContent = rules + '\n' + elemRules;
     }
     return () => { el.textContent = ''; };
-  }, [roleOverrides, singleOverride, mode, svgPrefix]);
+  }, [roleOverrides, elemOverrides, singleOverride, mode, svgPrefix]);
 
-  // Apply data-selected attribute to the selected path after every render
+  // Apply data-selected and data-sel-idx attributes after every render
   useEffect(() => {
     if (!hlRef.current || !ready) return;
     const els = [...hlRef.current.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
@@ -607,8 +621,10 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
     els.forEach((p, i) => {
       if (i === selectedIdx) p.setAttribute("data-selected", "1");
       else p.removeAttribute("data-selected");
+      if (elemOverrides && elemOverrides[i]) p.setAttribute("data-sel-idx", String(i));
+      else p.removeAttribute("data-sel-idx");
     });
-  }, [selectedIdx, svgHtml, ready]);
+  }, [selectedIdx, elemOverrides, svgHtml, ready]);
 
   const displayHtml = svgHtml;
   const [scale, setScale]     = useState(1);
@@ -711,6 +727,39 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
             style={{ opacity: dimmed ? 0.15 : 1, transition: "opacity .15s" }}
             dangerouslySetInnerHTML={{ __html: displayHtml }}
           />
+          {/* Selected element overlay — yellow outline */}
+          {ready && selectedIdx !== null && selectedIdx !== undefined && (() => {
+            const hidden = hlRef.current;
+            if (!hidden) return null;
+            const svgEl = hidden.querySelector("svg");
+            if (!svgEl) return null;
+            const vb = svgEl.getAttribute("viewBox");
+            const els = [...hidden.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
+              .filter(el => !el.closest("defs"));
+            const sel = els[selectedIdx];
+            if (!sel) return null;
+            const clone = sel.cloneNode(true);
+            // Apply singleOverride style if set, otherwise show original with yellow highlight
+            if (singleOverride) {
+              const ns = ROLE_STYLES[singleOverride.newRole];
+              if (ns) {
+                if (ns.stroke && ns.stroke !== "none") clone.style.stroke = ns.stroke;
+                if (ns["stroke-width"]) clone.style.strokeWidth = ns["stroke-width"];
+                if (ns["stroke-dasharray"]) clone.style.strokeDasharray = ns["stroke-dasharray"];
+              }
+              clone.style.filter = "drop-shadow(0 0 3px #C8A84B)";
+            } else {
+              clone.style.stroke = "#C8A84B";
+              clone.style.filter = "drop-shadow(0 0 4px #C8A84B)";
+            }
+            clone.style.fill = "none";
+            clone.style.opacity = "1";
+            return (
+              <svg viewBox={vb} className="vse-zoom-overlay" xmlns="http://www.w3.org/2000/svg" style={{pointerEvents:"none"}}>
+                <g dangerouslySetInnerHTML={{ __html: clone.outerHTML }} />
+              </svg>
+            );
+          })()}
           {dimmed && ready && matchedIndices && (() => {
             const hidden = hlRef.current;
             if (!hidden) return null;
@@ -834,13 +883,18 @@ function roleGroupsFromSvg(svgText) {
 }
 
 // в"Ђв"Ђ Tab 1: Annotate originals в"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђ
-const API = "http://localhost:7070";
+const API = `http://${window.location.hostname}:7070`;
 
-// Module-level SVG text cache — survives re-renders, cleared only on explicit buildTs change
+// Module-level SVG text cache — keyed by URL (includes ?t=buildTs)
 const _svgTextCache = new Map();
 function cachedFetch(url) {
   if (_svgTextCache.has(url)) return Promise.resolve(_svgTextCache.get(url));
-  return fetch(url).then(r => r.text()).then(t => { _svgTextCache.set(url, t); return t; });
+  return fetch(url, { cache: "no-store" }).then(r => r.text()).then(t => { _svgTextCache.set(url, t); return t; });
+}
+function clearNodeCache(nodeId) {
+  for (const key of _svgTextCache.keys()) {
+    if (key.includes(nodeId)) _svgTextCache.delete(key);
+  }
 }
 
 function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, saving, buildTs }) {
@@ -896,7 +950,8 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
 
   const [selectedEl, setSelectedEl] = useState(null);   // { role, idx }
   const [singleOverride, setSingleOverride] = useState(null); // { role, newRole }
-  useEffect(() => { setHoveredIdx(null); setRoleOverrides({}); setSelectedEl(null); setSingleOverride(null); }, [activeId]);
+  const [elemOverrides, setElemOverrides] = useState({}); // idx → newRole — per-element overrides
+  useEffect(() => { setHoveredIdx(null); setRoleOverrides({}); setSelectedEl(null); setSingleOverride(null); setElemOverrides({}); }, [activeId]);
   const entryMatchesNode = (entry, nodeId) =>
     entry.nodeIds?.includes(nodeId) || entry.files?.includes(nodeId);
 
@@ -1109,6 +1164,7 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                 mode="std"
                 svgPrefix={`${activeId}_std`}
                 roleOverrides={roleOverrides}
+                elemOverrides={elemOverrides}
                 selectedIdx={selectedEl?.idx ?? null}
                 singleOverride={singleOverride}
                 onElementClick={el => { setSelectedEl(el); setSingleOverride(null); }}
@@ -1204,26 +1260,55 @@ function TabCompare({ manifest, registry, setRegistry, buildStatus, onSave, savi
                       );
                     })}
                     {selectedEl && (
-                      <tr className="vse-inspector-row vse-row-selected-el" style={{background:"#2a2a1a"}}>
+                      <tr className="vse-inspector-row vse-row-selected-el">
                         <td className="vse-tc">
                           <LineSwatch
-                            color={singleOverride ? (ROLE_STYLES[singleOverride.newRole]?.stroke || selectedEl.role) : "#C8A84B"}
+                            color={singleOverride ? (ROLE_STYLES[singleOverride.newRole]?.stroke || "#C8A84B") : "#C8A84B"}
                             width={singleOverride ? parseFloat(ROLE_STYLES[singleOverride.newRole]?.["stroke-width"] || 1) : 1}
-                            dashed={false}
+                            dashed={singleOverride ? (ROLE_STYLES[singleOverride.newRole]?.["stroke-dasharray"] && ROLE_STYLES[singleOverride.newRole]?.["stroke-dasharray"] !== "none") : false}
                           />
                         </td>
-                        <td colSpan={2} style={{fontSize:"11px",color:"#C8A84B"}}>
+                        <td colSpan={2} style={{fontSize:"11px",color:"#C8A84B",verticalAlign:"middle"}}>
                           ☞ {selectedEl.role}
                         </td>
                         <td className="vse-tc vse-muted">1</td>
-                        <td>
+                        <td style={{display:"flex",gap:"4px",alignItems:"center"}}>
                           <select
                             className="vse-role-sel-sm"
+                            style={{flex:1}}
                             value={singleOverride?.newRole ?? selectedEl.role}
                             onChange={e => setSingleOverride({ role: selectedEl.role, newRole: e.target.value })}
                           >
                             <RoleOptions />
                           </select>
+                          {singleOverride && singleOverride.newRole !== selectedEl.role && (
+                            <button
+                              title="Применить к этому элементу"
+                              style={{fontSize:"11px",padding:"2px 6px",background:"#C8A84B",border:"none",borderRadius:"3px",cursor:"pointer",color:"#1a1a1a",whiteSpace:"nowrap"}}
+                              onClick={() => {
+                                // Per-element override — only this path, not the whole group
+                                setElemOverrides(prev => ({ ...prev, [selectedEl.idx]: singleOverride.newRole }));
+                                // Get path_d from DOM and save to server
+                                const stdDiv = document.querySelector(`.${activeId}_std`);
+                                const els = stdDiv ? [...stdDiv.querySelectorAll('path, line, polyline, polygon, rect, circle, ellipse')].filter(e => !e.closest('defs')) : [];
+                                const pathD = els[selectedEl.idx]?.getAttribute('d') || '';
+                                if (pathD) {
+                                  fetch(`${API}/api/elem-override`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ node_id: activeId, path_d: pathD, new_role: singleOverride.newRole }),
+                                  }).catch(() => {});
+                                }
+                                setSelectedEl(null);
+                                setSingleOverride(null);
+                              }}
+                            >✓</button>
+                          )}
+                          <button
+                            title="Снять выделение"
+                            style={{fontSize:"11px",padding:"2px 5px",background:"#444",border:"none",borderRadius:"3px",cursor:"pointer",color:"#aaa"}}
+                            onClick={() => { setSelectedEl(null); setSingleOverride(null); }}
+                          >✕</button>
                         </td>
                       </tr>
                     )}
@@ -1571,7 +1656,7 @@ export default function VseReview() {
   const [buildStatus, setBuildStatus] = useState(null); // null | {state, message}
   const [buildTs, setBuildTs] = useState(Date.now());
 
-  const API = "http://localhost:7070";
+  const API = `http://${window.location.hostname}:7070`;
 
   useEffect(() => {
     const t = "?t=" + Date.now();
@@ -1591,8 +1676,12 @@ export default function VseReview() {
         if (s.state !== "building") {
           clearInterval(id);
           if (s.state === "ok") {
-            setBuildTs(Date.now());
-            fetch("/vse/manifest.json?" + Date.now()).then(r => r.json()).then(setManifest);
+            // Small delay to ensure file is flushed to disk before re-fetch
+            setTimeout(() => {
+              clearNodeCache("");  // clear entire cache so fresh SVGs are loaded
+              setBuildTs(Date.now());
+              fetch("/vse/manifest.json?" + Date.now()).then(r => r.json()).then(setManifest);
+            }, 300);
           }
         }
       } catch {}

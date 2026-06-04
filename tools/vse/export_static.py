@@ -66,6 +66,24 @@ if _SKIP_APPROVED and os.path.exists(_APPROVED_PATH):
     except Exception:
         pass
 
+# Per-element overrides: elem_overrides.json { node_id: [{path_d, new_role}] }
+_ELEM_OVERRIDES_PATH = os.path.join(HERE, "elem_overrides.json")
+_elem_overrides = {}
+if os.path.exists(_ELEM_OVERRIDES_PATH):
+    try:
+        _elem_overrides = json.load(open(_ELEM_OVERRIDES_PATH, encoding="utf-8"))
+    except Exception:
+        pass
+
+def apply_elem_override(node_id, path_d, role):
+    """If a per-element override exists for this path, return the overridden role."""
+    overrides = _elem_overrides.get(node_id, [])
+    path_d_prefix = path_d[:40]
+    for o in overrides:
+        if path_d.startswith(o.get("path_d", "")[:40]) or o.get("path_d", "").startswith(path_d_prefix):
+            return o["new_role"]
+    return role
+
 def key_to_str(key):
     return "|".join(str(v) for v in key)
 
@@ -127,12 +145,14 @@ def build_annotated_orig_svg(ai_path, text_words, bb):
     pairs = normalize_fragmented_stitches(pairs)   # merge small stitch fragments
     classified = [(role, p, classified[i][2]) for i, (role, p) in enumerate(pairs)]
 
+    node_id = FILE_TO_NODE_ID.get(os.path.basename(ai_path).lower(), "")
     for role, p, key in classified:
         items = p.get("items", [])
         close = p.get("closePath", False) or (p.get("fill") is not None)
         d = items_to_svg_d(items, close)
         if not d:
             continue
+        role = apply_elem_override(node_id, d, role)
         style = _orig_path_style(p)
         dsk = display_key_str(key)
         lines.append(f'  <path d="{d}" style="{style}" data-role="{role}" data-sk="{dsk}"/>')
@@ -196,7 +216,7 @@ for path, node_id, label, code in SAMPLES:
 
     # Standardized SVG
     std_path = f"{OUT_DIR}/{node_id}_std.svg"
-    standardize(path, std_path)
+    standardize(path, std_path, elem_overrides=_elem_overrides.get(node_id, []))
     with open(std_path, encoding="utf-8") as f:
         std = f.read()
     std = clean_svg(std)
@@ -244,7 +264,7 @@ for e in registry:
             node_ids.append(node_id)
     e["nodeIds"] = node_ids
 
-if NODE_DIR_FILTER or CODE_PREFIX_FILTER:
+if NODE_DIR_FILTER or CODE_PREFIX_FILTER or NODE_ID_FILTER:
     manifest_path = f"{OUT_DIR}/manifest.json"
     existing_manifest = []
     if os.path.exists(manifest_path):
@@ -265,7 +285,7 @@ else:
 with open(f"{OUT_DIR}/style_registry.json", "w", encoding="utf-8") as f:
     json.dump(registry, f, ensure_ascii=False, indent=2)
 
-if NODE_DIR_FILTER or CODE_PREFIX_FILTER:
+if NODE_DIR_FILTER or CODE_PREFIX_FILTER or NODE_ID_FILTER:
     callout_path = f"{OUT_DIR}/callout_graph.json"
     existing_callouts = {}
     if os.path.exists(callout_path):

@@ -6723,7 +6723,8 @@
     "orient": "-",
     "sz": "M",
     "role": "contour_outer",
-    "key_str": "#777777|none|0.45|false"
+    "key_str": "#777777|none|0.45|false",
+    "nodeIds": []
   },
   {
     "stroke": "#1a1a1a",
@@ -6738,7 +6739,8 @@
     "orient": "-",
     "sz": "M",
     "role": "boundary_zone",
-    "key_str": "#1a1a1a|none|1|false"
+    "key_str": "#1a1a1a|none|1.0|false",
+    "nodeIds": []
   },
   {
     "stroke": "#1a1a1a",
@@ -6753,6 +6755,53 @@
     "orient": "-",
     "sz": "M",
     "role": "contour_outer",
+    "key_str": "#1a1a1a|none|1.0|false",
+    "nodeIds": []
+  },
+  {
+    "stroke": "#777777",
+    "fill": "none",
+    "width": 0.45,
+    "dashed": false,
+    "is_line": false,
+    "is_filled": false,
+    "is_tiny": false,
+    "is_closed": false,
+    "near_text": false,
+    "orient": "-",
+    "sz": "M",
+    "role": "contour_outer",
+    "key_str": "#777777|none|0.45|false",
+    "nodeIds": []
+  },
+  {
+    "stroke": "#777777",
+    "fill": "none",
+    "width": 0.45,
+    "dashed": false,
+    "is_line": false,
+    "is_filled": false,
+    "is_tiny": false,
+    "is_closed": false,
+    "near_text": false,
+    "orient": "-",
+    "sz": "M",
+    "role": "contour_outer",
+    "key_str": "#777777|none|0.45|false"
+  },
+  {
+    "stroke": "#1a1a1a",
+    "fill": "none",
+    "width": 1,
+    "dashed": false,
+    "is_line": false,
+    "is_filled": false,
+    "is_tiny": false,
+    "is_closed": false,
+    "near_text": false,
+    "orient": "-",
+    "sz": "M",
+    "role": "construction_line",
     "key_str": "#1a1a1a|none|1|false"
   }
 ]
