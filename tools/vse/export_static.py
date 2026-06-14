@@ -8,7 +8,7 @@ Output: F:/Projects/lekala-site/public/vse/
   - callout_graph.json     callout → target mappings
 """
 import os, re, json, fitz
-from engine import standardize, _normalize_color, _path_style_key, items_to_svg_d, _build_registry_lookup, classify_with_registry, apply_node_role_override, normalize_fragmented_stitches, sanitize_color_role_conflicts
+from engine import standardize, _normalize_color, _path_style_key, items_to_svg_d, _build_registry_lookup, classify_with_registry, apply_node_role_override, normalize_fragmented_stitches, sanitize_color_role_conflicts, reclassify_thin_contours
 from bbox import get_content_bbox
 from callout_graph import analyze
 from roles import near_any_text
@@ -140,10 +140,12 @@ def build_annotated_orig_svg(ai_path, text_words, bb):
         role = apply_node_role_override(ai_path, p, role)
         classified.append((role, p, key))
 
+    original_keys = [key for _, _, key in classified]
     pairs = [(role, p) for role, p, _ in classified]
+    pairs = reclassify_thin_contours(pairs)
     pairs = sanitize_color_role_conflicts(pairs)   # fix red paths wrongly classified as boundary
     pairs = normalize_fragmented_stitches(pairs)   # merge small stitch fragments
-    classified = [(role, p, classified[i][2]) for i, (role, p) in enumerate(pairs)]
+    classified = [(role, p, original_keys[i]) for i, (role, p) in enumerate(pairs)]
 
     node_id = FILE_TO_NODE_ID.get(os.path.basename(ai_path).lower(), "")
     for role, p, key in classified:
@@ -241,8 +243,19 @@ for path, node_id, label, code in SAMPLES:
 # Style registry — add key_str to each entry
 with open(os.path.join(HERE, "style_registry.json"), encoding="utf-8") as f:
     registry = json.load(f)
+if (
+    isinstance(registry, list)
+    and len(registry) == 1
+    and isinstance(registry[0], dict)
+    and isinstance(registry[0].get("value"), list)
+):
+    registry = registry[0]["value"]
+if not isinstance(registry, list):
+    registry = []
 
 for e in registry:
+    if not isinstance(e, dict):
+        continue
     key = (
         e.get("stroke",    "none"),
         e.get("fill",      "none"),
@@ -297,4 +310,8 @@ if NODE_DIR_FILTER or CODE_PREFIX_FILTER or NODE_ID_FILTER:
 with open(f"{OUT_DIR}/callout_graph.json", "w", encoding="utf-8") as f:
     json.dump(callout_all, f, ensure_ascii=False, indent=2)
 
-print(f"\nExported {len(manifest)} nodes to {OUT_DIR}")
+exported_count = len(SAMPLES)
+if NODE_DIR_FILTER or CODE_PREFIX_FILTER or NODE_ID_FILTER:
+    print(f"\nUpdated {exported_count} node(s); manifest has {len(manifest)} nodes in {OUT_DIR}")
+else:
+    print(f"\nExported {len(manifest)} nodes to {OUT_DIR}")

@@ -25,10 +25,10 @@
   <path d="M 385.73 330.50 L 401.40 330.50 C 413.61 331.28 413.11 347.55 401.40 348.21 L 386.29 348.21" style="stroke:#231200;stroke-width:1.50;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="contour_outer" data-sk="#1a1a1a|none|1.5|false"/>
   <path d="M 258.12 359.72 L 258.25 301.42" style="stroke:#231200;stroke-width:1.50;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="contour_outer" data-sk="#1a1a1a|none|1.5|false"/>
   <path d="M 386.03 330.35 L 386.03 302.01" style="stroke:#231200;stroke-width:1.50;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="contour_outer" data-sk="#1a1a1a|none|1.5|false"/>
-  <path d="M 416.20 355.85 L 416.24 368.57" style="stroke:#f14a41;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="stitch_thru" data-sk="#e02020|none|1.0|false"/>
-  <path d="M 418.59 350.18 L 418.46 368.57" style="stroke:#f14a41;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="stitch_thru" data-sk="#e02020|none|1.0|false"/>
+  <path d="M 416.20 355.85 L 416.24 368.57" style="stroke:#f14a41;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="stitch_edge" data-sk="#e02020|none|1.0|false"/>
+  <path d="M 418.59 350.18 L 418.46 368.57" style="stroke:#f14a41;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="stitch_edge" data-sk="#e02020|none|1.0|false"/>
   <path d="M 261.56 349.93 L 261.52 301.76" style="stroke:#f14a41;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:7 7;" data-role="stitch_thru" data-sk="#e02020|none|1.0|true"/>
-  <path d="M 261.57 352.35 L 261.34 368.24" style="stroke:#f14a41;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="stitch_thru" data-sk="#e02020|none|1.0|false"/>
+  <path d="M 261.57 352.35 L 261.34 368.24" style="stroke:#f14a41;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="stitch_edge" data-sk="#e02020|none|1.0|false"/>
   <path d="M 439.05 362.52 C 439.05 366.00 435.85 368.82 431.90 368.82 C 427.96 368.82 424.76 366.00 424.76 362.52 C 424.76 359.05 427.96 356.23 431.90 356.23 C 435.85 356.23 439.05 359.05 439.05 362.52" style="stroke:#f14a41;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="stitch_edge" data-sk="#e02020|none|1.0|false"/>
   <path d="M 398.20 328.06 C 398.20 331.53 395.00 334.35 391.05 334.35 C 387.11 334.35 383.90 331.53 383.90 328.06 C 383.90 324.58 387.11 321.76 391.05 321.76 C 395.00 321.76 398.20 324.58 398.20 328.06" style="stroke:#f14a41;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="stitch_edge" data-sk="#e02020|none|1.0|false"/>
   <path d="M 218.12 301.08 L 468.58 301.64 C 478.32 302.00 478.73 311.64 468.58 311.64 L 454.76 311.64" style="stroke:#231200;stroke-width:1.50;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="contour_outer" data-sk="#1a1a1a|none|1.5|false"/>
@@ -37,7 +37,7 @@
   <path d="M 406.95 296.76 L 407.12 340.74" style="stroke:#f14a41;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="stitch_edge" data-sk="#e02020|none|1.0|false"/>
   <path d="M 402.56 296.50 L 402.56 351.14" style="stroke:#f14a41;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="stitch_edge" data-sk="#e02020|none|1.0|false"/>
   <path d="M 419.65 325.25 L 387.56 392.82" style="stroke:#231200;stroke-width:0.50;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="callout_line" data-sk="#1a1a1a|none|0.5|false|D"/>
-  <path d="M 410.43 339.63 L 410.43 327.74" style="stroke:#231200;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="hw_button" data-sk="#1a1a1a|none|1.0|false"/>
+  <path d="M 410.43 339.63 L 410.43 327.74" style="stroke:#231200;stroke-width:1.00;fill:none;stroke-linecap:butt;stroke-linejoin:miter;" data-role="hw_zipper_tape" data-sk="#1a1a1a|none|1.0|false"/>
   <text x="536.8" y="219.4" font-family="Arial,sans-serif" font-size="12.2" fill="#222">Back</text>
   <text x="287.7" y="211.4" font-family="Arial,sans-serif" font-size="12.2" fill="#222">Front</text>
   <text x="496.6" y="188.8" font-family="Arial,sans-serif" font-size="10.2" fill="#222">Bt</text>

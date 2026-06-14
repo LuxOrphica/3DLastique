@@ -186,6 +186,25 @@
   border-radius: 6px;
 }
 
+.vse-contract-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 10, 6, 0.22);
+  z-index: 90;
+}
+
+.vse-contract-drawer {
+  position: fixed;
+  top: 74px;
+  right: 16px;
+  bottom: 16px;
+  width: min(820px, calc(100vw - 32px));
+  overflow: auto;
+  z-index: 100;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+  border-radius: 10px;
+}
+
 .vse-generate-btn {
   padding: 10px 20px;
   background: #C8A84B;
@@ -452,6 +471,24 @@
 }
 .vse-zoom-viewport:active { cursor: grabbing; }
 
+.vse-svg-state {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: #8a6a1a;
+  background: #fafaf8;
+  font-size: 12px;
+  text-align: center;
+}
+
+.vse-svg-state-error {
+  color: #a12626;
+  background: #fff7f7;
+}
+
 .vse-zoom-content {
   transform-origin: top left;
   position: absolute;
@@ -551,6 +588,86 @@
 
 .vse-tc { text-align: center; }
 .vse-muted { color: #999; font-size: 11px; }
+
+.vse-object-cell {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.vse-object-cell strong {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.vse-object-cell span {
+  color: #999;
+  font-size: 10px;
+}
+
+.vse-style-cell {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.vse-style-cell span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vse-style-params {
+  display: inline-grid;
+  grid-template-columns: auto auto auto;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.vse-style-params-fill {
+  grid-template-columns: 24px;
+}
+
+.vse-style-line,
+.vse-style-fill,
+.vse-style-width {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.vse-style-line code,
+.vse-style-fill code,
+.vse-style-width code {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  color: #555;
+}
+
+.vse-style-line svg {
+  flex: 0 0 auto;
+}
+
+.vse-style-muted {
+  opacity: .38;
+}
+
+.vse-style-fill .vse-color-dot,
+.vse-style-fill .vse-swatch-empty {
+  flex: 0 0 auto;
+  margin-right: 0;
+}
+
+.vse-style-width {
+  justify-content: flex-end;
+}
 
 .vse-color-dot {
   display: inline-block;

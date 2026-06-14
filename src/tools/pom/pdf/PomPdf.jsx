@@ -252,7 +252,7 @@ function CoverPage({ styleInfo, sketchFront, sketchBack }) {
           <View style={s.infoTable}>
             <InfoRow label="Style No."    value={styleInfo.styleCode} bold />
             <InfoRow label="Name EN"      value={styleInfo.nameEN} />
-            <InfoRow label="РќР°Р·РІР°РЅРёРµ RU"  value={styleInfo.nameRU} />
+            <InfoRow label="Название RU"  value={styleInfo.nameRU} />
             <InfoRow label="Season"       value={styleInfo.season} />
             <InfoRow label="Gender"       value={styleInfo.gender} />
             <InfoRow label="Sample size"  value={styleInfo.baseSize ? String(styleInfo.baseSize) : "-"} />
@@ -610,7 +610,7 @@ function BomPage({ styleInfo, bomItems }) {
     <Page size="A4" orientation="landscape" style={s.pageLandscape}>
       <TopBand styleInfo={styleInfo} />
       <View style={s.inner}>
-        <Text style={s.sectionTitle}>Material BOM В· Bill of Materials / РњР°С‚РµСЂРёР°Р»С‹ Рё С„СѓСЂРЅРёС‚СѓСЂР°</Text>
+        <Text style={s.sectionTitle}>Material BOM · Bill of Materials / Материалы и фурнитура</Text>
         <View style={s.table}>
           <View style={s.tHeadRow}>
             <Text style={[s.th, { width: BOM_COL.num }]}>#</Text>
@@ -684,7 +684,7 @@ function MeasurementPage({ styleInfo, poms, sizes, baseSize }) {
       <View style={s.tHeadRow}>
         <Text style={[s.th,     { width: COL.num }]}>#</Text>
         <Text style={[s.th,     { width: COL.code }]}>Code</Text>
-        <Text style={[s.th,     { width: COL.nameRU }]}>РќР°РёРјРµРЅРѕРІР°РЅРёРµ RU</Text>
+            <Text style={[s.th,     { width: COL.nameRU }]}>Наименование RU</Text>
         <Text style={[s.th,     { width: COL.nameEN }]}>Measure point EN</Text>
         {sizes.map(sz => (
           <Text key={sz} style={[sz === baseSize ? s.thBase : s.thSize, { width: COL.size }]}>{sz}</Text>
@@ -720,7 +720,7 @@ function MeasurementPage({ styleInfo, poms, sizes, baseSize }) {
     <Page size="A4" orientation="landscape" style={s.pageLandscape}>
       <TopBand styleInfo={styleInfo} />
       <View style={s.inner}>
-        <Text style={s.sectionTitle}>Measurement Set / РўР°Р±Р»РёС†Р° РёР·РјРµСЂРµРЅРёР№</Text>
+        <Text style={s.sectionTitle}>Measurement Set / Таблица измерений</Text>
         <View style={s.table}>
           <HeadRow />
           {mainPoms.length > 0 && <GroupRow label="Main measurements" totalWidth={totalWidth} />}
@@ -864,4 +864,3 @@ export function PomPdfDocument({
     </Document>
   );
 }
-

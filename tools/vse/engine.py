@@ -3,14 +3,18 @@ VSE — Visual Standardization Engine
 Usage: python engine.py input.ai output.svg
 """
 
-import sys, json, os, math
+import sys, json, os, math, hashlib
 import fitz
+import xml.etree.ElementTree as ET
 from roles import classify_path, near_any_text
+from stitch_logic import normalize_stitch_role
 from visual_standard import style_attr, get_style, ROLE_STYLES
 from bbox import get_content_bbox
 from hardware_symbols import render_zipper_clusters
 
 REGISTRY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "style_registry.json")
+NODE_STYLE_OVERRIDES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "node_style_overrides.json")
+NODE_ANNOTATIONS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "node_annotations.json")
 
 def _safe_print(text):
     try:
@@ -73,8 +77,19 @@ def _build_registry_lookup():
             entries = json.load(f)
     except Exception:
         return {}
+    if (
+        isinstance(entries, list)
+        and len(entries) == 1
+        and isinstance(entries[0], dict)
+        and isinstance(entries[0].get("value"), list)
+    ):
+        entries = entries[0]["value"]
+    if not isinstance(entries, list):
+        return {}
     lookup = {}
     for e in entries:
+        if not isinstance(e, dict):
+            continue
         role = e.get("role")
         if not role or role == "?":
             continue
@@ -93,6 +108,246 @@ def _build_registry_lookup():
         )
         lookup[key] = role
     return lookup
+
+def _load_node_style_overrides():
+    if not os.path.exists(NODE_STYLE_OVERRIDES_PATH):
+        return {}
+    try:
+        with open(NODE_STYLE_OVERRIDES_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _load_node_annotations():
+    if not os.path.exists(NODE_ANNOTATIONS_PATH):
+        return {"version": 1, "nodes": {}}
+    try:
+        with open(NODE_ANNOTATIONS_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception:
+        return {"version": 1, "nodes": {}}
+    if not isinstance(data, dict):
+        return {"version": 1, "nodes": {}}
+    nodes = data.get("nodes")
+    if not isinstance(nodes, dict):
+        data["nodes"] = {}
+    return data
+
+
+def _node_group_overrides(node_id, node_annotations):
+    if not node_id:
+        return {}
+    nodes = node_annotations.get("nodes", {}) if isinstance(node_annotations, dict) else {}
+    node = nodes.get(node_id, {}) if isinstance(nodes, dict) else {}
+    group_overrides = node.get("group_overrides", {}) if isinstance(node, dict) else {}
+    return group_overrides if isinstance(group_overrides, dict) else {}
+
+
+def _node_element_overrides(node_id, node_annotations):
+    if not node_id:
+        return {}
+    nodes = node_annotations.get("nodes", {}) if isinstance(node_annotations, dict) else {}
+    node = nodes.get(node_id, {}) if isinstance(nodes, dict) else {}
+    element_overrides = node.get("element_overrides", {}) if isinstance(node, dict) else {}
+    return element_overrides if isinstance(element_overrides, dict) else {}
+
+
+def _has_node_group_overrides(node_id, node_annotations):
+    return bool(_node_group_overrides(node_id, node_annotations))
+
+def apply_node_style_override(node_id, style_key, role, node_style_overrides):
+    if not node_id or not style_key or not role:
+        return role
+    entries = node_style_overrides.get(node_id, [])
+    if not isinstance(entries, list):
+        return role
+    for entry in entries:
+        key_strs = entry.get("key_strs") or []
+        from_role = entry.get("from_role")
+        new_role = entry.get("new_role")
+        if not new_role:
+            continue
+        if key_strs and style_key not in key_strs:
+            continue
+        if from_role and from_role != role:
+            continue
+        return new_role
+    return role
+
+
+def apply_node_annotation_group_override(node_id, style_key, role, node_annotations):
+    if not node_id or not style_key or not role:
+        return role
+    group_overrides = _node_group_overrides(node_id, node_annotations)
+    if style_key in group_overrides:
+        payload = group_overrides.get(style_key) or {}
+        new_role = payload.get("role")
+        if new_role:
+            return new_role
+    for payload in group_overrides.values():
+        if not isinstance(payload, dict):
+            continue
+        saved_keys = payload.get("key_strs") or []
+        new_role = payload.get("role")
+        from_role = payload.get("from_role")
+        if not new_role:
+            continue
+        if saved_keys and style_key not in saved_keys:
+            continue
+        if from_role and from_role != role:
+            continue
+        return new_role
+    return role
+
+
+def _group_key_for_role_and_path(role, p):
+    sk = _path_data_sk(p)
+    parts = str(sk or "").split("|")
+    if len(parts) >= 4:
+        return f"{role}|{parts[0]}|{parts[1]}|{parts[2]}|{parts[3]}"
+    color_hex = _normalize_color(p.get("color"))
+    fill_raw = p.get("fill")
+    fill_hex = _normalize_color(fill_raw) if fill_raw else "none"
+    w = round(p.get("width") or 0, 2)
+    dash = bool(p.get("dashes") and p.get("dashes") != "[] 0")
+    return f"{role}|{color_hex}|{fill_hex}|{w}|{str(dash).lower()}"
+
+
+def _parse_style_attr(style_text):
+    out = {}
+    for chunk in (style_text or "").split(";"):
+        if ":" not in chunk:
+            continue
+        k, v = chunk.split(":", 1)
+        out[k.strip().lower()] = v.strip()
+    return out
+
+
+def _strip_ns(tag):
+    return tag.split("}", 1)[-1] if "}" in tag else tag
+
+
+def _parse_width(value):
+    try:
+        return round(float(value or 0), 2)
+    except Exception:
+        return 0.0
+
+
+def _orig_entity_group_key(role, data_sk, stroke, fill, width, dashed):
+    data_sk = str(data_sk or "").strip()
+    if data_sk:
+        parts = data_sk.split("|")
+        if len(parts) >= 4:
+            return f"{role}|{parts[0]}|{parts[1]}|{parts[2]}|{parts[3]}"
+    return f"{role}|{stroke}|{fill}|{round(width,1)}|{str(bool(dashed)).lower()}"
+
+
+def _load_orig_identity_buckets(node_id, svg_out):
+    std_path = os.path.abspath(svg_out)
+    orig_path = std_path.replace("_std.svg", "_orig.svg") if std_path.endswith("_std.svg") else ""
+    if not orig_path or not os.path.exists(orig_path):
+        return {}
+    try:
+        root = ET.fromstring(open(orig_path, encoding="utf-8").read())
+    except Exception:
+        return {}
+    buckets = {}
+    for el in root.iter():
+        tag = _strip_ns(el.tag)
+        if tag not in {"path", "line", "polyline", "polygon", "rect", "circle", "ellipse"}:
+            continue
+        style_map = _parse_style_attr(el.attrib.get("style", ""))
+        role = el.attrib.get("data-role", "") or "unknown"
+        data_sk = el.attrib.get("data-sk", "") or ""
+        stroke = (el.attrib.get("stroke") or style_map.get("stroke") or "none").strip().lower()
+        fill = (el.attrib.get("fill") or style_map.get("fill") or "none").strip().lower()
+        width = _parse_width(el.attrib.get("stroke-width") or style_map.get("stroke-width"))
+        dash = (el.attrib.get("stroke-dasharray") or style_map.get("stroke-dasharray") or "").strip()
+        dashed = dash not in ("", "none", "0")
+        d_like = (
+            el.attrib.get("d")
+            or el.attrib.get("points")
+            or f"rect:{el.attrib.get('x','')}:{el.attrib.get('y','')}:{el.attrib.get('width','')}:{el.attrib.get('height','')}"
+            or f"circle:{el.attrib.get('cx','')}:{el.attrib.get('cy','')}:{el.attrib.get('r','')}"
+        )
+        prefix = str(d_like)[:80]
+        if not prefix:
+            continue
+        elem_key = hashlib.sha1(f"{node_id}|{prefix}".encode("utf-8")).hexdigest()[:16]
+        group_key = _orig_entity_group_key(role, data_sk, stroke, fill, width, dashed)
+        buckets.setdefault(group_key, []).append({
+            "elem_key": elem_key,
+            "path_d_prefix": prefix,
+            "group_key": group_key,
+        })
+    return buckets
+
+
+def _element_key_for_path(node_id, p, role):
+    items = p.get("items", [])
+    close = p.get("closePath", False)
+    fill = p.get("fill")
+    if fill is not None:
+        close = True
+    if role in ("callout_line", "dim_line", "callout_zoom"):
+        close = False
+    d = items_to_svg_d(items, close)
+    prefix = (d or "")[:80]
+    if not prefix:
+        return "", ""
+    elem_key = hashlib.sha1(f"{node_id}|{prefix}".encode("utf-8")).hexdigest()[:16]
+    return elem_key, prefix
+
+
+def _trace_key_list(value):
+    if isinstance(value, (list, tuple, set)):
+        return [str(v).strip() for v in value if str(v).strip()]
+    value = str(value or "").strip()
+    return [value] if value else []
+
+
+def _merge_trace_identity(paths):
+    elem_keys = []
+    group_keys = []
+    for p in paths:
+        for key in _trace_key_list(p.get("_vse_elem_keys") or p.get("_vse_elem_key")):
+            if key not in elem_keys:
+                elem_keys.append(key)
+        for key in _trace_key_list(p.get("_vse_group_keys") or p.get("_vse_group_key")):
+            if key not in group_keys:
+                group_keys.append(key)
+    return elem_keys, group_keys
+
+
+def apply_node_annotation_element_override(node_id, p, role, node_annotations):
+    if not node_id or not role:
+        return role
+    elem_overrides = _node_element_overrides(node_id, node_annotations)
+    if not elem_overrides:
+        return role
+    elem_key = str(p.get("_vse_elem_key") or "")
+    prefix = str(p.get("_vse_path_d_prefix") or "")
+    if not prefix:
+        elem_key, prefix = _element_key_for_path(node_id, p, role)
+    if not prefix:
+        return role
+    payload = elem_overrides.get(elem_key)
+    if isinstance(payload, dict) and payload.get("role"):
+        return payload.get("role")
+    short_prefix = prefix[:40]
+    for payload in elem_overrides.values():
+        if not isinstance(payload, dict):
+            continue
+        saved_prefix = str(payload.get("path_d_prefix") or "")[:40]
+        saved_role = payload.get("role")
+        if not saved_prefix or not saved_role:
+            continue
+        if prefix.startswith(saved_prefix) or saved_prefix.startswith(short_prefix):
+            return saved_role
+    return role
 
 def _path_style_key(p, text_words=None):
     rect = p.get("rect")
@@ -193,6 +448,181 @@ def classify_with_registry(p, text_words, registry_lookup):
     if key in registry_lookup:
         return registry_lookup[key]
     return heur
+
+
+def _is_open_black_contour_candidate(path):
+    if not path:
+        return False
+    if path.get("fill") is not None:
+        return False
+    if path.get("closePath", False):
+        return False
+    return _normalize_color(path.get("color")) == "#1a1a1a"
+
+
+def _point_xy(point):
+    if point is None:
+        return None
+    if hasattr(point, "x") and hasattr(point, "y"):
+        return (float(point.x), float(point.y))
+    try:
+        return (float(point[0]), float(point[1]))
+    except Exception:
+        return None
+
+
+def _path_trace_points(path):
+    points = []
+    for item in path.get("items", []) or []:
+        kind = item[0]
+        if kind == "l":
+            candidates = (item[1], item[2])
+        elif kind == "c":
+            candidates = (item[1], item[4])
+        elif kind == "re":
+            rect = item[1]
+            candidates = (
+                (rect.x0, rect.y0),
+                (rect.x1, rect.y0),
+                (rect.x1, rect.y1),
+                (rect.x0, rect.y1),
+            )
+        elif kind == "qu":
+            quad = item[1]
+            candidates = (quad.ul, quad.ur, quad.lr, quad.ll)
+        else:
+            candidates = ()
+        for candidate in candidates:
+            xy = _point_xy(candidate)
+            if xy is not None:
+                points.append(xy)
+    return points
+
+
+def _dist_points(a, b):
+    return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
+
+
+def _rect_center(rect):
+    return ((float(rect.x0) + float(rect.x1)) / 2, (float(rect.y0) + float(rect.y1)) / 2)
+
+
+def _rect_outer_score(rect, drawing_center):
+    corners = (
+        (float(rect.x0), float(rect.y0)),
+        (float(rect.x1), float(rect.y0)),
+        (float(rect.x1), float(rect.y1)),
+        (float(rect.x0), float(rect.y1)),
+    )
+    return max(_dist_points(corner, drawing_center) for corner in corners)
+
+
+def _touching_break_point(path, break_points, tol=8.0):
+    path_points = _path_trace_points(path)
+    if not path_points:
+        return None
+    for break_point in break_points:
+        if any(_dist_points(path_point, break_point) <= tol for path_point in path_points):
+            return break_point
+    return None
+
+
+def _reclassify_breakline_contour_continuations(classified):
+    """Demote inner duplicate contours that continue from a crop/break line.
+
+    Some AI nodes draw the crop edge as a thin L-shaped break line and then
+    continue from its endpoint with two nearby heavy open contours. The outer
+    one is the real shape contour; the inner one is a break/crop continuation.
+    If both stay contour_outer, the break line visually fuses with a duplicate
+    contour. Keep the outer path and render the inner continuation as break_line.
+    """
+    break_points = []
+    for role, path in classified:
+        if role != "break_line":
+            continue
+        for point in _path_trace_points(path):
+            if not any(_dist_points(point, existing) <= 0.5 for existing in break_points):
+                break_points.append(point)
+    if not break_points:
+        return classified
+
+    rects = [
+        p.get("rect")
+        for _, p in classified
+        if p.get("rect") is not None
+    ]
+    if not rects:
+        return classified
+    drawing_center = (
+        (min(r.x0 for r in rects) + max(r.x1 for r in rects)) / 2,
+        (min(r.y0 for r in rects) + max(r.y1 for r in rects)) / 2,
+    )
+
+    candidates_by_break = {}
+    for idx, (role, path) in enumerate(classified):
+        if role != "contour_outer" or not _is_open_black_contour_candidate(path):
+            continue
+        if round(float(path.get("width") or 0), 2) < 1.35:
+            continue
+        rect = path.get("rect")
+        if rect is None:
+            continue
+        break_point = _touching_break_point(path, break_points)
+        if break_point is None:
+            continue
+        candidates_by_break.setdefault(break_point, []).append((idx, rect))
+
+    demote_indexes = set()
+    for candidates in candidates_by_break.values():
+        if len(candidates) < 2:
+            continue
+        keep_idx, _ = max(
+            candidates,
+            key=lambda item: _rect_outer_score(item[1], drawing_center),
+        )
+        for idx, _ in candidates:
+            if idx != keep_idx:
+                demote_indexes.add(idx)
+
+    if not demote_indexes:
+        return classified
+
+    out = []
+    for idx, (role, path) in enumerate(classified):
+        out.append(("break_line" if idx in demote_indexes else role, path))
+    return out
+
+
+def reclassify_thin_contours(classified):
+    """Split thin crop/break lines away from real garment contours.
+
+    In the source drawings, real part contours are consistently the heavier
+    black strokes in the node. Crop/break lines are open black strokes that are
+    visibly thinner. Style registry entries can collapse both into
+    contour_outer, so do this node-level pass before identity keys are built.
+    """
+    contour_widths = [
+        round(float(p.get("width") or 0), 2)
+        for role, p in classified
+        if role == "contour_outer" and _is_open_black_contour_candidate(p)
+    ]
+    if not contour_widths:
+        return classified
+    max_contour_width = max(contour_widths)
+    if max_contour_width < 1.35:
+        return classified
+
+    out = []
+    for role, p in classified:
+        if role != "contour_outer" or not _is_open_black_contour_candidate(p):
+            out.append((role, p))
+            continue
+        width = round(float(p.get("width") or 0), 2)
+        if width < 1.4 and width <= max_contour_width - 0.15:
+            out.append(("break_line", p))
+        else:
+            out.append((role, p))
+    return _reclassify_breakline_contour_continuations(out)
 
 
 def apply_node_role_override(ai_path, p, role):
@@ -585,6 +1015,13 @@ def merge_stitch_chains(candidates, threshold=8.0, contour_segs=None):
         source["items"] = merged_items
         source["closePath"] = False
         source["fill"] = None
+        elem_keys, group_keys = _merge_trace_identity([link["path"] for link in chain])
+        source["_vse_elem_keys"] = elem_keys
+        source["_vse_group_keys"] = group_keys
+        if elem_keys:
+            source["_vse_elem_key"] = elem_keys[0]
+        if group_keys:
+            source["_vse_group_key"] = group_keys[0]
         xs, ys = [], []
         for link in chain:
             r = link["path"].get("rect")
@@ -661,6 +1098,14 @@ def normalize_fragmented_stitches(classified):
     normalized = []
     for role, p in classified:
         if role != "stitch_edge":
+            normalized.append((role, p))
+            continue
+        dashes = p.get("dashes")
+        is_dashed = bool(dashes) and str(dashes) not in ("[] 0", "[]", "")
+        if not is_dashed:
+            # Contract rule: on the original drawing, through-stitch is dashed.
+            # Solid red stitch fragments must remain stitch_edge and should not be
+            # silently folded back into through-stitch rows.
             normalized.append((role, p))
             continue
         width = round(p.get("width") or 0, 2)
@@ -865,11 +1310,13 @@ def sanitize_color_role_conflicts(render_classified):
     result = []
     for role, p in render_classified:
         fixed = role
-        if role in _BOUNDARY_ROLES and _is_red_stroke(p):
-            # Red dashed = stitch_thru; red solid = stitch_edge
+        if (role in _BOUNDARY_ROLES or role in {"stitch_thru", "stitch_edge"}) and _is_red_stroke(p):
+            # Red dashed = stitch_thru; red solid = stitch_edge.
+            # Keep this invariant before any stitch-merge render pass so solid
+            # seam markers do not get merged into dashed through-stitch rows.
             dashes = p.get("dashes")
             is_dashed = bool(dashes) and str(dashes) not in ("[] 0", "[]", "")
-            fixed = "stitch_thru" if is_dashed else "stitch_edge"
+            fixed = normalize_stitch_role(role, is_dashed)
         result.append((fixed, p))
     return result
 
@@ -982,6 +1429,13 @@ def merge_stitch_thru_rows_for_render(render_classified):
         source["rect"] = fitz.Rect(group["x0"], y, group["x1"], y)
         source["closePath"] = False
         source["fill"] = None
+        elem_keys, group_keys = _merge_trace_identity([item["path"] for item in group["items"]])
+        source["_vse_elem_keys"] = elem_keys
+        source["_vse_group_keys"] = group_keys
+        if elem_keys:
+            source["_vse_elem_key"] = elem_keys[0]
+        if group_keys:
+            source["_vse_group_key"] = group_keys[0]
         passthrough.append(("stitch_thru", source))
 
     columns.sort(key=lambda r: (round(r["x"] / 3.5), r["width"], r["y0"]))
@@ -1022,6 +1476,13 @@ def merge_stitch_thru_rows_for_render(render_classified):
         source["rect"] = fitz.Rect(x, group["y0"], x, group["y1"])
         source["closePath"] = False
         source["fill"] = None
+        elem_keys, group_keys = _merge_trace_identity([item["path"] for item in group["items"]])
+        source["_vse_elem_keys"] = elem_keys
+        source["_vse_group_keys"] = group_keys
+        if elem_keys:
+            source["_vse_elem_key"] = elem_keys[0]
+        if group_keys:
+            source["_vse_group_key"] = group_keys[0]
         passthrough.append(("stitch_thru", source))
 
     passthrough.extend(merge_stitch_chains(curved, threshold=12.0, contour_segs=contour_segs))
@@ -1067,6 +1528,7 @@ def add_buckle_fills_for_render(render_classified):
         fill_path["fill"] = (1, 1, 1)
         fill_path["width"] = 0
         fill_path["color"] = None
+        fill_path["_vse_trace_ignore"] = True
         result.append(("hw_buckle_fill", fill_path))
 
     result.extend(render_classified)
@@ -1190,6 +1652,8 @@ def standardize(ai_path, svg_out, elem_overrides=None):
     paths           = page.get_drawings()
     text_words      = page.get_text("words")
     registry_lookup = _build_registry_lookup()
+    node_style_overrides = _load_node_style_overrides()
+    node_annotations = _load_node_annotations()
 
     # Full text lines for rendering (blocks → lines → spans)
     text_lines = []
@@ -1234,12 +1698,49 @@ def standardize(ai_path, svg_out, elem_overrides=None):
     W, H = bb.width, bb.height
     vb = f"{bb.x0:.2f} {bb.y0:.2f} {bb.width:.2f} {bb.height:.2f}"
     node_name = os.path.basename(str(ai_path)).lower()
+    out_name = os.path.basename(str(svg_out)).lower()
+    if out_name.endswith("_std.svg"):
+        node_id = out_name[:-8]
+    else:
+        node_id = os.path.splitext(node_name)[0].replace(" ", "_")
+    orig_identity_buckets = _load_orig_identity_buckets(node_id, svg_out)
 
-    # Classify all paths (registry overrides heuristics)
-    classified = []
+    # Classify all paths (registry overrides heuristics), then split thin
+    # crop/break lines away from heavier garment contours before identity keys
+    # are built.
+    base_classified = []
+    use_legacy_group_overrides = not _has_node_group_overrides(node_id, node_annotations)
     for p in paths:
         role = classify_with_registry(p, text_words, registry_lookup)
+        style_key = _path_style_key(p, text_words)
+        if use_legacy_group_overrides:
+            role = apply_node_style_override(node_id, style_key, role, node_style_overrides)
         role = apply_node_role_override(ai_path, p, role)
+        base_classified.append((role, p))
+
+    classified = []
+    for role, p in reclassify_thin_contours(base_classified):
+        detected_role = role
+        group_key = _group_key_for_role_and_path(detected_role, p)
+        elem_key, prefix = _element_key_for_path(node_id, p, detected_role)
+        orig_identity = None
+        bucket = orig_identity_buckets.get(group_key) or []
+        if bucket:
+            orig_identity = bucket.pop(0)
+        if orig_identity:
+            elem_key = orig_identity.get("elem_key") or elem_key
+            prefix = orig_identity.get("path_d_prefix") or prefix
+            group_key = orig_identity.get("group_key") or group_key
+        p = dict(p)
+        p["_vse_detected_role"] = detected_role
+        p["_vse_group_key"] = group_key
+        p["_vse_group_keys"] = [group_key] if group_key else []
+        p["_vse_elem_key"] = elem_key
+        p["_vse_elem_keys"] = [elem_key] if elem_key else []
+        p["_vse_path_d_prefix"] = prefix
+        role = apply_node_annotation_group_override(node_id, group_key, role, node_annotations)
+        role = apply_node_annotation_element_override(node_id, p, role, node_annotations)
+        p["_vse_final_role"] = role
         classified.append((role, p))
     classified = normalize_fragmented_stitches(classified)
 
@@ -1272,9 +1773,18 @@ def standardize(ai_path, svg_out, elem_overrides=None):
     # Only push annotation roles to the top so they're never obscured by content.
     _ANNOTATION_ROLES = frozenset({
         "callout_line", "callout_zoom", "dim_line", "arrow",
-        "stitch_symbol", "label", "break_line", "unknown",
+        "stitch_symbol", "label", "unknown",
     })
-    render_classified.sort(key=lambda e: 1 if e[0] in _ANNOTATION_ROLES else 0)
+
+    def _render_priority(item):
+        role, _ = item
+        if role == "break_line":
+            return -1
+        if role in _ANNOTATION_ROLES:
+            return 1
+        return 0
+
+    render_classified.sort(key=_render_priority)
 
     lines = []
     lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W:.0f}" height="{H:.0f}" viewBox="{vb}">')
@@ -1380,7 +1890,23 @@ def standardize(ai_path, svg_out, elem_overrides=None):
                 )
             else:
                 style = style_attr(role)
-            lines.append(f'    <path d="{d}" style="{style}" data-role="{role}"/>')
+            extra_attrs = []
+            elem_key = str(p.get("_vse_elem_key") or "").strip()
+            group_key = str(p.get("_vse_group_key") or "").strip()
+            elem_keys = _trace_key_list(p.get("_vse_elem_keys") or elem_key)
+            group_keys = _trace_key_list(p.get("_vse_group_keys") or group_key)
+            if elem_key:
+                extra_attrs.append(f'data-elem-key="{elem_key}"')
+            if len(elem_keys) > 1:
+                extra_attrs.append(f'data-elem-keys="{",".join(elem_keys)}"')
+            if group_key:
+                extra_attrs.append(f'data-group-key="{group_key}"')
+            if len(group_keys) > 1:
+                extra_attrs.append(f'data-group-keys="{",".join(group_keys)}"')
+            if p.get("_vse_trace_ignore"):
+                extra_attrs.append('data-trace-ignore="1"')
+            extra_attr_text = (" " + " ".join(extra_attrs)) if extra_attrs else ""
+            lines.append(f'    <path d="{d}" style="{style}" data-role="{role}"{extra_attr_text}/>')
 
     if current_role is not None:
         lines.append('  </g>')
@@ -1389,12 +1915,29 @@ def standardize(ai_path, svg_out, elem_overrides=None):
     if zipper_snippets:
         lines.append('  <g id="role-hw_zipper" data-role="hw_zipper">')
         for snippet in zipper_snippets:
-            lines.append(f'    <g data-role="hw_zipper">\n    {snippet}\n    </g>')
+            if isinstance(snippet, dict):
+                svg = snippet.get("svg", "")
+                elem_keys = _trace_key_list(snippet.get("elem_keys") or snippet.get("primary_elem_key"))
+                group_keys = _trace_key_list(snippet.get("group_keys") or snippet.get("primary_group_key"))
+                attrs = ['data-role="hw_zipper"', 'data-render-kind="generated_symbol"']
+                if len(elem_keys) == 1:
+                    attrs.append(f'data-elem-key="{elem_keys[0]}"')
+                if elem_keys:
+                    attrs.append(f'data-source-elem-keys="{",".join(elem_keys)}"')
+                    attrs.append(f'data-elem-keys="{",".join(elem_keys)}"')
+                if len(group_keys) == 1:
+                    attrs.append(f'data-group-key="{group_keys[0]}"')
+                if group_keys:
+                    attrs.append(f'data-source-group-keys="{",".join(group_keys)}"')
+                    attrs.append(f'data-group-keys="{",".join(group_keys)}"')
+                lines.append(f'    <g {" ".join(attrs)}>\n    {svg}\n    </g>')
+            else:
+                lines.append(f'    <g data-role="hw_zipper" data-render-kind="generated_symbol">\n    {snippet}\n    </g>')
         lines.append('  </g>')
 
     # Stitch symbol glyphs (e.g. vvvvv in small font = stitch marking)
     if stitch_symbols:
-        lines.append('  <g id="role-stitch_symbol" data-role="stitch_symbol">')
+        lines.append('  <g id="role-stitch_symbol" data-role="stitch_symbol" data-trace-ignore="1">')
         for (x0, y0, x1, y1, txt, size, color) in stitch_symbols:
             count = max(1, len(txt.strip()))
             width = max(x1 - x0, size * count * 0.55)
@@ -1414,11 +1957,11 @@ def standardize(ai_path, svg_out, elem_overrides=None):
                 pts.append((mid, y_bottom))
                 pts.append((right, y_top))
             d = "M " + " L ".join(f"{px:.2f} {py:.2f}" for px, py in pts)
-            lines.append(f'    <path d="{d}" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:1" data-role="stitch_symbol"/>')
+            lines.append(f'    <path d="{d}" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:1" data-role="stitch_symbol" data-trace-ignore="1"/>')
         lines.append('  </g>')
 
     # Text labels — full lines, not individual words
-    lines.append('  <g id="role-label" data-role="label">')
+    lines.append('  <g id="role-label" data-role="label" data-trace-ignore="1">')
     ls = get_style("label")
     ff = ls.get("font-family", "Arial, sans-serif")
     fc = ls.get("fill", "#1A1A1A")

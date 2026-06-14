@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { T } from "./lang";
 import Header from "./components/Header";
@@ -9,13 +9,18 @@ import ForWhom from "./components/ForWhom";
 import Products from "./components/Products";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
-import PomBuilder from "./tools/pom/PomBuilder";
-import TechPackBuilder from "./tools/pom/TechPackBuilder";
-import TechPackGuidePage from "./tools/pom/TechPackGuidePage";
-import TechPackHub from "./tools/pom/TechPackHub";
-import NodeCatalog from "./tools/nodes/NodeCatalog";
-import VseReview from "./tools/vse/VseReview";
 import "./index.css";
+
+const PomBuilder = lazy(() => import("./tools/pom/PomBuilder"));
+const TechPackBuilder = lazy(() => import("./tools/pom/TechPackBuilder"));
+const TechPackGuidePage = lazy(() => import("./tools/pom/TechPackGuidePage"));
+const TechPackHub = lazy(() => import("./tools/pom/TechPackHub"));
+const NodeCatalog = lazy(() => import("./tools/nodes/NodeCatalog"));
+const VseReview = lazy(() => import("./tools/vse/VseReview"));
+
+function ToolFallback() {
+  return <div style={{ padding: 24 }}>Загрузка...</div>;
+}
 
 function LandingPage({ t, lang, setLang, theme, toggleTheme }) {
   return (
@@ -53,37 +58,49 @@ export default function App() {
       <Route path="/tools/pom" element={
         <div style={{ position: "relative" }}>
           <Header t={t} lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />
-          <PomBuilder lang={lang} />
+          <Suspense fallback={<ToolFallback />}>
+            <PomBuilder lang={lang} />
+          </Suspense>
         </div>
       } />
       <Route path="/tools/techpack" element={
         <div style={{ position: "relative" }}>
           <Header t={t} lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />
-          <TechPackBuilder lang={lang} />
+          <Suspense fallback={<ToolFallback />}>
+            <TechPackBuilder lang={lang} />
+          </Suspense>
         </div>
       } />
       <Route path="/tools/techpack-hub" element={
         <div style={{ position: "relative" }}>
           <Header t={t} lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />
-          <TechPackHub />
+          <Suspense fallback={<ToolFallback />}>
+            <TechPackHub />
+          </Suspense>
         </div>
       } />
       <Route path="/tools/techpack/guides/:slug" element={
         <div style={{ position: "relative" }}>
           <Header t={t} lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />
-          <TechPackGuidePage />
+          <Suspense fallback={<ToolFallback />}>
+            <TechPackGuidePage />
+          </Suspense>
         </div>
       } />
       <Route path="/tools/nodes" element={
         <div style={{ position: "relative" }}>
           <Header t={t} lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />
-          <NodeCatalog lang={lang} />
+          <Suspense fallback={<ToolFallback />}>
+            <NodeCatalog lang={lang} />
+          </Suspense>
         </div>
       } />
       <Route path="/tools/vse" element={
         <div style={{ position: "relative" }}>
           <Header t={t} lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />
-          <VseReview />
+          <Suspense fallback={<ToolFallback />}>
+            <VseReview />
+          </Suspense>
         </div>
       } />
     </Routes>

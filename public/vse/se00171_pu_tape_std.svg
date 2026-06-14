@@ -1,22 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 0.00 184.28 121.28">
   <!-- VSE — Visual Standardization Engine -->
   <g id="role-contour_outer" data-role="contour_outer">
-    <path d="M 14.62 101.28 L 164.28 101.28" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
-    <path d="M 96.95 90.27 L 15.03 90.27" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
-    <path d="M 96.30 90.76 L 96.30 8.00" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer"/>
+    <path d="M 14.62 101.28 L 164.28 101.28" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="5931b1aaaf2a1870" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
+    <path d="M 96.95 90.27 L 15.03 90.27" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="f21c1215a0a38bfc" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
+    <path d="M 96.30 90.76 L 96.30 8.00" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="5059225264be3fea" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
   </g>
-  <g id="role-fill_glue" data-role="fill_glue">
-    <path d="M 78.53 92.52 H 96.78 V 98.61 H 78.53 Z Z" style="stroke:#7E6A3A;stroke-width:0.5;stroke-dasharray:3 2;fill:#E8DAA8;opacity:0.55" data-role="fill_glue"/>
+  <g id="role-fill_shape" data-role="fill_shape">
+    <path d="M 78.53 92.52 H 96.78 V 98.61 H 78.53 Z Z" style="stroke:#CCCCCC;stroke-width:0.5;stroke-dasharray:none;fill:#E8E8E8;opacity:0.7" data-role="fill_shape" data-elem-key="73a59c134e956688" data-group-key="fill_shape|none|#b86ba7|0|false"/>
   </g>
   <g id="role-break_line" data-role="break_line">
-    <path d="M 15.03 101.28 L 15.03 8.00" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
-    <path d="M 15.03 8.00 L 164.28 8.00" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
-    <path d="M 164.28 8.00 L 164.28 101.28" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line"/>
+    <path d="M 15.03 101.28 L 15.03 8.00" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line" data-elem-key="81082a4ae986657e" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 15.03 8.00 L 164.28 8.00" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line" data-elem-key="309e1b12b5eb4485" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 164.28 8.00 L 164.28 101.28" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1" data-role="break_line" data-elem-key="a2628501ea71b455" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
   </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 94.48 96.04 L 112.42 84.72" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line"/>
+    <path d="M 94.48 96.04 L 112.42 84.72" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="5921314ef2662214" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
   </g>
-  <g id="role-label" data-role="label">
+  <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="106.1" y="86.4" font-family="Arial, sans-serif" font-size="10.2" fill="#1A1A1A">Glue</text>
   </g>
 </svg>

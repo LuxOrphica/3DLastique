@@ -27,7 +27,7 @@ ROLE_STYLES = {
     },
     "construction_line": {
         "stroke":           "#1A1A1A",
-        "stroke-width":     "0.5",
+        "stroke-width":     "0.9",
         "stroke-dasharray": "none",
         "fill":             "none",
         "stroke-linecap":   "butt",
@@ -269,7 +269,7 @@ ROLE_STYLES = {
         "stroke-dasharray": "none",
         "fill":             "#FFFFFF",
         "opacity":          "1",
-        "_label": "Маска материала / material mask",
+        "_label": "Маска материала / technical occluder only",
     },
     "fill_white_detail": {
         "stroke":           "none",
@@ -277,7 +277,7 @@ ROLE_STYLES = {
         "stroke-dasharray": "none",
         "fill":             "#FFFFFF",
         "opacity":          "1",
-        "_label": "Visible white layer",
+        "_label": "Visible white detail / front white face",
     },
     "fill_fabric": {
         "stroke":           "#AAAAAA",
@@ -296,7 +296,7 @@ ROLE_STYLES = {
         "_label": "Серая ткань / нейтральная заливка",
     },
     "fill_dark_fabric": {
-        "stroke":           "#444444",
+        "stroke":           "#888888",
         "stroke-width":     "0.5",
         "stroke-dasharray": "none",
         "fill":             "#555555",
@@ -337,7 +337,7 @@ ROLE_STYLES = {
     },
     "fill_velcro": {
         "stroke":           "#1A1A1A",
-        "stroke-width":     "1.0",
+        "stroke-width":     "0.75",
         "stroke-dasharray": "none",
         "fill":             "#A8A8A8",
         "opacity":          "1",
@@ -435,7 +435,7 @@ ROLE_STYLES = {
         "_label": "Молния",
     },
     "hw_zipper_tape": {
-        "stroke":           "#1A1A1A",
+        "stroke":           "#1D1C1A",
         "stroke-width":     "1.0",
         "stroke-dasharray": "none",
         "fill":             "none",
@@ -455,7 +455,7 @@ ROLE_STYLES = {
     },
     "hw_buckle": {
         "stroke":           "#1A1A1A",
-        "stroke-width":     "0.75",
+        "stroke-width":     "1.0",
         "stroke-dasharray": "none",
         "fill":             "none",
         "stroke-linecap":   "butt",
@@ -523,7 +523,7 @@ ROLE_STYLES = {
         "stroke-width":     "0.5",
         "stroke-dasharray": "none",
         "fill":             "none",
-        "stroke-linecap":   "round",
+        "stroke-linecap":   "butt",
         "opacity":          "1",
         "_label": "Линия обрыва (ГОСТ 2.303)",
     },
@@ -592,7 +592,7 @@ ROLE_STYLES = {
     },
     "line_velcro": {
         "stroke":           "#1A1A1A",
-        "stroke-width":     "1.0",
+        "stroke-width":     "0.75",
         "stroke-dasharray": "none",
         "fill":             "none",
         "stroke-linecap":   "butt",

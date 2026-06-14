@@ -52,6 +52,21 @@ def _union_bbox(paths):
     return x0, y0, x1, y1
 
 
+def _trace_key_list(value):
+    if isinstance(value, (list, tuple, set)):
+        return [str(v).strip() for v in value if str(v).strip()]
+    return [s.strip() for s in str(value or "").split(",") if s.strip()]
+
+
+def _merge_trace_keys(paths, attr_name, single_name):
+    keys = []
+    for p in paths:
+        for key in _trace_key_list(p.get(attr_name) or p.get(single_name)):
+            if key not in keys:
+                keys.append(key)
+    return keys
+
+
 def zipper_symbol_svg(x0, y0, x1, y1, stroke="#1A1A1A", slider_center=None):
     """
     Standard tech-pack zipper symbol.
@@ -147,5 +162,13 @@ def render_zipper_clusters(zipper_paths, tape_paths=None):
             r = anchor["rect"]
             slider_center = ((r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2)
         svg = zipper_symbol_svg(x0, y0, x1, y1, slider_center=slider_center)
-        snippets.append(svg)
+        elem_keys = _merge_trace_keys(cluster, "_vse_elem_keys", "_vse_elem_key")
+        group_keys = _merge_trace_keys(cluster, "_vse_group_keys", "_vse_group_key")
+        snippets.append({
+            "svg": svg,
+            "elem_keys": elem_keys,
+            "group_keys": group_keys,
+            "primary_elem_key": elem_keys[0] if len(elem_keys) == 1 else "",
+            "primary_group_key": group_keys[0] if len(group_keys) == 1 else "",
+        })
     return snippets
