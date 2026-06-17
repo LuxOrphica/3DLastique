@@ -621,9 +621,9 @@
 }
 
 .vse-style-params {
-  display: inline-grid;
-  grid-template-columns: auto auto auto;
-  gap: 8px;
+  display: inline-flex;
+  flex-direction: row;
+  gap: 6px;
   align-items: center;
   min-width: 0;
 }
@@ -666,7 +666,7 @@
 }
 
 .vse-style-width {
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .vse-color-dot {

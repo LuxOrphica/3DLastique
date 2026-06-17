@@ -21,13 +21,15 @@ import tempfile
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from stitch_logic import normalize_stitch_role
+from role_cleanup import normalize_active_role
+from stitch_logic import find_stitch_operation_codes, load_stitch_operation_codes, normalize_stitch_role
 from visual_standard import ROLE_STYLES
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 ASSIGNED_PATH = HERE / "unknown_roles_assigned.json"
 REGISTRY_PATH = HERE / "style_registry.json"
+ROLE_CATALOG_PATH = HERE / "role_catalog.json"
 NODE_STYLE_OVERRIDES_PATH = HERE / "node_style_overrides.json"
 NODE_ANNOTATIONS_PATH = HERE / "node_annotations.json"
 ELEM_OVERRIDES_PATH = HERE / "elem_overrides.json"
@@ -70,6 +72,16 @@ def _read_json(path, fallback):
         return json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
         return fallback
+
+
+def _load_role_catalog():
+    data = _read_json(ROLE_CATALOG_PATH, {})
+    if not isinstance(data, dict):
+        return {}
+    roles = data.get("roles")
+    if not isinstance(roles, dict):
+        data["roles"] = {}
+    return data
 
 
 def _normalize_registry_payload(registry):
@@ -390,6 +402,50 @@ def _svg_entities(svg_path):
     return out
 
 
+def _float_attr(elem, name):
+    raw = elem.attrib.get(name)
+    if raw is None:
+        return None
+    import re
+    match = re.search(r"-?\d+(?:\.\d+)?", str(raw))
+    return float(match.group(0)) if match else None
+
+
+def _svg_operation_codes(svg_path):
+    if not svg_path or not svg_path.exists():
+        return []
+    try:
+        root = ET.fromstring(svg_path.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    code_ref = load_stitch_operation_codes()
+    rows = []
+    for el in root.iter():
+        if _strip_ns(el.tag) not in {"text", "tspan"}:
+            continue
+        text = " ".join("".join(el.itertext()).split())
+        if not text:
+            continue
+        for code in find_stitch_operation_codes(text):
+            meta = code_ref.get(code, {})
+            rows.append({
+                "code": code,
+                "text": text,
+                "x": _float_attr(el, "x"),
+                "y": _float_attr(el, "y"),
+                "font_size": _float_attr(el, "font-size"),
+                "family": meta.get("family", ""),
+                "label_ru": meta.get("label_ru", ""),
+                "label_en": meta.get("label_en", ""),
+                "default_role": meta.get("default_role", ""),
+                "confidence": "high_text_label",
+                "relation": "explicit_text_in_original",
+                "visual_description": meta.get("visual_description", ""),
+                "notes": meta.get("notes", ""),
+            })
+    return rows
+
+
 def _entity_group_key(ent):
     data_sk = str(ent.get("data_sk") or "").strip()
     if data_sk:
@@ -501,6 +557,10 @@ def _normalize_state_entities(orig_entities):
             role = normalize_stitch_role(role, bool(ent.get("dashed")))
             ent = dict(ent)
             ent["role"] = role
+        normalized_role = normalize_active_role(role)
+        if normalized_role != role:
+            ent = dict(ent)
+            ent["role"] = normalized_role
         normalized.append(ent)
     return normalized
 
@@ -527,6 +587,7 @@ def _build_node_state(node_id):
     orig_path = _local_svg_path(item.get("origSvg"))
     orig_entities = _svg_entities(orig_path)
     orig_entities = _normalize_state_entities(orig_entities)
+    operation_codes = _svg_operation_codes(orig_path)
 
     orig_keys_by_style = {}
     for ent in orig_entities:
@@ -586,8 +647,8 @@ def _build_node_state(node_id):
         payload = group_overrides.get(group["group_key"])
         if not payload:
             continue
-        group["override_role"] = payload.get("role")
-        group["final_role"] = payload.get("role") or group["detected_role"]
+        group["override_role"] = normalize_active_role(payload.get("role"))
+        group["final_role"] = normalize_active_role(payload.get("role") or group["detected_role"])
         group["match_status"] = "matched"
         matched_group_keys.add(group["group_key"])
 
@@ -605,8 +666,8 @@ def _build_node_state(node_id):
             if saved_from_role and saved_from_role != group_from_role:
                 continue
             if saved_keys and group_key_strs and saved_keys & group_key_strs:
-                group["override_role"] = payload.get("role")
-                group["final_role"] = payload.get("role") or group["detected_role"]
+                group["override_role"] = normalize_active_role(payload.get("role"))
+                group["final_role"] = normalize_active_role(payload.get("role") or group["detected_role"])
                 group["match_status"] = "fallback_matched"
                 matched_group_keys.add(gk)
                 break
@@ -644,7 +705,7 @@ def _build_node_state(node_id):
                     break
         else:
             matched_element_keys.add(elem_key)
-        override_role = saved.get("role") if isinstance(saved, dict) else None
+        override_role = normalize_active_role(saved.get("role")) if isinstance(saved, dict) else None
         if saved and match_status == "fallback_matched":
             for k, payload in element_overrides.items():
                 if payload is saved:
@@ -656,7 +717,7 @@ def _build_node_state(node_id):
             "path_d_prefix": prefix,
             "detected_role": ent["role"],
             "override_role": override_role,
-            "final_role": override_role or ent["role"],
+            "final_role": normalize_active_role(override_role or ent["role"]),
             "match_status": match_status,
             "warnings": [],
         })
@@ -675,6 +736,7 @@ def _build_node_state(node_id):
         "review_status": review_status,
         "groups": list(grouped.values()),
         "elements": elements,
+        "operation_codes": operation_codes,
         "warnings": top_warnings,
     }
 
@@ -1118,6 +1180,14 @@ def get_role_styles():
     return jsonify({
         "ok": True,
         "styles": _public_role_styles(),
+    })
+
+
+@app.route("/api/role-catalog", methods=["GET"])
+def get_role_catalog():
+    return jsonify({
+        "ok": True,
+        "catalog": _load_role_catalog(),
     })
 
 

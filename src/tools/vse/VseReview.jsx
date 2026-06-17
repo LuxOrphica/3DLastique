@@ -5,30 +5,14 @@ const ROLE_STYLES = {
   // Контуры
   contour_outer:       { stroke: "#1A1A1A", "stroke-width": "1.5",  "stroke-dasharray": "none" },
   construction_line:   { stroke: "#1A1A1A", "stroke-width": "0.9",  "stroke-dasharray": "none" },
-  contour_fold:        { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "8 3 2 3" },
-  contour_cut:         { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
   contour_hidden:      { stroke: "#8A8A8A", "stroke-width": "0.65", "stroke-dasharray": "4 2" },
-  // Швы
+  // Строчки / швы
   seam_line:           { stroke: "#1A1A1A", "stroke-width": "2.5",  "stroke-dasharray": "none" },
-  seam_allowance:      { stroke: "#555555", "stroke-width": "0.5",  "stroke-dasharray": "4 2" },
-  // Строчки (ISO 4915 / Sportmaster AW24)
   stitch_edge:         { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "none" },
   stitch_thru:         { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "3 1.5" },
-  stitch_topstitch:    { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "none" },
-  stitch_double:       { stroke: "#C8102E", "stroke-width": "1.0",  "stroke-dasharray": "1 2" },
-  stitch_hidden:       { stroke: "#C8102E", "stroke-width": "0.65", "stroke-dasharray": "5 3" },
-  stitch_cover:        { stroke: "#C8102E", "stroke-width": "1.1",  "stroke-dasharray": "4 1 1 1" },
-  stitch_overlock:     { stroke: "#C8102E", "stroke-width": "1.0",  "stroke-dasharray": "2 1 2 1" },
-  stitch_L:            { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "3 1.5" },
-  stitch_C:            { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "1 1.5" },
-  stitch_O:            { stroke: "#C8102E", "stroke-width": "1.0",  "stroke-dasharray": "2 1 2 1" },
-  stitch_F:            { stroke: "#C8102E", "stroke-width": "1.2",  "stroke-dasharray": "4 1 1 1 4 1" },
-  stitch_zigzag:       { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "2 0.5" },
   stitch_Bt:           { stroke: "#C8102E", "stroke-width": "3.0",  "stroke-dasharray": "none" },
   // Границы
   boundary_fragment:   { stroke: "#27A6DE", "stroke-width": "1.5",  "stroke-dasharray": "none" },
-  boundary_zone:       { stroke: "#1B4FA8", "stroke-width": "0.75", "stroke-dasharray": "6 3" },
-  boundary_lining:     { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "12 4" },
   boundary_interlining:{ stroke: "#29B473", "stroke-width": "1.0",  "stroke-dasharray": "none" },
   // Заливки и материалы
   fill_interlining:    { stroke: "#888888", "stroke-width": "0.5",  "stroke-dasharray": "none" },
@@ -37,45 +21,30 @@ const ROLE_STYLES = {
   fill_dark_fabric:    { stroke: "#888888", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_contrast:       { stroke: "#B54422", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_tape:           { stroke: "#777777", "stroke-width": "0.5",  "stroke-dasharray": "none" },
-  fill_binding:        { stroke: "#B8763A", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_elastic:        { stroke: "#666666", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  material_sweat_band: { stroke: "#666666", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  component_half_belt: { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
   fill_cord:           { stroke: "#333333", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_velcro:         { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
+  fill_velcro_hook:    { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
+  fill_velcro_loop:    { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
   fill_material_mask:  { stroke: "none",    "stroke-width": "0",    "stroke-dasharray": "none" },
   fill_white_detail:   { stroke: "none",    "stroke-width": "0",    "stroke-dasharray": "none" },
   fill_pu_tape:        { stroke: "#6B6B6B", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_piping:         { stroke: "#9B741B", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_glue:           { stroke: "#7E6A3A", "stroke-width": "0.5",  "stroke-dasharray": "3 2" },
-  fill_gradient:       { stroke: "#777777", "stroke-width": "0.5",  "stroke-dasharray": "none" },
-  fill_fur:            { stroke: "#6B4A2E", "stroke-width": "0.5",  "stroke-dasharray": "none" },
-  fill_shadow:         { stroke: "#6F6F6F", "stroke-width": "0.5",  "stroke-dasharray": "none" },
-  fill_pink_light:     { stroke: "#C785A8", "stroke-width": "0.5",  "stroke-dasharray": "none" },
-  fill_pink_dark:      { stroke: "#9A4A73", "stroke-width": "0.5",  "stroke-dasharray": "none" },
-  construction_aux:    { stroke: "#555555", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_shape:          { stroke: "#CCCCCC", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   // Фурнитура
   hw_zipper:           { stroke: "#1A1A1A", "stroke-width": "1.2",  "stroke-dasharray": "none" },
   hw_zipper_tape:      { stroke: "#1D1C1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
-  hw_zipper_tape_edge: { stroke: "#333333", "stroke-width": "0.65", "stroke-dasharray": "none" },
-  hw_buckle_fill:      { stroke: "none",    "stroke-width": "0",    "stroke-dasharray": "none" },
-  hw_buckle:           { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
   hw_ring:             { stroke: "#1A1A1A", "stroke-width": "6.5",  "stroke-dasharray": "none" },
-  hw_button:           { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
-  hw_snap:             { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
-  hw_other:            { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
+  hw_loop:             { stroke: "#1A1A1A", "stroke-width": "4.5",  "stroke-dasharray": "none" },
   // Аннотации
   callout_line:        { stroke: "#333333", "stroke-width": "0.6",  "stroke-dasharray": "none" },
   callout_zoom:        { stroke: "#1B4FA8", "stroke-width": "0.75", "stroke-dasharray": "none" },
   break_line:          { stroke: "#1A1A1A", "stroke-width": "0.5",  "stroke-dasharray": "none" },
-  dim_line:            { stroke: "#333333", "stroke-width": "0.5",  "stroke-dasharray": "none" },
-  guide_line:          { stroke: "#777777", "stroke-width": "0.5",  "stroke-dasharray": "4 2" },
-  line_reference:      { stroke: "#555555", "stroke-width": "0.5",  "stroke-dasharray": "2 2" },
   line_elastic:        { stroke: "#8A8A8A", "stroke-width": "0.75", "stroke-dasharray": "2 2" },
   line_fur:            { stroke: "#4A453E", "stroke-width": "0.65", "stroke-dasharray": "1 2" },
-  line_velcro:         { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
-  line_mesh:           { stroke: "#555555", "stroke-width": "0.5",  "stroke-dasharray": "1 2" },
-  line_decorative:     { stroke: "#1B4FA8", "stroke-width": "0.75", "stroke-dasharray": "none" },
-  line_photo_trace:    { stroke: "#AAAAAA", "stroke-width": "0.5",  "stroke-dasharray": "2 2" },
   line_gathered_edge:  { stroke: "#777777", "stroke-width": "0.45", "stroke-dasharray": "none" },
   arrow:               { stroke: "none",    "stroke-width": "0",    "stroke-dasharray": "none" },
   stitch_symbol:       { stroke: "#1A1A1A", "stroke-width": "0.5",  "stroke-dasharray": "none" },
@@ -85,18 +54,14 @@ const ROLE_STYLES = {
 
 const ROLE_GROUPS = [
   { label: "— не назначено —", roles: ["?"] },
-  { label: "Контуры",          roles: ["contour_outer", "construction_line", "contour_fold", "contour_cut", "contour_hidden"] },
-  { label: "Швы",              roles: ["seam_line", "seam_allowance"] },
-  { label: "Строчки",          roles: ["stitch_edge", "stitch_thru", "stitch_topstitch", "stitch_double", "stitch_hidden", "stitch_cover", "stitch_overlock", "stitch_zigzag", "stitch_L", "stitch_C", "stitch_O", "stitch_F", "stitch_Bt", "stitch_symbol"] },
-  { label: "Слои и зоны",           roles: ["boundary_fragment", "boundary_zone", "boundary_lining", "boundary_interlining"] },
-  { label: "Заливки",          roles: ["fill_interlining", "fill_fabric", "fill_fabric_gray", "fill_dark_fabric", "fill_contrast", "fill_tape", "fill_binding", "fill_elastic", "fill_cord", "fill_velcro", "fill_material_mask", "fill_pu_tape", "fill_piping", "fill_glue", "fill_pink_light", "fill_pink_dark", "construction_aux", "fill_shape"] },
-  { label: "Фурнитура",        roles: ["hw_zipper", "hw_zipper_tape", "hw_zipper_tape_edge", "hw_buckle", "hw_buckle_fill", "hw_ring", "hw_button", "hw_buttonhole", "hw_snap", "hw_other"] },
-  { label: "Выноски",          roles: ["callout_line", "callout_zoom", "dim_line", "arrow"] },
-  { label: "Смысловые линии",  roles: ["guide_line", "line_reference", "line_elastic", "line_fur", "line_velcro", "line_mesh", "line_decorative", "line_photo_trace", "line_gathered_edge", "break_line"] },
-  { label: "Прочее",           roles: ["unknown", "_skip"] },
+  { label: "Контуры и конструкция", roles: ["contour_outer", "construction_line", "contour_hidden", "break_line"] },
+  { label: "Строчки / швы", roles: ["seam_line", "stitch_edge", "stitch_thru", "stitch_Bt", "stitch_symbol"] },
+  { label: "Материалы и слои", roles: ["boundary_fragment", "boundary_interlining", "fill_interlining", "fill_fabric", "fill_fabric_gray", "fill_dark_fabric", "fill_contrast", "fill_shape", "component_half_belt", "fill_white_detail", "fill_material_mask"] },
+  { label: "Ленты, резинки, шнуры", roles: ["fill_tape", "fill_elastic", "material_sweat_band", "line_elastic", "fill_cord", "fill_pu_tape", "fill_piping", "fill_glue", "line_fur", "line_gathered_edge"] },
+  { label: "Фурнитура", roles: ["hw_zipper", "hw_zipper_tape", "hw_ring", "hw_loop", "fill_velcro", "fill_velcro_hook", "fill_velcro_loop"] },
+  { label: "Выноски и обозначения", roles: ["callout_line", "callout_zoom", "arrow", "label"] },
+  { label: "Прочее", roles: ["unknown"] },
 ];
-
-ROLE_GROUPS.splice(6, 0, { label: "Эффекты заливки", roles: ["fill_gradient", "fill_fur", "fill_shadow"] });
 
 const ROLES = ROLE_GROUPS.flatMap(g => g.roles);
 
@@ -105,30 +70,14 @@ const ROLE_LABELS = {
   // Контуры
   "contour_outer":       "Контур детали",
   "construction_line":   "Конструктивная линия",
-  "contour_fold":        "Линия сгиба",
-  "contour_cut":         "Линия разреза",
   "contour_hidden":      "Невидимый контур / пунктир",
-  // Швы
+  // Строчки / швы
   "seam_line":           "Линия шва",
-  "seam_allowance":      "Припуск на шов",
-  // Строчки
   "stitch_edge":         "Строчка по краю",
   "stitch_thru":         "Строчка сквозная",
-  "stitch_topstitch":    "Отделочная строчка / topstitch",
-  "stitch_double":       "Двойная строчка",
-  "stitch_hidden":       "Скрытая / потайная строчка",
-  "stitch_cover":        "Распошивальная / cover stitch",
-  "stitch_overlock":     "Оверлочная строчка",
-  "stitch_L":            "Челночная L (ISO 301)",
-  "stitch_C":            "Цепная C (ISO 401)",
-  "stitch_O":            "Оверлок O (ISO 504/514)",
-  "stitch_F":            "Распошивалка F (ISO 602/605)",
-  "stitch_zigzag":       "Зигзаг",
   "stitch_Bt":           "Закрепка / bar tack (Bc/Bt)",
   // Границы
   "boundary_fragment":   "Прокладка (Padding)",
-  "boundary_zone":       "Конструктивная зона",
-  "boundary_lining":     "Подкладка (Lining)",
   "boundary_interlining":"Флизелин (Interlining)",
   // Заливки
   "fill_interlining":    "Штриховка прокладки",
@@ -137,87 +86,55 @@ const ROLE_LABELS = {
   "fill_dark_fabric":    "Темная ткань / темная деталь",
   "fill_contrast":       "Контрастная деталь",
   "fill_tape":           "Тесьма / лента",
-  "fill_binding":        "Окантовка / binding",
   "fill_elastic":        "Резинка / elastic band",
+  "material_sweat_band": "Внутренняя поясная лента",
+  "component_half_belt": "Полупояс / регулировочный хлястик",
   "fill_cord":           "Шнур / cord",
-  "fill_velcro":         "Велкро / velcro",
+  "fill_velcro":         "Липучка: не уточнено",
+  "fill_velcro_hook":    "Липучка: крючковая часть",
+  "fill_velcro_loop":    "Липучка: петельная часть",
   "fill_material_mask":  "Маска материала",
   "fill_pu_tape":        "PU tape / полиуретановая лента",
   "fill_piping":         "Кант / piping",
   "fill_glue":           "Клеевая зона / glue",
-  "fill_pink_light":     "Светлая розовая заливка",
-  "fill_pink_dark":      "Темная розово-фиолетовая заливка",
-  "construction_aux":    "Вспомогательная линия",
   "fill_shape":          "Заливка (прочее)",
   // Фурнитура
   "hw_zipper":           "Молния",
   "hw_zipper_tape":      "Молния",
-  "hw_zipper_tape_edge": "Контур тесьмы молнии",
-  "hw_buckle":           "Пряжка",
-  "hw_buckle_fill":      "Заливка пряжки",
-  "hw_button":           "Пуговица (Button, Bs)",
-  "hw_buttonhole":       "Петля (Buttonhole, Bh)",
-  "hw_snap":             "Кнопка / люверс",
-  "hw_other":            "Фурнитура (прочее)",
+  "hw_loop":             "Петля / рамка",
   // Аннотации
   "callout_line":        "Выноска",
   "callout_zoom":        "Выноска к увеличению",
   "break_line":          "Линия обрыва",
-  "dim_line":            "Размерная линия",
-  "guide_line":          "Вспомогательная направляющая",
-  "line_reference":      "Справочная смысловая линия",
   "line_elastic":        "Резинка / эластичная линия",
   "line_fur":            "Мех / ворсовая линия",
-  "line_velcro":         "Обводка липучки / Velcro outline",
-  "line_mesh":           "Сетка / mesh",
-  "line_decorative":     "Декоративная линия",
-  "line_photo_trace":    "Линия с фото / неуверенная",
   "line_gathered_edge":  "Мятый / сборенный край материала",
   "arrow":               "Стрелка",
   "stitch_symbol":       "Символ строчки (vvvv)",
   // Прочее
   "unknown":             "Неизвестно",
-  "_skip":               "— не выводить —",
 };
 
 const ROLE_GROUP_LABELS = {
   "— не назначено —": "— не назначено —",
-  "Контуры": "Контуры",
-  "Швы": "Швы",
-  "Строчки": "Строчки",
-  "Слои и зоны": "Слои и зоны",
-  "Заливки": "Заливки",
-  "Эффекты заливки": "Эффекты заливки",
+  "Контуры и конструкция": "Контуры и конструкция",
+  "Строчки / швы": "Строчки / швы",
+  "Материалы и слои": "Материалы и слои",
+  "Ленты, резинки, шнуры": "Ленты, резинки, шнуры",
   "Фурнитура": "Фурнитура",
-  "Выноски": "Выноски",
-  "Смысловые линии": "Смысловые линии",
+  "Выноски и обозначения": "Выноски и обозначения",
   "Прочее": "Прочее",
 };
 
 const ROLE_LABELS_CLEAN = {
   "?": "— не назначено —",
   contour_outer: "Контур детали",
-  contour_fold: "Линия сгиба",
-  contour_cut: "Линия разреза",
   contour_hidden: "Невидимый контур / пунктир",
   seam_line: "Линия шва",
-  seam_allowance: "Припуск на шов",
   stitch_edge: "Строчка по краю",
   stitch_thru: "Сквозная строчка",
-  stitch_topstitch: "Отделочная строчка / topstitch",
-  stitch_double: "Двойная строчка",
-  stitch_hidden: "Скрытая / потайная строчка",
-  stitch_cover: "Распошивальная / cover stitch",
-  stitch_overlock: "Оверлочная строчка",
-  stitch_L: "Челночная L (ISO 301)",
-  stitch_C: "Цепная C (ISO 401)",
-  stitch_O: "Оверлок O (ISO 504/514)",
-  stitch_F: "Распошивальная F (ISO 602/605)",
-  stitch_zigzag: "Зигзаг",
   stitch_Bt: "Закрепка / bar tack (Bc/Bt)",
   boundary_fragment: "Прокладка / padding",
-  boundary_zone: "Конструктивная зона",
-  boundary_lining: "Подкладка / lining",
   boundary_interlining: "Флизелин / interlining",
   fill_interlining: "Штриховка прокладки",
   fill_fabric: "Штриховка ткани",
@@ -225,87 +142,53 @@ const ROLE_LABELS_CLEAN = {
   fill_dark_fabric: "Темная ткань / темная деталь",
   fill_contrast: "Контрастная деталь",
   fill_tape: "Тесьма / лента",
-  fill_binding: "Окантовка / binding",
   fill_elastic: "Резинка / elastic band",
+  material_sweat_band: "Внутренняя поясная лента",
+  component_half_belt: "Полупояс / регулировочный хлястик",
   fill_cord: "Шнур / cord",
+  fill_velcro: "Липучка: не уточнено",
+  fill_velcro_hook: "Липучка: крючковая часть",
+  fill_velcro_loop: "Липучка: петельная часть",
   fill_material_mask: "Маска материала",
   fill_pu_tape: "PU tape / полиуретановая лента",
   fill_piping: "Кант / piping",
   fill_glue: "Клеевая зона / glue",
-  fill_gradient: "Градиентная заливка / shading",
-  fill_fur: "Меховая градиентная заливка / fur fill",
-  fill_shadow: "Теневая / металлическая градиентная заливка",
-  fill_pink_light: "Светлая розовая заливка",
-  fill_pink_dark: "Темная розово-фиолетовая заливка",
-  construction_aux: "Вспомогательная линия",
   fill_shape: "Заливка / прочее",
   hw_zipper: "Молния",
   hw_zipper_tape: "Тесьма молнии",
-  hw_zipper_tape_edge: "Контур тесьмы молнии",
-  hw_buckle: "Пряжка / buckle",
-  hw_buckle_fill: "Заливка пряжки",
-  hw_button: "Пуговица / button",
-  hw_buttonhole: "Петля / buttonhole",
-  hw_snap: "Кнопка / люверс",
-  hw_other: "Фурнитура / прочее",
+  hw_loop: "Петля / рамка",
   callout_line: "Выноска",
   callout_zoom: "Выноска к увеличению",
   break_line: "Линия обрыва",
-  dim_line: "Размерная линия",
-  guide_line: "Вспомогательная направляющая",
-  line_reference: "Справочная смысловая линия",
   line_elastic: "Резинка / эластичная линия",
   line_fur: "Мех / ворсовая линия",
-  line_velcro: "Обводка липучки / Velcro outline",
-  line_mesh: "Сетка / mesh",
-  line_decorative: "Декоративная линия",
-  line_photo_trace: "Линия с фото / неуверенная",
   line_gathered_edge: "Мятый / сборенный край материала",
   arrow: "Стрелка",
   stitch_symbol: "Символ строчки",
   unknown: "Неизвестно",
-  _skip: "— не выводить —",
 };
 
 const ROLE_GROUPS_UI = [
   { label: "— не назначено —", roles: ["?"] },
-  { label: "Контуры", roles: ["contour_outer", "construction_line", "contour_fold", "contour_cut", "contour_hidden"] },
-  { label: "Швы", roles: ["seam_line", "seam_allowance"] },
-  { label: "Строчки", roles: ["stitch_edge", "stitch_thru", "stitch_topstitch", "stitch_double", "stitch_hidden", "stitch_cover", "stitch_overlock", "stitch_zigzag", "stitch_L", "stitch_C", "stitch_O", "stitch_F", "stitch_Bt"] },
-  { label: "Слои и зоны", roles: ["boundary_fragment", "boundary_zone", "boundary_lining", "boundary_interlining"] },
-  { label: "Заливки", roles: ["fill_interlining", "fill_fabric", "fill_fabric_gray", "fill_dark_fabric", "fill_contrast", "fill_tape", "fill_binding", "fill_elastic", "fill_cord", "fill_velcro", "fill_material_mask", "fill_pu_tape", "fill_piping", "fill_glue", "fill_pink_light", "fill_pink_dark", "construction_aux", "fill_shape"] },
-  { label: "Эффекты заливки", roles: ["fill_gradient", "fill_fur", "fill_shadow"] },
-  { label: "Фурнитура", roles: ["hw_zipper", "hw_zipper_tape", "hw_zipper_tape_edge", "hw_buckle", "hw_buckle_fill", "hw_ring", "hw_button", "hw_buttonhole", "hw_snap", "hw_other"] },
-  { label: "Выноски", roles: ["callout_line", "callout_zoom", "dim_line", "arrow", "stitch_symbol"] },
-  { label: "Смысловые линии", roles: ["guide_line", "line_reference", "line_elastic", "line_fur", "line_velcro", "line_mesh", "line_decorative", "line_photo_trace", "line_gathered_edge", "break_line"] },
-  { label: "Прочее", roles: ["unknown", "_skip"] },
+  { label: "Контуры и конструкция", roles: ["contour_outer", "construction_line", "contour_hidden", "break_line"] },
+  { label: "Строчки / швы", roles: ["seam_line", "stitch_edge", "stitch_thru", "stitch_Bt", "stitch_symbol"] },
+  { label: "Материалы и слои", roles: ["boundary_fragment", "boundary_interlining", "fill_interlining", "fill_fabric", "fill_fabric_gray", "fill_dark_fabric", "fill_contrast", "fill_shape", "component_half_belt", "fill_white_detail", "fill_material_mask"] },
+  { label: "Ленты, резинки, шнуры", roles: ["fill_tape", "fill_elastic", "material_sweat_band", "line_elastic", "fill_cord", "fill_pu_tape", "fill_piping", "fill_glue", "line_fur", "line_gathered_edge"] },
+  { label: "Фурнитура", roles: ["hw_zipper", "hw_zipper_tape", "hw_ring", "hw_loop", "fill_velcro", "fill_velcro_hook", "fill_velcro_loop"] },
+  { label: "Выноски и обозначения", roles: ["callout_line", "callout_zoom", "arrow", "label"] },
+  { label: "Прочее", roles: ["unknown"] },
 ];
 
 const ROLE_LABELS_UI = {
   "?": "— не назначено —",
   contour_outer: "Контур детали",
   construction_line: "Конструктивная линия",
-  contour_fold: "Линия сгиба",
-  contour_cut: "Линия разреза",
   contour_hidden: "Скрытый контур / пунктир",
   seam_line: "Линия шва",
-  seam_allowance: "Припуск на шов",
   stitch_edge: "Строчка по краю",
   stitch_thru: "Сквозная строчка",
-  stitch_topstitch: "Отделочная строчка / topstitch",
-  stitch_double: "Двойная строчка",
-  stitch_hidden: "Скрытая / потайная строчка",
-  stitch_cover: "Распошивальная / cover stitch",
-  stitch_overlock: "Оверлочная строчка",
-  stitch_L: "Челночная L (ISO 301)",
-  stitch_C: "Цепная C (ISO 401)",
-  stitch_O: "Оверлок O (ISO 504/514)",
-  stitch_F: "Распошивальная F (ISO 602/605)",
-  stitch_zigzag: "Зигзаг",
   stitch_Bt: "Закрепка / bar tack (Bc/Bt)",
   boundary_fragment: "Прокладка / padding",
-  boundary_zone: "Конструктивная зона",
-  boundary_lining: "Подкладка / lining",
   boundary_interlining: "Флизелин / interlining",
   fill_interlining: "Заливка прокладки",
   fill_fabric: "Заливка ткани",
@@ -313,61 +196,165 @@ const ROLE_LABELS_UI = {
   fill_dark_fabric: "Темная ткань / темная деталь",
   fill_contrast: "Контрастная деталь",
   fill_tape: "Тесьма / лента",
-  fill_binding: "Окантовка / binding",
   fill_elastic: "Резинка / elastic band",
+  material_sweat_band: "Внутренняя поясная лента",
+  component_half_belt: "Полупояс / регулировочный хлястик",
   fill_cord: "Шнур / cord",
+  fill_velcro: "Липучка: не уточнено",
+  fill_velcro_hook: "Липучка: крючковая часть",
+  fill_velcro_loop: "Липучка: петельная часть",
   fill_material_mask: "Маска материала",
   fill_pu_tape: "PU tape / полиуретановая лента",
   fill_piping: "Кант / piping",
   fill_glue: "Клеевая зона / glue",
-  fill_gradient: "Градиентная заливка / shading",
-  fill_fur: "Меховая градиентная заливка / fur fill",
-  fill_shadow: "Теневая / металлическая градиентная заливка",
-  fill_pink_light: "Светлая розовая заливка",
-  fill_pink_dark: "Темная розово-фиолетовая заливка",
-  construction_aux: "Вспомогательная линия",
   fill_shape: "Заливка / прочее",
   hw_zipper: "Молния",
   hw_zipper_tape: "Тесьма молнии",
-  hw_zipper_tape_edge: "Контур тесьмы молнии",
-  hw_buckle: "Пряжка / buckle",
-  hw_buckle_fill: "Заливка пряжки",
-  hw_button: "Пуговица / button",
-  hw_buttonhole: "Петля / buttonhole",
-  hw_snap: "Кнопка / люверс",
-  hw_other: "Фурнитура / прочее",
+  hw_loop: "Петля / рамка",
   callout_line: "Выноска",
   callout_zoom: "Выноска к увеличению",
   break_line: "Линия обрыва",
-  dim_line: "Размерная линия",
-  guide_line: "Вспомогательная направляющая",
-  line_reference: "Справочная смысловая линия",
   line_elastic: "Резинка / эластичная линия",
   line_fur: "Мех / ворсовая линия",
-  line_velcro: "Контур липучки / Velcro outline",
-  line_mesh: "Сетка / mesh",
-  line_decorative: "Декоративная линия",
-  line_photo_trace: "Линия с фото / неуверенная",
   line_gathered_edge: "Мятый / собранный край",
   arrow: "Стрелка",
   stitch_symbol: "Символ строчки",
   unknown: "Неизвестно",
-  _skip: "— не выводить —",
 };
+
+const REMOVED_ROLE_OPTIONS = new Set([
+  "_skip",
+  "boundary_lining",
+  "boundary_zone",
+  "construction_aux",
+  "contour_cut",
+  "contour_fold",
+  "dim_line",
+  "fill_binding",
+  "fill_fur",
+  "fill_gradient",
+  "fill_pink_dark",
+  "fill_pink_light",
+  "fill_shadow",
+  "guide_line",
+  "hw_buckle",
+  "hw_buckle_fill",
+  "hw_button",
+  "hw_buttonhole",
+  "hw_other",
+  "hw_snap",
+  "hw_zipper_tape_edge",
+  "line_decorative",
+  "line_mesh",
+  "line_photo_trace",
+  "line_reference",
+  "line_velcro",
+  "seam_allowance",
+  "stitch_C",
+  "stitch_F",
+  "stitch_L",
+  "stitch_O",
+  "stitch_cover",
+  "stitch_double",
+  "stitch_hidden",
+  "stitch_overlock",
+  "stitch_topstitch",
+  "stitch_zigzag",
+]);
 
 const roleLabel = role => ROLE_LABELS_UI[role] || role;
 
-function objectLabelForRole(role) {
+function roleCatalogEntry(roleCatalog, role) {
+  return roleCatalog?.roles?.[role] || null;
+}
+
+function roleCatalogLabel(roleCatalog, role) {
+  return roleCatalogEntry(roleCatalog, role)?.label_ru || roleLabel(role);
+}
+
+function activeRoleChoices(roleCatalog) {
+  if (Array.isArray(roleCatalog?.role_choices) && roleCatalog.role_choices.length) {
+    return roleCatalog.role_choices;
+  }
+  return ROLE_GROUPS_UI.flatMap(group =>
+    group.roles
+      .filter(role => !REMOVED_ROLE_OPTIONS.has(role))
+      .map(role => ({
+        choice_key: role,
+        label_ru: roleLabel(role),
+        group: group.label,
+        role,
+      }))
+  );
+}
+
+function roleLayerKind(style = {}) {
+  const fill = style?.fill || "none";
+  const stroke = style?.stroke || "none";
+  if (fill && fill !== "none") return "fill";
+  if (stroke && stroke !== "none") return "stroke";
+  return "symbol";
+}
+
+function choiceKeyForRole(roleCatalog, role) {
+  const choices = activeRoleChoices(roleCatalog);
+  const found = choices.find(choice => {
+    if (choice.role === role) return true;
+    return Object.values(choice.variants || {}).includes(role);
+  });
+  return found?.choice_key || role || "unknown";
+}
+
+function roleForChoice(roleCatalog, choiceKey, style = {}) {
+  const choice = activeRoleChoices(roleCatalog).find(item => item.choice_key === choiceKey);
+  if (!choice) return choiceKey || "unknown";
+  if (choice.role) return choice.role;
+  const variants = choice.variants || {};
+  const layer = roleLayerKind(style);
+  return variants[layer] || variants.fill || variants.stroke || variants.symbol || Object.values(variants)[0] || "unknown";
+}
+
+function roleObjectLabel(roleCatalog, role) {
+  const entry = roleCatalogEntry(roleCatalog, role);
+  const objectRole = entry?.object_role;
+  if (objectRole && roleCatalog?.object_roles?.[objectRole]?.label_ru) {
+    return roleCatalog.object_roles[objectRole].label_ru;
+  }
+  if (entry?.label_ru?.includes(":")) {
+    return entry.label_ru.split(":")[0].trim();
+  }
+  return entry?.label_ru || "";
+}
+
+function roleMetaLine(roleCatalog, role) {
+  const entry = roleCatalogEntry(roleCatalog, role);
+  if (!entry) return "";
+  return "";
+}
+
+function roleMetaTitle(roleCatalog, role) {
+  const entry = roleCatalogEntry(roleCatalog, role);
+  if (!entry) return "";
+  const bits = [
+    entry.label_ru,
+    entry.family,
+    entry.entity_type,
+    entry.object_role,
+    entry.part_role,
+  ].filter(Boolean);
+  return bits.join(" · ");
+}
+
+function objectLabelForRole(role, roleCatalog = null) {
+  const catalogLabel = roleObjectLabel(roleCatalog, role);
+  if (catalogLabel) return catalogLabel;
   const r = role || "";
   if (r === "fill_elastic" || r === "line_elastic") return "Резинка / elastic band";
-  if (r === "fill_binding" || r === "line_gathered_edge") return "Окантовка / край";
+  if (r === "line_gathered_edge") return "Окантовка / край";
   if (r.startsWith("hw_zipper")) return "Молния";
-  if (r.startsWith("hw_buckle")) return "Пряжка";
-  if (r.startsWith("hw_button")) return "Пуговица / петля";
-  if (r.startsWith("boundary_lining")) return "Подкладка / lining";
   if (r.startsWith("boundary_interlining") || r === "fill_interlining") return "Флизелин / interlining";
   if (r.startsWith("stitch_")) return "Строчка";
-  if (r.startsWith("callout_") || r === "dim_line" || r === "arrow") return "Выноска / обозначение";
+  if (r.startsWith("callout_") || r === "arrow") return "Выноска / обозначение";
   if (r.startsWith("contour_")) return "Контур / форма";
   if (r.startsWith("fill_")) return roleLabel(role);
   return roleLabel(role);
@@ -419,10 +406,21 @@ ROLE_LABELS.fill_white_detail = "Видимая белая деталь";
 ROLE_LABELS_CLEAN.fill_white_detail = "Видимая белая деталь";
 ROLE_LABELS_UI.fill_white_detail = "Видимая белая деталь";
 
-function RoleOptions() {
-  return ROLE_GROUPS_UI.map(g => (
-    <optgroup key={g.label} label={g.label}>
-      {g.roles.map(r => <option key={r} value={r}>{roleLabel(r)}</option>)}
+function RoleOptions({ roleCatalog = null } = {}) {
+  const byGroup = new Map();
+  for (const choice of activeRoleChoices(roleCatalog)) {
+    if (!choice?.choice_key) continue;
+    const group = choice.group || "Прочее";
+    if (!byGroup.has(group)) byGroup.set(group, []);
+    byGroup.get(group).push(choice);
+  }
+  return [...byGroup.entries()].map(([group, choices]) => (
+    <optgroup key={group} label={group}>
+      {choices.map(choice => (
+        <option key={choice.choice_key} value={choice.choice_key}>
+          {choice.label_ru || choice.choice_key}
+        </option>
+      ))}
     </optgroup>
   ));
 }
@@ -572,17 +570,9 @@ function buildSvgOverrideCss({ roleOverrides, elemOverrides, selectedElemKey, si
   const groupRules = Object.entries(roleOverrides || {}).map(([groupKey, newRole]) => {
     const ds = resolveDisplayStyle({}, newRole);
     const g = cssAttrEscape(groupKey);
-    const sourceRole = cssAttrEscape(String(groupKey || "").split("|")[0] || "");
     return `
 [data-group-key="${g}"],
 [data-group-key="${g}"] ${shapeSel} {
-  stroke: ${ds.stroke} !important;
-  stroke-width: ${ds.width} !important;
-  stroke-dasharray: ${ds.dasharray === "none" ? "none" : ds.dasharray} !important;
-  opacity: 1 !important;
-}
-[data-role="${sourceRole}"],
-[data-role="${sourceRole}"] ${shapeSel} {
   stroke: ${ds.stroke} !important;
   stroke-width: ${ds.width} !important;
   stroke-dasharray: ${ds.dasharray === "none" ? "none" : ds.dasharray} !important;
@@ -647,13 +637,14 @@ function collectRelatedStdIndices(els, baseIndices, hoveredRole) {
 
   const velcroClusterRoles = new Set([
     "fill_velcro",
+    "fill_velcro_hook",
+    "fill_velcro_loop",
     "fill_white_detail",
-    "line_velcro",
     "contour_outer",
     "stitch_edge",
     "stitch_thru",
   ]);
-  const genericFillClusterRoles = new Set(["fill_cord", "fill_binding", "fill_elastic"]);
+  const genericFillClusterRoles = new Set(["fill_cord", "fill_elastic"]);
 
   let relatedRoles = null;
   if (velcroClusterRoles.has(hoveredRole)) {
@@ -898,8 +889,22 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
 
   const onViewportClick = e => {
     if (!onElementClick || mode !== "std") return;
-    if (dragging.current?.moved) return; // was a drag, not a click
-    const path = e.target.closest("path, line, polyline, polygon, circle, ellipse, rect");
+    if (dragging.current?.moved) return;
+    let path = e.target.closest("path, line, polyline, polygon, circle, ellipse, rect");
+    if ((!path || !hlRef.current?.contains(path)) && hlRef.current) {
+      // Missed thin stroke — find nearest path within 12px
+      const allEls = [...hlRef.current.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
+        .filter(el => !el.closest("defs"));
+      let best = null, bestDist = 12;
+      for (const el of allEls) {
+        const bb = el.getBoundingClientRect();
+        const dx = Math.max(bb.left - e.clientX, 0, e.clientX - bb.right);
+        const dy = Math.max(bb.top - e.clientY, 0, e.clientY - bb.bottom);
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < bestDist) { bestDist = d; best = el; }
+      }
+      path = best;
+    }
     if (!path || !hlRef.current?.contains(path)) return;
     const role = path.getAttribute("data-role") || path.closest("[data-role]")?.getAttribute("data-role");
     if (!role) return;
@@ -989,24 +994,11 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
             const els = [...hidden.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
               .filter(el => !el.closest("defs"));
             const matched = els.filter((_, idx) => matchedIndices.has(idx));
-            const isBreakLineHover = hoveredEntry?.role === "break_line";
-            const contourMasks = isBreakLineHover
-              ? els.filter(el => {
-                  const role = el.getAttribute("data-role") || el.closest?.("[data-role]")?.getAttribute("data-role");
-                  return role === "contour_outer";
-                })
-              : [];
             return (
               <svg viewBox={vb} className="vse-zoom-overlay" xmlns="http://www.w3.org/2000/svg">
                 {matched.map((el, i) => {
                   const clone = el.cloneNode(true);
-                  if (isBreakLineHover) {
-                    clone.style.filter = "none";
-                    clone.style.strokeWidth = "0.5";
-                    clone.style.strokeLinecap = "butt";
-                  } else {
-                    clone.style.filter = "drop-shadow(0 0 3px #C8A84B)";
-                  }
+                  clone.style.filter = "drop-shadow(0 0 3px #C8A84B)";
                   clone.style.opacity = "1";
                   // Apply roleOverride styles to clone so overlay reflects live preview
                   if (roleOverrides && mode === "std") {
@@ -1025,12 +1017,6 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
                     clone.querySelectorAll?.("[data-role]").forEach(applyOverride);
                   }
                   return <g key={i} dangerouslySetInnerHTML={{ __html: clone.outerHTML }} />;
-                })}
-                {contourMasks.map((el, i) => {
-                  const clone = el.cloneNode(true);
-                  clone.style.opacity = "1";
-                  clone.style.filter = "none";
-                  return <g key={`contour-mask-${i}`} dangerouslySetInnerHTML={{ __html: clone.outerHTML }} />;
                 })}
               </svg>
             );
@@ -1417,12 +1403,22 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
   const [contractError, setContractError] = useState("");
   const [contractFilter, setContractFilter] = useState("all");
   const [renderedGroupStyles, setRenderedGroupStyles] = useState({});
+  const [roleCatalog, setRoleCatalog] = useState(null);
   const NS_KEY = "vse_node_statuses_v2";
 
   const [nodeStatuses, setNodeStatuses] = useState(() => {
     try { return JSON.parse(localStorage.getItem(NS_KEY)) || { approved: [], complex: [] }; }
     catch { return { approved: [], complex: [] }; }
   });
+
+  useEffect(() => {
+    fetch(`${API}/api/role-catalog`)
+      .then(r => r.json())
+      .then(data => {
+        if (data?.ok !== false && data?.catalog?.roles) setRoleCatalog(data.catalog);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     fetch(`${API}/api/node-status`)
@@ -1626,6 +1622,12 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     width: selectedEl?.width,
     dashed: selectedEl?.dashed,
   }, selectedDisplayRole);
+  const selectedActualStyle = resolveActualStyle({
+    stroke: selectedEl?.stroke,
+    fill: selectedEl?.fill,
+    width: selectedEl?.width,
+    dashed: selectedEl?.dashed,
+  });
 
   useEffect(() => {
     if (!selectedEl) return;
@@ -1745,7 +1747,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                 <div className="vse-node-styles">
                   <div className="vse-node-styles-hdr"><span>Наведи на строку: подсветка на оригинале и стандарте</span><span>Роли из node-state</span><span className="vse-assign-progress">{assignedCount} / {groups.length}</span></div>
                   <table className="vse-table">
-                    <thead><tr><th style={{width:"190px"}}>Объект</th><th>Параметры</th><th style={{width:"44px"}}>Кол.</th><th style={{width:"220px"}}>Назначить роль</th></tr></thead>
+                    <thead><tr><th style={{width:"190px"}}>Сущность</th><th>Параметры</th><th style={{width:"44px"}}>Кол.</th><th style={{width:"220px"}}>Назначить роль</th></tr></thead>
                     <tbody>
                       {selectedEl && (
                         <tr className="vse-inspector-row vse-row-selected-el">
@@ -1753,9 +1755,11 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                             return (
                               <>
                           <td>
-                            <div className="vse-object-cell">
-                              <strong>{objectLabelForRole(selectedDisplayRole)}</strong>
-                              <span>выбранный элемент</span>
+                            <div className="vse-object-cell" title={roleMetaTitle(roleCatalog, selectedDisplayRole) || undefined}>
+                              <strong>{objectLabelForRole(selectedDisplayRole, roleCatalog)}</strong>
+                              {roleMetaLine(roleCatalog, selectedDisplayRole) && (
+                                <span title={roleMetaTitle(roleCatalog, selectedDisplayRole) || undefined}>{roleMetaLine(roleCatalog, selectedDisplayRole)}</span>
+                              )}
                             </div>
                           </td>
                           <td><StyleParams style={selectedDisplayStyle} /></td>
@@ -1763,10 +1767,14 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                           <td style={{display:"flex",gap:"4px",alignItems:"center"}}>
                             <div style={{display:"flex",flexDirection:"column",gap:"2px",flex:1}}>
                               <span style={{fontSize:"11px",color:"#C8A84B"}}>Выбрано: {roleLabel(selectedState?.detected_role || selectedEl.role)}</span>
-                              <select className="vse-role-sel-sm" style={{flex:1}} value={selectedDisplayRole} onChange={e => setSingleOverride({ role: selectedState?.detected_role || selectedEl.role, newRole: e.target.value })}><RoleOptions /></select>
+                              <select className="vse-role-sel-sm" style={{flex:1}} value={choiceKeyForRole(roleCatalog, selectedDisplayRole)} onChange={e => {
+                                const newRole = roleForChoice(roleCatalog, e.target.value, selectedActualStyle);
+                                const elemKey = selectedState?.elem_key || selectedEl?.elemKey;
+                                setSingleOverride({ role: selectedState?.detected_role || selectedEl.role, newRole });
+                                if (elemKey) setElementDrafts(prev => ({ ...prev, [elemKey]: newRole }));
+                              }}><RoleOptions roleCatalog={roleCatalog} /></select>
                             </div>
-                            {singleOverride && singleOverride.newRole !== (selectedState?.override_role || selectedState?.final_role || selectedState?.detected_role || selectedEl.role) && <button data-testid="element-draft-save" title="Сохранить для элемента" style={{fontSize:"11px",padding:"2px 6px",background:"#C8A84B",border:"none",borderRadius:"3px",cursor:"pointer",color:"#1a1a1a",whiteSpace:"nowrap"}} onClick={() => { const elemKey = selectedState?.elem_key || selectedEl?.elemKey; if (elemKey) setElementDrafts(prev => ({ ...prev, [elemKey]: singleOverride.newRole })); setSingleOverride(null); }}>Сохранить</button>}
-                            <button title="Отмена" style={{fontSize:"11px",padding:"2px 5px",background:"#444",border:"none",borderRadius:"3px",cursor:"pointer",color:"#aaa"}} onClick={() => { setSelectedEl(null); setSingleOverride(null); }}>Отмена</button>
+                            <button title="Снять выделение" style={{fontSize:"11px",padding:"2px 5px",background:"#444",border:"none",borderRadius:"3px",cursor:"pointer",color:"#aaa"}} onClick={() => { setSelectedEl(null); setSingleOverride(null); }}>✕</button>
                           </td>
                               </>
                             );
@@ -1777,20 +1785,26 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                         const isHov = safeIdx === idx;
                         const assigned = g.currentRole && g.currentRole !== "?";
                         const displayStyle = resolveDisplayStyle(g.renderedStyle || g.entry, g.currentRole);
+                        const actualStyle = resolveActualStyle(g.renderedStyle || g.entry);
                         const dispStroke = displayStyle.stroke;
                         const dispWidth = displayStyle.width;
                         const dispDashed = displayStyle.dashed;
                         return (
                           <tr key={g.mapKey} className={`vse-inspector-row${isHov ? " hovered" : ""}${assigned ? " vse-row-filled" : ""}${Object.prototype.hasOwnProperty.call(groupDrafts, g.mapKey) ? " vse-row-override" : ""}`} onMouseEnter={() => setHoveredIdx(idx)} onMouseLeave={() => setHoveredIdx(null)}>
                             <td>
-                              <div className="vse-object-cell">
-                                <strong>{objectLabelForRole(g.currentRole)}</strong>
-                                <span>из node-state</span>
+                              <div className="vse-object-cell" title={roleMetaTitle(roleCatalog, g.currentRole) || undefined}>
+                                <strong>{objectLabelForRole(g.currentRole, roleCatalog)}</strong>
+                                {roleMetaLine(roleCatalog, g.currentRole) && (
+                                  <span title={roleMetaTitle(roleCatalog, g.currentRole) || undefined}>{roleMetaLine(roleCatalog, g.currentRole)}</span>
+                                )}
                               </div>
                             </td>
                             <td><StyleParams style={displayStyle} /></td>
                             <td className="vse-tc vse-muted">{g.count}</td>
-                            <td><select className="vse-role-sel-sm" value={g.currentRole ?? "?"} onChange={e => setGroupDrafts(prev => ({ ...prev, [g.mapKey]: e.target.value }))}><RoleOptions /></select></td>
+                            <td><select className="vse-role-sel-sm" value={choiceKeyForRole(roleCatalog, g.currentRole ?? "?")} onChange={e => {
+                              const newRole = roleForChoice(roleCatalog, e.target.value, actualStyle);
+                              setGroupDrafts(prev => ({ ...prev, [g.mapKey]: newRole }));
+                            }}><RoleOptions roleCatalog={roleCatalog} /></select></td>
                           </tr>
                         );
                       })}
@@ -1884,11 +1898,11 @@ function TabCallouts({ calloutGraph, meanings, setMeanings }) {
   );
 }
 
-// в"Ђв"Ђ Tab 3: Style registry в"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђ
+// Tab 3: Style registry
 function TabRegistry({ registry, setRegistry, manifest }) {
   const filled = registry.filter(r => r.role !== "?").length;
 
-  // node_id в†' origSvg url
+  // node_id -> origSvg url
   const svgByNodeId = Object.fromEntries(manifest.map(n => [n.id, n.origSvg]));
 
   return (

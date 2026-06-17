@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "removed_roles": [
+    "_skip",
+    "boundary_lining",
+    "boundary_zone",
+    "construction_aux",
+    "contour_cut",
+    "contour_fold",
+    "dim_line",
+    "fill_binding",
+    "fill_fur",
+    "fill_gradient",
+    "fill_pink_dark",
+    "fill_pink_light",
+    "fill_shadow",
+    "guide_line",
+    "hw_buckle",
+    "hw_buckle_fill",
+    "hw_button",
+    "hw_buttonhole",
+    "hw_other",
+    "hw_snap",
+    "hw_zipper_tape_edge",
+    "line_decorative",
+    "line_mesh",
+    "line_photo_trace",
+    "line_reference",
+    "line_velcro",
+    "seam_allowance",
+    "stitch_C",
+    "stitch_F",
+    "stitch_L",
+    "stitch_O",
+    "stitch_cover",
+    "stitch_double",
+    "stitch_hidden",
+    "stitch_overlock",
+    "stitch_topstitch",
+    "stitch_zigzag"
+  ],
+  "replacement": "unknown",
+  "changed_files": {
+    "tools\\vse\\style_registry.json": {
+      "hw_buttonhole": 2,
+      "hw_button": 1,
+      "_skip": 2,
+      "fill_binding": 2,
+      "line_decorative": 2,
+      "dim_line": 1,
+      "line_mesh": 2,
+      "boundary_zone": 1
+    },
+    "tools\\vse\\unknown_roles_assigned.json": {
+      "line_mesh": 1,
+      "fill_binding": 2
+    },
+    "public\\vse\\style_registry.json": {
+      "hw_buttonhole": 2,
+      "hw_button": 1,
+      "_skip": 2,
+      "fill_binding": 2,
+      "line_decorative": 2,
+      "dim_line": 1,
+      "line_mesh": 2,
+      "boundary_zone": 1
+    }
+  }
+}

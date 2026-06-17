@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 from roles import classify_path, near_any_text
 from stitch_logic import normalize_stitch_role
 from visual_standard import style_attr, get_style, ROLE_STYLES
+from role_cleanup import normalize_active_role
 from bbox import get_content_bbox
 from hardware_symbols import render_zipper_clusters
 
@@ -1715,11 +1716,12 @@ def standardize(ai_path, svg_out, elem_overrides=None):
         style_key = _path_style_key(p, text_words)
         if use_legacy_group_overrides:
             role = apply_node_style_override(node_id, style_key, role, node_style_overrides)
-        role = apply_node_role_override(ai_path, p, role)
+        role = normalize_active_role(apply_node_role_override(ai_path, p, role))
         base_classified.append((role, p))
 
     classified = []
     for role, p in reclassify_thin_contours(base_classified):
+        role = normalize_active_role(role)
         detected_role = role
         group_key = _group_key_for_role_and_path(detected_role, p)
         elem_key, prefix = _element_key_for_path(node_id, p, detected_role)
@@ -1738,8 +1740,8 @@ def standardize(ai_path, svg_out, elem_overrides=None):
         p["_vse_elem_key"] = elem_key
         p["_vse_elem_keys"] = [elem_key] if elem_key else []
         p["_vse_path_d_prefix"] = prefix
-        role = apply_node_annotation_group_override(node_id, group_key, role, node_annotations)
-        role = apply_node_annotation_element_override(node_id, p, role, node_annotations)
+        role = normalize_active_role(apply_node_annotation_group_override(node_id, group_key, role, node_annotations))
+        role = normalize_active_role(apply_node_annotation_element_override(node_id, p, role, node_annotations))
         p["_vse_final_role"] = role
         classified.append((role, p))
     classified = normalize_fragmented_stitches(classified)
@@ -1768,6 +1770,7 @@ def standardize(ai_path, svg_out, elem_overrides=None):
     # Use workbench registry assignments to fix individual cases.
 
     render_classified = add_buckle_fills_for_render(render_classified)
+    render_classified = [(normalize_active_role(role), p) for role, p in render_classified]
 
     # Preserve original AI draw order — this is the designer's intentional z-order.
     # Only push annotation roles to the top so they're never obscured by content.

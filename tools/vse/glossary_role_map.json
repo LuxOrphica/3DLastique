@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "status": "draft",
+  "purpose": "Explicit bridge between approved glossary terms and current VSE role taxonomy. This file is diagnostic/reference only until wired into UI or render logic.",
+  "rules": [
+    {
+      "terms": ["Elastic band", "Elastic Band", "elastic band"],
+      "approved_ru": "эластичная тесьма",
+      "object_role": "material.elastic_band",
+      "role_choice": "material.elastic_band",
+      "variants": {
+        "fill": "fill_elastic",
+        "stroke": "line_elastic"
+      },
+      "mapping_status": "mapped",
+      "note": "Термин на чертеже указывает на сущность Резинка. Заливка и обводка выбираются по параметрам слоя."
+    },
+    {
+      "terms": ["Interlining", "Innterlining", "Intrelining"],
+      "approved_ru": "прокладочный материал",
+      "object_role": "material.interlining",
+      "role_choice": "material.interlining",
+      "variants": {
+        "fill": "fill_interlining",
+        "stroke": "boundary_interlining"
+      },
+      "mapping_status": "mapped",
+      "note": "В glossary это не всегда флизелин. В текущей UI-терминологии role_choice пока называется Флизелин."
+    },
+    {
+      "terms": ["Padding", "padding"],
+      "approved_ru": "утеплитель",
+      "role_choice": "material.padding",
+      "variants": {
+        "stroke": "boundary_fragment"
+      },
+      "mapping_status": "partial",
+      "note": "Текущая роль хранит только границу/контур прокладки. Отдельной fill-роли для утеплителя сейчас нет."
+    },
+    {
+      "terms": ["Shell fabric", "shell fabric", "Shell", "shell"],
+      "approved_ru": "материал верха",
+      "role_choice": "material.fabric",
+      "variants": {
+        "fill": "fill_fabric"
+      },
+      "mapping_status": "mapped",
+      "note": "Общий материал верха; конкретные контуры детали не должны автоматически становиться material.fabric."
+    },
+    {
+      "terms": ["Lining", "lining", "Lining of pocket", "lining of pocket"],
+      "approved_ru": "подкладка",
+      "role_choice": null,
+      "variants": {},
+      "mapping_status": "taxonomy_gap",
+      "note": "В текущих активных ролях нет отдельной сущности Подкладка. Нельзя автоматически мапить на fill_fabric без решения."
+    },
+    {
+      "terms": ["Zipper", "zipper", "Invisible zipper"],
+      "approved_ru": "застёжка-молния",
+      "object_role": "hardware.zipper",
+      "role_choice": null,
+      "variants": {},
+      "mapping_status": "object_only",
+      "note": "Надпись указывает на объект Молния. Для визуальной разметки нужны части: зубцы, тесьма, замок/слайдер."
+    },
+    {
+      "terms": ["Edge of zipper"],
+      "approved_ru": "край застёжки-молнии",
+      "object_role": "hardware.zipper",
+      "part_role": "hardware.zipper.tape_edge",
+      "role_choice": "hardware.zipper.tape",
+      "role": "hw_zipper_tape",
+      "mapping_status": "approximate",
+      "note": "В текущих ролях нет отдельного tape_edge; ближайшая активная роль — тесьма молнии."
+    },
+    {
+      "terms": ["PU seam-tape", "PU seam tape", "PU-seam tape", "PU tape"],
+      "approved_ru": "ПУ-лента для герметизации шва",
+      "role_choice": "material.pu_tape",
+      "variants": {
+        "fill": "fill_pu_tape"
+      },
+      "mapping_status": "mapped",
+      "note": "Материал/лента, не строчка."
+    },
+    {
+      "terms": ["Tape", "tape", "Fabric tape", "tape from fabric", "Tape from shell fabric"],
+      "approved_ru": "лента / тесьма",
+      "role_choice": "material.tape",
+      "variants": {
+        "fill": "fill_tape"
+      },
+      "mapping_status": "context",
+      "note": "Может быть обычной тесьмой, тесьмой молнии или частью другого объекта. Требует контекста."
+    },
+    {
+      "terms": ["Binding", "binding", "Binding from tape", "Binding from shell"],
+      "approved_ru": "окантовка / окантовочная бейка",
+      "role_choice": "material.tape",
+      "variants": {
+        "fill": "fill_tape"
+      },
+      "mapping_status": "approximate",
+      "note": "В текущих активных ролях нет отдельной binding-роли. Пока ближайшая роль — тесьма/лента."
+    },
+    {
+      "terms": ["Piping", "piping", "Piping with cord", "Reflective piping", "Reflecting piping"],
+      "approved_ru": "кант",
+      "role_choice": "material.piping",
+      "variants": {
+        "fill": "fill_piping"
+      },
+      "mapping_status": "mapped",
+      "note": "Кант как материал/деталь."
+    },
+    {
+      "terms": ["Cord", "cord", "Elastic cord", "Draw cord", "draw cord"],
+      "approved_ru": "шнур",
+      "object_role": "material.cord",
+      "role_choice": "material.cord",
+      "role": "fill_cord",
+      "mapping_status": "mapped",
+      "note": "Шнур как самостоятельная материал-сущность."
+    },
+    {
+      "terms": ["Glue", "glue", "Glue tape", "Tape with Glue"],
+      "approved_ru": "клей",
+      "role_choice": "material.glue",
+      "variants": {
+        "fill": "fill_glue"
+      },
+      "mapping_status": "mapped",
+      "note": "Клеевая зона или клеевая лента."
+    },
+    {
+      "terms": ["Velcro", "velcro"],
+      "approved_ru": "текстильная застёжка / велкро",
+      "object_role": "fastener.velcro",
+      "role_choice": "fastener.velcro",
+      "role": "fill_velcro",
+      "mapping_status": "mapped",
+      "note": "Общий fallback, когда hook/loop не уточнены подписью."
+    },
+    {
+      "terms": ["Velcro/hook/", "velcro/hook/", "Velcro /hook/", "Invisible velcro/hook/"],
+      "approved_ru": "крючковая часть текстильной застёжки",
+      "object_role": "fastener.velcro",
+      "part_role": "fastener.velcro.hook_tape",
+      "role_choice": "fastener.velcro.hook_tape",
+      "role": "fill_velcro_hook",
+      "mapping_status": "mapped",
+      "note": "Крючковая часть липучки. Заливка/обводка — параметры слоя, не часть роли."
+    },
+    {
+      "terms": ["Velcro/loop/", "velcro/loop/", "Velcro /loop/", "Invisible velcro/loop/"],
+      "approved_ru": "петельная часть текстильной застёжки",
+      "object_role": "fastener.velcro",
+      "part_role": "fastener.velcro.loop_tape",
+      "role_choice": "fastener.velcro.loop_tape",
+      "role": "fill_velcro_loop",
+      "mapping_status": "mapped",
+      "note": "Петельная часть липучки. Не путать с обычным Loop/петлей-рамкой."
+    },
+    {
+      "terms": ["Half-belt"],
+      "approved_ru": "полупояс / регулировочный хлястик",
+      "object_role": "component.half_belt",
+      "role_choice": "component.half_belt",
+      "role": "component_half_belt",
+      "mapping_status": "mapped",
+      "note": "Серая регулировочная деталь; не Velcro и не параметр заливки."
+    },
+    {
+      "terms": ["Sweat band"],
+      "approved_ru": "внутренняя поясная лента",
+      "object_role": "material.sweat_band",
+      "role_choice": "material.sweat_band",
+      "role": "material_sweat_band",
+      "mapping_status": "mapped",
+      "note": "Не переводить как резинка без явного признака elastic."
+    },
+    {
+      "terms": ["Loop"],
+      "approved_ru": "петля / рамка",
+      "object_role": "hardware.loop",
+      "role_choice": "hardware.loop",
+      "role": "hw_loop",
+      "mapping_status": "mapped",
+      "note": "Обычный Loop как жесткая петля/рамка; не Velcro /loop/."
+    },
+    {
+      "terms": ["Snap-button", "snap-button", "Snap button", "Invisible snap-button"],
+      "approved_ru": "кнопка",
+      "object_role": "fastener.snap_button",
+      "role_choice": null,
+      "variants": {},
+      "mapping_status": "taxonomy_gap",
+      "note": "В object_roles кнопка есть, но активной visual role/choice для частей кнопки сейчас нет."
+    },
+    {
+      "terms": ["Buckle"],
+      "approved_ru": "пряжка",
+      "object_role": "hardware.buckle",
+      "role_choice": null,
+      "variants": {},
+      "mapping_status": "taxonomy_gap",
+      "note": "В object_roles пряжка есть, но активной visual role/choice для пряжки сейчас нет."
+    },
+    {
+      "terms": ["Ring"],
+      "approved_ru": "кольцо",
+      "object_role": "hardware.ring",
+      "role_choice": "hardware.ring",
+      "role": "hw_ring",
+      "mapping_status": "mapped",
+      "note": "Кольцо / люверс / D-ring как фурнитура."
+    },
+    {
+      "terms": ["Seam", "seam", "Side seam", "Shoulder seam", "back seam"],
+      "approved_ru": "шов",
+      "role_choice": "seam.line",
+      "role": "seam_line",
+      "mapping_status": "context",
+      "note": "Текстовая подпись шва не всегда означает, что ближайшая линия должна быть seam_line. Нужен контекст геометрии."
+    },
+    {
+      "terms": ["Stitch", "Stitching", "Stitch on stitch", "Fix stitch"],
+      "approved_ru": "строчка",
+      "role_choice": null,
+      "variants": {},
+      "mapping_status": "context",
+      "note": "Может соответствовать stitch_edge, stitch_thru, stitch_Bt или текстовой инструкции. Нельзя мапить без геометрии."
+    },
+    {
+      "terms": ["Bt"],
+      "approved_ru": "закрепка на спецмашине",
+      "stitch_operation_code": "Bt",
+      "role": "stitch_Bt",
+      "mapping_status": "operation_code",
+      "reference": "tools/vse/stitch_operation_codes.json",
+      "note": "Код операции строчки, а не материал и не самостоятельная visual role."
+    },
+    {
+      "terms": ["Bc", "with Back Tack (Bc)", "Back Tack (Bc)"],
+      "approved_ru": "закрепка прямой-обратной строчкой",
+      "stitch_operation_code": "Bc",
+      "role": "stitch_Bt",
+      "mapping_status": "operation_code",
+      "reference": "tools/vse/stitch_operation_codes.json",
+      "note": "Код операции строчки; по PDF выполняется одноигольной челночной строчкой с повышенной частотой."
+    },
+    {
+      "terms": ["F4"],
+      "approved_ru": "4-игольный флок",
+      "stitch_operation_code": "F4",
+      "role": "stitch_symbol",
+      "mapping_status": "operation_code",
+      "reference": "tools/vse/stitch_operation_codes.json",
+      "note": "Код операции для ближайшей строчки; геометрическая роль самой линии остается отдельной."
+    },
+    {
+      "terms": ["Type A", "Type B"],
+      "approved_ru": null,
+      "role_choice": null,
+      "variants": {},
+      "mapping_status": "code",
+      "note": "Типы/метки вариантов. Не переводить и не использовать как role mapping без контекста."
+    }
+  ]
+}

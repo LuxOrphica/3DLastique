@@ -1,0 +1,888 @@
+{
+  "version": 1,
+  "status": "draft",
+  "purpose": "Semantic layer over legacy VSE roles. This file does not replace ROLE_STYLES yet.",
+  "families": {
+    "contour": "Контуры и форма",
+    "break": "Линии обрыва и разрыва",
+    "stitch": "Строчки / швы",
+    "material": "Материалы, слои и заливки",
+    "hardware": "Фурнитура",
+    "annotation": "Выноски, подписи и обозначения",
+    "construction": "Вспомогательная геометрия",
+    "unknown": "Неопределенное"
+  },
+  "entity_types": {
+    "stroke": "Линия или обводка",
+    "fill": "Заливка или пятно",
+    "symbol": "Условный знак или повторяющийся символ",
+    "text": "Текст",
+    "composite": "Составной объект: несколько stroke/fill/symbol частей",
+    "component": "Смысловая деталь или часть объекта; заливка/обводка являются параметрами отображения",
+    "annotation": "Выноска, подпись, размер или zoom-связь",
+    "technical": "Служебная сущность"
+  },
+  "object_roles": {
+    "hardware.zipper": {
+      "label_ru": "Молния",
+      "parts": [
+        "hardware.zipper.slider",
+        "hardware.zipper.teeth",
+        "hardware.zipper.tape",
+        "hardware.zipper.tape_edge",
+        "hardware.zipper.stop",
+        "hardware.zipper.pull"
+      ]
+    },
+    "fastener.velcro": {
+      "label_ru": "Липучка",
+      "parts": [
+        "fastener.velcro.hook_tape",
+        "fastener.velcro.loop_tape",
+        "fastener.velcro.outline"
+      ]
+    },
+    "fastener.snap_button": {
+      "label_ru": "Кнопка-застежка",
+      "parts": [
+        "fastener.snap_button.upper_part",
+        "fastener.snap_button.bottom_part",
+        "fastener.snap_button.ring",
+        "fastener.snap_button.center"
+      ]
+    },
+    "hardware.buckle": {
+      "label_ru": "Пряжка",
+      "parts": [
+        "hardware.buckle.frame",
+        "hardware.buckle.pin",
+        "hardware.buckle.fill"
+      ]
+    },
+    "hardware.ring": {
+      "label_ru": "Кольцо",
+      "parts": [
+        "hardware.ring.body"
+      ]
+    },
+    "hardware.loop": {
+      "label_ru": "Петля / рамка",
+      "parts": [
+        "hardware.loop.body"
+      ]
+    },
+    "component.half_belt": {
+      "label_ru": "Полупояс / регулировочный хлястик",
+      "parts": [
+        "component.half_belt.body"
+      ]
+    },
+    "material.sweat_band": {
+      "label_ru": "Внутренняя поясная лента",
+      "parts": [
+        "material.sweat_band.body"
+      ]
+    },
+    "material.elastic_band": {
+      "label_ru": "Резинка",
+      "parts": [
+        "material.elastic_band.fill",
+        "material.elastic_band.outline"
+      ]
+    },
+    "material.cord": {
+      "label_ru": "Шнур",
+      "parts": [
+        "material.cord.body",
+        "material.cord.tip"
+      ]
+    }
+  },
+  "roles": {
+    "contour_outer": {
+      "role_id": "contour.outer",
+      "label_ru": "Контур детали",
+      "family": "contour",
+      "entity_type": "stroke",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "contour_outer"
+      ]
+    },
+    "construction_line": {
+      "role_id": "construction.line",
+      "label_ru": "Конструктивная линия",
+      "family": "construction",
+      "entity_type": "stroke",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "construction_line"
+      ]
+    },
+    "contour_hidden": {
+      "role_id": "contour.hidden",
+      "label_ru": "Скрытый контур",
+      "family": "contour",
+      "entity_type": "stroke",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "contour_hidden"
+      ]
+    },
+    "break_line": {
+      "role_id": "break.line",
+      "label_ru": "Линия обрыва",
+      "family": "break",
+      "entity_type": "stroke",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "break_line"
+      ]
+    },
+    "seam_line": {
+      "role_id": "seam.line",
+      "label_ru": "Линия шва",
+      "family": "stitch",
+      "entity_type": "stroke",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "seam_line"
+      ]
+    },
+    "stitch_edge": {
+      "role_id": "stitch.edge",
+      "label_ru": "Строчка по краю",
+      "family": "stitch",
+      "entity_type": "stroke",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "stitch_edge"
+      ]
+    },
+    "stitch_thru": {
+      "role_id": "stitch.thru",
+      "label_ru": "Сквозная строчка",
+      "family": "stitch",
+      "entity_type": "stroke",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "stitch_thru"
+      ],
+      "notes": "В оригинале обычно пунктирная."
+    },
+    "stitch_Bt": {
+      "role_id": "stitch.bar_tack",
+      "label_ru": "Закрепка",
+      "family": "stitch",
+      "entity_type": "symbol",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "stitch_Bt"
+      ]
+    },
+    "stitch_symbol": {
+      "role_id": "stitch.symbol",
+      "label_ru": "Символ строчки",
+      "family": "stitch",
+      "entity_type": "symbol",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "stitch_symbol"
+      ]
+    },
+    "boundary_fragment": {
+      "role_id": "material.padding.boundary",
+      "label_ru": "Граница прокладки",
+      "family": "material",
+      "entity_type": "stroke",
+      "object_role": "material.padding",
+      "part_role": "material.padding.boundary",
+      "legacy_roles": [
+        "boundary_fragment"
+      ]
+    },
+    "boundary_interlining": {
+      "role_id": "material.interlining.boundary",
+      "label_ru": "Граница флизелина",
+      "family": "material",
+      "entity_type": "stroke",
+      "object_role": "material.interlining",
+      "part_role": "material.interlining.boundary",
+      "legacy_roles": [
+        "boundary_interlining"
+      ]
+    },
+    "fill_interlining": {
+      "role_id": "material.interlining.fill",
+      "label_ru": "Флизелин: заливка",
+      "family": "material",
+      "entity_type": "fill",
+      "object_role": "material.interlining",
+      "part_role": "material.interlining.fill",
+      "legacy_roles": [
+        "fill_interlining"
+      ]
+    },
+    "fill_fabric": {
+      "role_id": "material.fabric.fill",
+      "label_ru": "Ткань: заливка",
+      "family": "material",
+      "entity_type": "fill",
+      "object_role": "material.fabric",
+      "part_role": "material.fabric.fill",
+      "legacy_roles": [
+        "fill_fabric"
+      ]
+    },
+    "fill_fabric_gray": {
+      "role_id": "material.fabric_gray.fill",
+      "label_ru": "Ткань: серая заливка",
+      "family": "material",
+      "entity_type": "fill",
+      "object_role": "material.fabric",
+      "part_role": "material.fabric.fill",
+      "legacy_roles": [
+        "fill_fabric_gray"
+      ]
+    },
+    "fill_dark_fabric": {
+      "role_id": "material.dark_fabric.fill",
+      "label_ru": "Ткань: темная заливка",
+      "family": "material",
+      "entity_type": "fill",
+      "object_role": "material.fabric",
+      "part_role": "material.fabric.fill",
+      "legacy_roles": [
+        "fill_dark_fabric"
+      ]
+    },
+    "fill_contrast": {
+      "role_id": "material.contrast.fill",
+      "label_ru": "Контрастная деталь: заливка",
+      "family": "material",
+      "entity_type": "fill",
+      "object_role": "material.contrast",
+      "part_role": "material.contrast.fill",
+      "legacy_roles": [
+        "fill_contrast"
+      ]
+    },
+    "fill_tape": {
+      "role_id": "material.tape.fill",
+      "label_ru": "Тесьма / лента: заливка",
+      "family": "material",
+      "entity_type": "fill",
+      "object_role": "material.tape",
+      "part_role": "material.tape.fill",
+      "legacy_roles": [
+        "fill_tape"
+      ]
+    },
+    "fill_elastic": {
+      "role_id": "material.elastic_band.fill",
+      "label_ru": "Резинка: заливка",
+      "family": "material",
+      "entity_type": "fill",
+      "object_role": "material.elastic_band",
+      "part_role": "material.elastic_band.fill",
+      "legacy_roles": [
+        "fill_elastic"
+      ]
+    },
+    "line_elastic": {
+      "role_id": "material.elastic_band.outline",
+      "label_ru": "Резинка: линия",
+      "family": "material",
+      "entity_type": "stroke",
+      "object_role": "material.elastic_band",
+      "part_role": "material.elastic_band.outline",
+      "legacy_roles": [
+        "line_elastic"
+      ]
+    },
+    "fill_cord": {
+      "role_id": "material.cord.body",
+      "label_ru": "Шнур: тело",
+      "family": "material",
+      "entity_type": "composite",
+      "object_role": "material.cord",
+      "part_role": "material.cord.body",
+      "legacy_roles": [
+        "fill_cord"
+      ]
+    },
+    "fill_velcro": {
+      "role_id": "fastener.velcro.surface",
+      "label_ru": "Липучка: не уточнено",
+      "family": "hardware",
+      "entity_type": "component",
+      "object_role": "fastener.velcro",
+      "part_role": "fastener.velcro.unknown_tape",
+      "legacy_roles": [
+        "fill_velcro"
+      ],
+      "notes": "Legacy/fallback роль, когда hook/loop не удалось уточнить."
+    },
+    "fill_velcro_hook": {
+      "role_id": "fastener.velcro.hook_tape",
+      "label_ru": "Липучка: крючковая часть",
+      "family": "hardware",
+      "entity_type": "component",
+      "object_role": "fastener.velcro",
+      "part_role": "fastener.velcro.hook_tape",
+      "legacy_roles": [
+        "fill_velcro_hook"
+      ],
+      "notes": "Соответствует подписи Velcro /hook/."
+    },
+    "fill_velcro_loop": {
+      "role_id": "fastener.velcro.loop_tape",
+      "label_ru": "Липучка: петельная часть",
+      "family": "hardware",
+      "entity_type": "component",
+      "object_role": "fastener.velcro",
+      "part_role": "fastener.velcro.loop_tape",
+      "legacy_roles": [
+        "fill_velcro_loop"
+      ],
+      "notes": "Соответствует подписи Velcro /loop/."
+    },
+    "component_half_belt": {
+      "role_id": "component.half_belt",
+      "label_ru": "Полупояс / регулировочный хлястик",
+      "family": "material",
+      "entity_type": "component",
+      "object_role": "component.half_belt",
+      "part_role": "component.half_belt.body",
+      "legacy_roles": [
+        "component_half_belt"
+      ],
+      "notes": "Half-belt: деталь регулировки, не Velcro и не просто заливка."
+    },
+    "material_sweat_band": {
+      "role_id": "material.sweat_band",
+      "label_ru": "Внутренняя поясная лента",
+      "family": "material",
+      "entity_type": "component",
+      "object_role": "material.sweat_band",
+      "part_role": "material.sweat_band.body",
+      "legacy_roles": [
+        "material_sweat_band"
+      ],
+      "notes": "Sweat band: внутренняя поясная лента, не резинка."
+    },
+    "hw_loop": {
+      "role_id": "hardware.loop",
+      "label_ru": "Петля / рамка",
+      "family": "hardware",
+      "entity_type": "component",
+      "object_role": "hardware.loop",
+      "part_role": "hardware.loop.body",
+      "legacy_roles": [
+        "hw_loop"
+      ],
+      "notes": "Loop как жесткая петля/рамка, не Velcro loop."
+    },
+    "fill_material_mask": {
+      "role_id": "technical.material_mask",
+      "label_ru": "Маска материала",
+      "family": "material",
+      "entity_type": "technical",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "fill_material_mask"
+      ]
+    },
+    "fill_white_detail": {
+      "role_id": "material.white_detail.fill",
+      "label_ru": "Белая деталь: заливка",
+      "family": "material",
+      "entity_type": "fill",
+      "object_role": "material.white_detail",
+      "part_role": "material.white_detail.fill",
+      "legacy_roles": [
+        "fill_white_detail"
+      ]
+    },
+    "fill_pu_tape": {
+      "role_id": "material.pu_tape.fill",
+      "label_ru": "PU tape: заливка",
+      "family": "material",
+      "entity_type": "fill",
+      "object_role": "material.pu_tape",
+      "part_role": "material.pu_tape.fill",
+      "legacy_roles": [
+        "fill_pu_tape"
+      ]
+    },
+    "fill_piping": {
+      "role_id": "material.piping.fill",
+      "label_ru": "Кант / piping: заливка",
+      "family": "material",
+      "entity_type": "fill",
+      "object_role": "material.piping",
+      "part_role": "material.piping.fill",
+      "legacy_roles": [
+        "fill_piping"
+      ]
+    },
+    "fill_glue": {
+      "role_id": "material.glue.fill",
+      "label_ru": "Клеевая зона: заливка",
+      "family": "material",
+      "entity_type": "fill",
+      "object_role": "material.glue",
+      "part_role": "material.glue.fill",
+      "legacy_roles": [
+        "fill_glue"
+      ]
+    },
+    "line_fur": {
+      "role_id": "material.fur.stroke",
+      "label_ru": "Мех: линия",
+      "family": "material",
+      "entity_type": "stroke",
+      "object_role": "material.fur",
+      "part_role": "material.fur.stroke",
+      "legacy_roles": [
+        "line_fur"
+      ]
+    },
+    "fill_shape": {
+      "role_id": "material.shape.fill",
+      "label_ru": "Форма: заливка",
+      "family": "material",
+      "entity_type": "fill",
+      "object_role": "material.shape",
+      "part_role": "material.shape.fill",
+      "legacy_roles": [
+        "fill_shape"
+      ]
+    },
+    "hw_zipper": {
+      "role_id": "hardware.zipper.teeth",
+      "label_ru": "Молния: зубцы",
+      "family": "hardware",
+      "entity_type": "symbol",
+      "object_role": "hardware.zipper",
+      "part_role": "hardware.zipper.teeth",
+      "legacy_roles": [
+        "hw_zipper"
+      ],
+      "notes": "Если это сгенерированный символ, renderer должен хранить data-render-kind и source keys."
+    },
+    "hw_zipper_tape": {
+      "role_id": "hardware.zipper.tape",
+      "label_ru": "Молния: тесьма",
+      "family": "hardware",
+      "entity_type": "stroke",
+      "object_role": "hardware.zipper",
+      "part_role": "hardware.zipper.tape",
+      "legacy_roles": [
+        "hw_zipper_tape"
+      ]
+    },
+    "hw_ring": {
+      "role_id": "hardware.ring.body",
+      "label_ru": "Кольцо",
+      "family": "hardware",
+      "entity_type": "stroke",
+      "object_role": "hardware.ring",
+      "part_role": "hardware.ring.body",
+      "legacy_roles": [
+        "hw_ring"
+      ]
+    },
+    "callout_line": {
+      "role_id": "annotation.callout.line",
+      "label_ru": "Выноска",
+      "family": "annotation",
+      "entity_type": "annotation",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "callout_line"
+      ]
+    },
+    "callout_zoom": {
+      "role_id": "annotation.zoom",
+      "label_ru": "Выноска к увеличению",
+      "family": "annotation",
+      "entity_type": "annotation",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "callout_zoom"
+      ]
+    },
+    "line_gathered_edge": {
+      "role_id": "material.gathered_edge.line",
+      "label_ru": "Мятый / собранный край",
+      "family": "material",
+      "entity_type": "stroke",
+      "object_role": "material.fabric",
+      "part_role": "material.fabric.gathered_edge",
+      "legacy_roles": [
+        "line_gathered_edge"
+      ]
+    },
+    "arrow": {
+      "role_id": "annotation.arrow",
+      "label_ru": "Стрелка",
+      "family": "annotation",
+      "entity_type": "annotation",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "arrow"
+      ]
+    },
+    "label": {
+      "role_id": "annotation.label",
+      "label_ru": "Текстовая подпись",
+      "family": "annotation",
+      "entity_type": "text",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "label"
+      ],
+      "notes": "Может быть источником target_role для callout graph."
+    },
+    "unknown": {
+      "role_id": "unknown",
+      "label_ru": "Неизвестно",
+      "family": "unknown",
+      "entity_type": "technical",
+      "object_role": null,
+      "part_role": null,
+      "legacy_roles": [
+        "unknown"
+      ]
+    }
+  },
+  "role_choices": [
+    {
+      "choice_key": "?",
+      "label_ru": "— не назначено —",
+      "group": "— не назначено —",
+      "role": "?"
+    },
+    {
+      "choice_key": "contour.outer",
+      "label_ru": "Контур детали",
+      "group": "Контуры и конструкция",
+      "role": "contour_outer"
+    },
+    {
+      "choice_key": "construction.line",
+      "label_ru": "Конструктивная линия",
+      "group": "Контуры и конструкция",
+      "role": "construction_line"
+    },
+    {
+      "choice_key": "contour.hidden",
+      "label_ru": "Скрытый контур",
+      "group": "Контуры и конструкция",
+      "role": "contour_hidden"
+    },
+    {
+      "choice_key": "break.line",
+      "label_ru": "Линия обрыва",
+      "group": "Контуры и конструкция",
+      "role": "break_line"
+    },
+    {
+      "choice_key": "seam.line",
+      "label_ru": "Линия шва",
+      "group": "Строчки / швы",
+      "role": "seam_line"
+    },
+    {
+      "choice_key": "stitch.edge",
+      "label_ru": "Строчка по краю",
+      "group": "Строчки / швы",
+      "role": "stitch_edge"
+    },
+    {
+      "choice_key": "stitch.thru",
+      "label_ru": "Сквозная строчка",
+      "group": "Строчки / швы",
+      "role": "stitch_thru"
+    },
+    {
+      "choice_key": "stitch.bar_tack",
+      "label_ru": "Закрепка",
+      "group": "Строчки / швы",
+      "role": "stitch_Bt"
+    },
+    {
+      "choice_key": "stitch.symbol",
+      "label_ru": "Символ строчки",
+      "group": "Строчки / швы",
+      "role": "stitch_symbol"
+    },
+    {
+      "choice_key": "material.padding",
+      "label_ru": "Прокладка",
+      "group": "Материалы и слои",
+      "variants": {
+        "stroke": "boundary_fragment"
+      }
+    },
+    {
+      "choice_key": "material.interlining",
+      "label_ru": "Флизелин",
+      "group": "Материалы и слои",
+      "variants": {
+        "fill": "fill_interlining",
+        "stroke": "boundary_interlining"
+      }
+    },
+    {
+      "choice_key": "material.fabric",
+      "label_ru": "Ткань",
+      "group": "Материалы и слои",
+      "variants": {
+        "fill": "fill_fabric"
+      }
+    },
+    {
+      "choice_key": "material.fabric_gray",
+      "label_ru": "Серая ткань",
+      "group": "Материалы и слои",
+      "variants": {
+        "fill": "fill_fabric_gray"
+      }
+    },
+    {
+      "choice_key": "material.dark_fabric",
+      "label_ru": "Темная ткань",
+      "group": "Материалы и слои",
+      "variants": {
+        "fill": "fill_dark_fabric"
+      }
+    },
+    {
+      "choice_key": "material.contrast",
+      "label_ru": "Контрастная деталь",
+      "group": "Материалы и слои",
+      "variants": {
+        "fill": "fill_contrast"
+      }
+    },
+    {
+      "choice_key": "material.shape",
+      "label_ru": "Форма",
+      "group": "Материалы и слои",
+      "variants": {
+        "fill": "fill_shape"
+      }
+    },
+    {
+      "choice_key": "material.white_detail",
+      "label_ru": "Белая деталь",
+      "group": "Материалы и слои",
+      "variants": {
+        "fill": "fill_white_detail"
+      }
+    },
+    {
+      "choice_key": "technical.material_mask",
+      "label_ru": "Маска материала",
+      "group": "Материалы и слои",
+      "role": "fill_material_mask"
+    },
+    {
+      "choice_key": "material.tape",
+      "label_ru": "Тесьма / лента",
+      "group": "Ленты, резинки, шнуры",
+      "variants": {
+        "fill": "fill_tape"
+      }
+    },
+    {
+      "choice_key": "material.elastic_band",
+      "label_ru": "Резинка",
+      "group": "Ленты, резинки, шнуры",
+      "variants": {
+        "fill": "fill_elastic",
+        "stroke": "line_elastic"
+      }
+    },
+    {
+      "choice_key": "material.sweat_band",
+      "label_ru": "Внутренняя поясная лента",
+      "group": "Ленты, резинки, шнуры",
+      "role": "material_sweat_band"
+    },
+    {
+      "choice_key": "component.half_belt",
+      "label_ru": "Полупояс / регулировочный хлястик",
+      "group": "Материалы и слои",
+      "role": "component_half_belt"
+    },
+    {
+      "choice_key": "material.cord",
+      "label_ru": "Шнур",
+      "group": "Ленты, резинки, шнуры",
+      "role": "fill_cord"
+    },
+    {
+      "choice_key": "material.pu_tape",
+      "label_ru": "PU tape",
+      "group": "Ленты, резинки, шнуры",
+      "variants": {
+        "fill": "fill_pu_tape"
+      }
+    },
+    {
+      "choice_key": "material.piping",
+      "label_ru": "Кант / piping",
+      "group": "Ленты, резинки, шнуры",
+      "variants": {
+        "fill": "fill_piping"
+      }
+    },
+    {
+      "choice_key": "material.glue",
+      "label_ru": "Клеевая зона",
+      "group": "Ленты, резинки, шнуры",
+      "variants": {
+        "fill": "fill_glue"
+      }
+    },
+    {
+      "choice_key": "material.fur",
+      "label_ru": "Мех",
+      "group": "Ленты, резинки, шнуры",
+      "variants": {
+        "stroke": "line_fur"
+      }
+    },
+    {
+      "choice_key": "material.gathered_edge",
+      "label_ru": "Мятый / собранный край",
+      "group": "Ленты, резинки, шнуры",
+      "role": "line_gathered_edge"
+    },
+    {
+      "choice_key": "hardware.zipper.teeth",
+      "label_ru": "Молния: зубцы",
+      "group": "Фурнитура",
+      "role": "hw_zipper"
+    },
+    {
+      "choice_key": "hardware.zipper.tape",
+      "label_ru": "Молния: тесьма",
+      "group": "Фурнитура",
+      "role": "hw_zipper_tape"
+    },
+    {
+      "choice_key": "hardware.ring",
+      "label_ru": "Кольцо",
+      "group": "Фурнитура",
+      "role": "hw_ring"
+    },
+    {
+      "choice_key": "hardware.loop",
+      "label_ru": "Петля / рамка",
+      "group": "Фурнитура",
+      "role": "hw_loop"
+    },
+    {
+      "choice_key": "fastener.velcro",
+      "label_ru": "Липучка: не уточнено",
+      "group": "Фурнитура",
+      "role": "fill_velcro"
+    },
+    {
+      "choice_key": "fastener.velcro.hook_tape",
+      "label_ru": "Липучка: крючковая часть",
+      "group": "Фурнитура",
+      "role": "fill_velcro_hook"
+    },
+    {
+      "choice_key": "fastener.velcro.loop_tape",
+      "label_ru": "Липучка: петельная часть",
+      "group": "Фурнитура",
+      "role": "fill_velcro_loop"
+    },
+    {
+      "choice_key": "annotation.callout.line",
+      "label_ru": "Выноска",
+      "group": "Выноски и обозначения",
+      "role": "callout_line"
+    },
+    {
+      "choice_key": "annotation.zoom",
+      "label_ru": "Выноска к увеличению",
+      "group": "Выноски и обозначения",
+      "role": "callout_zoom"
+    },
+    {
+      "choice_key": "annotation.arrow",
+      "label_ru": "Стрелка",
+      "group": "Выноски и обозначения",
+      "role": "arrow"
+    },
+    {
+      "choice_key": "annotation.label",
+      "label_ru": "Текстовая подпись",
+      "group": "Выноски и обозначения",
+      "role": "label"
+    },
+    {
+      "choice_key": "unknown",
+      "label_ru": "Неизвестно",
+      "group": "Прочее",
+      "role": "unknown"
+    }
+  ],
+  "annotation_phrase_rules": [
+    {
+      "contains": [
+        "Velcro",
+        "hook"
+      ],
+      "target_role": "fastener.velcro.hook_tape"
+    },
+    {
+      "contains": [
+        "Velcro",
+        "loop"
+      ],
+      "target_role": "fastener.velcro.loop_tape"
+    },
+    {
+      "contains": [
+        "Snap-button",
+        "upper"
+      ],
+      "target_role": "fastener.snap_button.upper_part"
+    },
+    {
+      "contains": [
+        "Snap-button",
+        "bottom"
+      ],
+      "target_role": "fastener.snap_button.bottom_part"
+    },
+    {
+      "contains": [
+        "Loop"
+      ],
+      "target_role": "textile.loop"
+    }
+  ]
+}

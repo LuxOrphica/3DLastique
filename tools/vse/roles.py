@@ -180,8 +180,13 @@ def classify_path(p, text_words):
     if is_filled and is_closed and near_text_contains(rect, text_words, ("cord", "шнур")):
         return "fill_cord"
 
-    # Velcro / hook-and-loop: filled area near "velcro", "hook", "loop" text.
-    if is_filled and is_closed and near_text_contains(rect, text_words, ("velcro", "hook", "loop", "липуч", "велкро")):
+    # Velcro / hook-and-loop: split hook and loop when the callout text says so.
+    near_velcro_text = near_text_contains(rect, text_words, ("velcro", "липуч", "велкро"))
+    if is_filled and is_closed and near_velcro_text and near_text_contains(rect, text_words, ("hook", "крюч")):
+        return "fill_velcro_hook"
+    if is_filled and is_closed and near_velcro_text and near_text_contains(rect, text_words, ("loop", "петл")):
+        return "fill_velcro_loop"
+    if is_filled and is_closed and near_velcro_text:
         return "fill_velcro"
 
     # Interlining fill: black filled closed shape (diagonal hatch)
@@ -195,17 +200,24 @@ def classify_path(p, text_words):
     if _simple_stroke and color == "BLACK" and w < 1.5:
         angle, length = _path_angle_and_length(items)
         if angle is not None:
-            if length >= 80:
-                return "break_line"
-            if not near_any_text(rect, text_words) and length >= 40:
-                return "break_line"    # длинная линия → линия обрыва
-            else:
-                return "callout_line"  # короткая линия рядом с подписью → выноска
+            _axis = angle <= 15 or angle >= 75  # horizontal or vertical
+            if _axis and length >= 40:
+                return "break_line"    # ось-выровненная длинная линия → линия обрыва
+            elif not _axis and near_any_text(rect, text_words):
+                return "callout_line"  # диагональная рядом с текстом → выноска
+            elif not _axis:
+                return "construction_line"  # диагональная не у текста → конструктивная
 
     # Large thin open black paths often mark an interrupted/cropped contour.
+    # Must be axis-aligned (horiz or vert) — diagonal lines are construction_line.
     # Heavier black strokes (>= 1.5) remain real garment contours.
     if color == "BLACK" and not is_filled and not is_closed and w < 1.0 and (rw > 80 or rh > 80):
-        return "break_line"
+        angle, _ = _path_angle_and_length(items)
+        is_axis_aligned = angle is None or angle <= 15 or angle >= 75
+        if is_axis_aligned:
+            return "break_line"
+        else:
+            return "construction_line"
 
     # Wrinkled/gathered material edge: small complex open black strokes.
     # Keep it separate from contours so the standardized view can render it thin and gray.
