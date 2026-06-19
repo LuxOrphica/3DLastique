@@ -9,6 +9,7 @@ Output: F:/Projects/lekala-site/public/vse/
 """
 import os, re, json, fitz
 from engine import standardize, _normalize_color, _path_style_key, items_to_svg_d, _build_registry_lookup, classify_with_registry, apply_node_role_override, normalize_fragmented_stitches, sanitize_color_role_conflicts, reclassify_thin_contours
+from role_cleanup import normalize_active_role
 from bbox import get_content_bbox
 from callout_graph import analyze
 from roles import near_any_text
@@ -81,8 +82,8 @@ def apply_elem_override(node_id, path_d, role):
     path_d_prefix = path_d[:40]
     for o in overrides:
         if path_d.startswith(o.get("path_d", "")[:40]) or o.get("path_d", "").startswith(path_d_prefix):
-            return o["new_role"]
-    return role
+            return normalize_active_role(o["new_role"])
+    return normalize_active_role(role)
 
 def key_to_str(key):
     return "|".join(str(v) for v in key)
@@ -137,7 +138,7 @@ def build_annotated_orig_svg(ai_path, text_words, bb):
     for p in paths:
         key = _path_style_key(p, text_words)
         role = classify_with_registry(p, text_words, registry_lookup)
-        role = apply_node_role_override(ai_path, p, role)
+        role = normalize_active_role(apply_node_role_override(ai_path, p, role))
         classified.append((role, p, key))
 
     original_keys = [key for _, _, key in classified]

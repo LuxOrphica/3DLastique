@@ -330,6 +330,21 @@ def _is_blackish_hex(value):
     return r < 55 and g < 55 and b < 55
 
 
+def _is_redish_hex(value):
+    value = str(value or "").strip().lower()
+    if value in {"#e02020", "#c8102e", "#eb2123", "#ee4c42", "#f14a41"}:
+        return True
+    if not value.startswith("#") or len(value) != 7:
+        return False
+    try:
+        r = int(value[1:3], 16)
+        g = int(value[3:5], 16)
+        b = int(value[5:7], 16)
+    except Exception:
+        return False
+    return r >= 180 and g <= 90 and b <= 90
+
+
 def _svg_entities(svg_path):
     if not svg_path or not svg_path.exists():
         return []
@@ -551,6 +566,24 @@ def _normalize_state_entities(orig_entities):
             and not ent.get("dashed")
         ):
             role = "break_line"
+            ent = dict(ent)
+            ent["role"] = role
+        if (
+            role == "break_line"
+            and round(float(ent.get("width", 0) or 0), 2) >= 1.35
+            and _is_blackish_hex(ent.get("stroke"))
+            and ent.get("fill") in {"none", ""}
+            and not ent.get("dashed")
+        ):
+            role = "contour_outer"
+            ent = dict(ent)
+            ent["role"] = role
+        if _is_redish_hex(ent.get("stroke")) and ent.get("dashed"):
+            role = "stitch_thru"
+            ent = dict(ent)
+            ent["role"] = role
+        elif _is_redish_hex(ent.get("stroke")) and role in {"boundary_lining", "boundary_interlining"}:
+            role = "stitch_edge"
             ent = dict(ent)
             ent["role"] = role
         if role in {"stitch_thru", "stitch_edge"}:

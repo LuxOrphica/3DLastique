@@ -219,7 +219,11 @@
     "ac00400_gloves_mittens": {
       "group_overrides": {},
       "element_overrides": {},
-      "review_status": "approved"
+      "review_status": "approved",
+      "source_hash": "e501c23bc1e5a01754a6a8e444a02ea218a18bf4",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "updated_at": "2026-06-17T12:30:12Z"
     },
     "ac00004": {
       "group_overrides": {},
@@ -228,16 +232,37 @@
       "source_hash": "47d1e8402005b7dad5fe34b51fac7aea13c39cac",
       "identity_version": 1,
       "extraction_version": 1,
-      "updated_at": "2026-06-14T18:34:32Z"
+      "updated_at": "2026-06-17T12:44:49Z"
     },
     "ac00002": {
       "group_overrides": {},
-      "element_overrides": {},
+      "element_overrides": {
+        "8f2a969e6143b5cb": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 187.03 154.33 L 183.53 154.33",
+          "updated_at": "2026-06-17T12:42:19Z"
+        },
+        "8d97bdd7f91adbbb": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 98.46 154.33 L 94.96 154.33",
+          "updated_at": "2026-06-17T12:42:19Z"
+        },
+        "3f784264bf6c62c5": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 186.72 115.12 L 183.22 115.12",
+          "updated_at": "2026-06-17T12:42:19Z"
+        },
+        "e07c788141de03a3": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 97.10 115.12 L 93.60 115.12",
+          "updated_at": "2026-06-17T12:42:19Z"
+        }
+      },
       "source_hash": "03194099d2408056ab9c872288ff819913489b00",
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-06-14T18:18:40Z"
+      "updated_at": "2026-06-17T12:42:19Z"
     },
     "ac00009": {
       "group_overrides": {},
@@ -341,6 +366,133 @@
       "extraction_version": 1,
       "review_status": "pending",
       "updated_at": "2026-06-16T17:26:48Z"
+    },
+    "ac00204_cap_s_half_belt": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "a1cdb181028b8ca8f0ad966a52255440523d39ff",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-06-17T12:25:45Z"
+    },
+    "dc00015": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "ddcf6808f1ee1a7a89f7dc765e6c7cfc7d35d041",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-06-17T12:46:19Z"
+    },
+    "fp00052_w_woven": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "5abd0ebe6e2040478ac2e49cc0efb5900c930145",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-06-17T12:47:10Z"
+    },
+    "ct00054_zipper": {
+      "group_overrides": {},
+      "element_overrides": {
+        "1bcae3961d1769bc": {
+          "role": "hw_zipper",
+          "path_d_prefix": "M 181.65 52.99 L 181.65 205.88",
+          "updated_at": "2026-06-17T14:04:41Z"
+        },
+        "6559dee14135859c": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 148.33 151.94 L 148.33 46.46 L 213.50 46.46",
+          "updated_at": "2026-06-17T14:04:41Z"
+        }
+      },
+      "source_hash": "3f1eb1c856a015bea1ccd45cddc78e8c05e390ea",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-06-17T14:04:41Z"
+    },
+    "ac00406_gloves_mittens": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "6f80ffd0742af98eb9b82e7a319c2123ac4e6246",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-06-19T10:31:24Z"
+    },
+    "ac00407_gloves_mittens": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "783a19e7ef6cd516ff82fef07e3e9739f82f0f63",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-06-19T10:31:52Z"
+    },
+    "ac00401_gloves_mittens": {
+      "group_overrides": {},
+      "element_overrides": {
+        "6c638d5130202622": {
+          "role": "stitch_Bt",
+          "path_d_prefix": "M 64.11 114.27 L 64.11 117.27",
+          "updated_at": "2026-06-19T10:33:00Z"
+        },
+        "cc63dca665abc792": {
+          "role": "stitch_Bt",
+          "path_d_prefix": "M 64.11 121.60 L 64.11 141.08",
+          "updated_at": "2026-06-19T10:33:00Z"
+        },
+        "eae0083b0208ace2": {
+          "role": "stitch_Bt",
+          "path_d_prefix": "M 64.11 143.25 L 64.11 146.25",
+          "updated_at": "2026-06-19T10:33:00Z"
+        }
+      },
+      "source_hash": "956b3fd72fc5f818ef8f1afb151acaa5372e0706",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-06-19T10:33:00Z"
+    },
+    "ac00402_gloves_mittens": {
+      "group_overrides": {
+        "fill_interlining|#1a1a1a|#1a1a1a|0.75|false": {
+          "role": "break_line",
+          "key_strs": [
+            "#1a1a1a|#1a1a1a|0.75|false"
+          ],
+          "updated_at": "2026-06-19T10:34:20Z"
+        }
+      },
+      "element_overrides": {},
+      "source_hash": "4cfbb6180d388a16ae3b3071b57efc6bb7167dc2",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-06-19T10:34:20Z"
+    },
+    "ac00403_gloves_mittens": {
+      "group_overrides": {},
+      "element_overrides": {
+        "2d39109965da60bb": {
+          "role": "break_line",
+          "path_d_prefix": "M 232.54 188.37 L 232.54 16.94 Z",
+          "updated_at": "2026-06-19T10:39:20Z"
+        },
+        "a9e796450ba9044d": {
+          "role": "hw_zipper_tape",
+          "path_d_prefix": "M 170.09 155.33 L 170.09 172.51 L 103.66 172.51 L 103.66 155.33",
+          "updated_at": "2026-06-19T10:39:20Z"
+        }
+      },
+      "source_hash": "6909fb606c881d8a50e8c00b5658b3c98d1ea26c",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-06-19T10:39:20Z"
     }
   }
 }

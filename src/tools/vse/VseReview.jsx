@@ -465,6 +465,17 @@ function resolveActualStyle(baseEntry = {}) {
   };
 }
 
+function styleFromGroupKey(groupKey) {
+  const parts = String(groupKey || "").split("|");
+  if (parts.length < 5) return null;
+  return resolveActualStyle({
+    stroke: parts[1] || "#999999",
+    fill: parts[2] || "none",
+    width: parseFloat(parts[3] || "0") || 0.5,
+    dashed: parts[4] === "true",
+  });
+}
+
 function parseRenderedGroupStyles(svgText) {
   if (!svgText || typeof DOMParser === "undefined") return {};
   const doc = new DOMParser().parseFromString(svgText, "image/svg+xml");
@@ -1622,7 +1633,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     width: selectedEl?.width,
     dashed: selectedEl?.dashed,
   }, selectedDisplayRole);
-  const selectedActualStyle = resolveActualStyle({
+  const selectedActualStyle = styleFromGroupKey(selectedState?.group_key) || resolveActualStyle({
     stroke: selectedEl?.stroke,
     fill: selectedEl?.fill,
     width: selectedEl?.width,
@@ -1651,19 +1662,17 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     try {
       const group_overrides = {};
       for (const group of nodeState.groups || []) {
-        const desired = Object.prototype.hasOwnProperty.call(groupDrafts, group.group_key)
-          ? groupDrafts[group.group_key]
-          : group.override_role;
-        if (desired && desired !== group.detected_role) {
+        const hasDraft = Object.prototype.hasOwnProperty.call(groupDrafts, group.group_key);
+        const desired = hasDraft ? groupDrafts[group.group_key] : group.override_role;
+        if (desired && (hasDraft || desired !== group.detected_role)) {
           group_overrides[group.group_key] = { role: desired, key_strs: group.key_strs || [] };
         }
       }
       const element_overrides = {};
       for (const element of nodeState.elements || []) {
-        const desired = Object.prototype.hasOwnProperty.call(elementDrafts, element.elem_key)
-          ? elementDrafts[element.elem_key]
-          : element.override_role;
-        if (desired && desired !== element.detected_role) {
+        const hasDraft = Object.prototype.hasOwnProperty.call(elementDrafts, element.elem_key);
+        const desired = hasDraft ? elementDrafts[element.elem_key] : element.override_role;
+        if (desired && (hasDraft || desired !== element.detected_role)) {
           element_overrides[element.elem_key] = { role: desired, path_d_prefix: element.path_d_prefix || "" };
         }
       }
@@ -1762,7 +1771,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                               )}
                             </div>
                           </td>
-                          <td><StyleParams style={selectedDisplayStyle} /></td>
+                          <td><StyleParams style={selectedActualStyle} /></td>
                           <td className="vse-tc vse-muted">1</td>
                           <td style={{display:"flex",gap:"4px",alignItems:"center"}}>
                             <div style={{display:"flex",flexDirection:"column",gap:"2px",flex:1}}>
@@ -1784,11 +1793,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                       {groups.map((g, idx) => {
                         const isHov = safeIdx === idx;
                         const assigned = g.currentRole && g.currentRole !== "?";
-                        const displayStyle = resolveDisplayStyle(g.renderedStyle || g.entry, g.currentRole);
-                        const actualStyle = resolveActualStyle(g.renderedStyle || g.entry);
-                        const dispStroke = displayStyle.stroke;
-                        const dispWidth = displayStyle.width;
-                        const dispDashed = displayStyle.dashed;
+                        const actualStyle = resolveActualStyle(g.entry);
                         return (
                           <tr key={g.mapKey} className={`vse-inspector-row${isHov ? " hovered" : ""}${assigned ? " vse-row-filled" : ""}${Object.prototype.hasOwnProperty.call(groupDrafts, g.mapKey) ? " vse-row-override" : ""}`} onMouseEnter={() => setHoveredIdx(idx)} onMouseLeave={() => setHoveredIdx(null)}>
                             <td>
@@ -1799,7 +1804,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                                 )}
                               </div>
                             </td>
-                            <td><StyleParams style={displayStyle} /></td>
+                            <td><StyleParams style={actualStyle} /></td>
                             <td className="vse-tc vse-muted">{g.count}</td>
                             <td><select className="vse-role-sel-sm" value={choiceKeyForRole(roleCatalog, g.currentRole ?? "?")} onChange={e => {
                               const newRole = roleForChoice(roleCatalog, e.target.value, actualStyle);

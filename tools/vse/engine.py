@@ -1267,7 +1267,20 @@ _BOUNDARY_ROLES = frozenset((
 
 def _is_red_stroke(p):
     c = _normalize_color(p.get("color"))
-    return c.startswith("#e") or c.startswith("#c8") or c in ("#eb2123", "#e11f25", "#c8102e")
+    if not c.startswith("#") or len(c) != 7:
+        return False
+    try:
+        r = int(c[1:3], 16)
+        g = int(c[3:5], 16)
+        b = int(c[5:7], 16)
+    except ValueError:
+        return False
+    return r >= 175 and g <= 105 and b <= 105
+
+
+def _is_black_stroke(p):
+    c = _normalize_color(p.get("color"))
+    return c in ("#1a1a1a", "#221f1f", "#000000")
 
 
 def scale_stitch_bt_height(render_classified, scale_y=0.5):
@@ -1311,13 +1324,24 @@ def sanitize_color_role_conflicts(render_classified):
     result = []
     for role, p in render_classified:
         fixed = role
-        if (role in _BOUNDARY_ROLES or role in {"stitch_thru", "stitch_edge"}) and _is_red_stroke(p):
+        if role == "break_line" and _is_black_stroke(p) and (p.get("width") or 0) >= 1.35:
+            fixed = "contour_outer"
+        fill = p.get("fill")
+        red_line_role_conflict = (
+            role in _BOUNDARY_ROLES
+            or role in {"stitch_thru", "stitch_edge", "unknown"}
+            or (str(role).startswith("fill_") and fill is None)
+        )
+        if red_line_role_conflict and _is_red_stroke(p):
             # Red dashed = stitch_thru; red solid = stitch_edge.
             # Keep this invariant before any stitch-merge render pass so solid
             # seam markers do not get merged into dashed through-stitch rows.
             dashes = p.get("dashes")
             is_dashed = bool(dashes) and str(dashes) not in ("[] 0", "[]", "")
-            fixed = normalize_stitch_role(role, is_dashed)
+            if role in {"stitch_thru", "stitch_edge"}:
+                fixed = normalize_stitch_role(role, is_dashed)
+            else:
+                fixed = "stitch_thru" if is_dashed else "stitch_edge"
         result.append((fixed, p))
     return result
 
@@ -1720,7 +1744,8 @@ def standardize(ai_path, svg_out, elem_overrides=None):
         base_classified.append((role, p))
 
     classified = []
-    for role, p in reclassify_thin_contours(base_classified):
+    stable_classified = sanitize_color_role_conflicts(reclassify_thin_contours(base_classified))
+    for role, p in stable_classified:
         role = normalize_active_role(role)
         detected_role = role
         group_key = _group_key_for_role_and_path(detected_role, p)
@@ -1819,7 +1844,7 @@ def standardize(ai_path, svg_out, elem_overrides=None):
                 d_prefix = d[:40]
                 for o in elem_overrides:
                     if d.startswith(o.get("path_d", "")[:40]) or o.get("path_d", "").startswith(d_prefix):
-                        role = o["new_role"]
+                        role = normalize_active_role(o["new_role"])
                         break
             if role == "hw_zipper_tape":
                 if p.get("fill") is not None:

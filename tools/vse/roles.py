@@ -134,9 +134,6 @@ def classify_path(p, text_words):
     if color == "BLUE" and rw > 100 and rh > 100:
         return "boundary_zone"
 
-    if color == "RED" and is_dashed and (rw > 80 or rh > 80):
-        return "boundary_lining"
-
     if is_dashed and _is_neutral_gray(p.get("color")):
         return "contour_hidden"
 
