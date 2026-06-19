@@ -1639,6 +1639,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     width: selectedEl?.width,
     dashed: selectedEl?.dashed,
   });
+  const selectedParamStyle = selectedDisplayStyle;
 
   useEffect(() => {
     if (!selectedEl) return;
@@ -1771,7 +1772,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                               )}
                             </div>
                           </td>
-                          <td><StyleParams style={selectedActualStyle} /></td>
+                          <td><StyleParams style={selectedParamStyle} /></td>
                           <td className="vse-tc vse-muted">1</td>
                           <td style={{display:"flex",gap:"4px",alignItems:"center"}}>
                             <div style={{display:"flex",flexDirection:"column",gap:"2px",flex:1}}>
@@ -1794,6 +1795,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                         const isHov = safeIdx === idx;
                         const assigned = g.currentRole && g.currentRole !== "?";
                         const actualStyle = resolveActualStyle(g.entry);
+                        const paramStyle = g.renderedStyle || resolveDisplayStyle(g.entry, g.currentRole);
                         return (
                           <tr key={g.mapKey} className={`vse-inspector-row${isHov ? " hovered" : ""}${assigned ? " vse-row-filled" : ""}${Object.prototype.hasOwnProperty.call(groupDrafts, g.mapKey) ? " vse-row-override" : ""}`} onMouseEnter={() => setHoveredIdx(idx)} onMouseLeave={() => setHoveredIdx(null)}>
                             <td>
@@ -1804,7 +1806,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                                 )}
                               </div>
                             </td>
-                            <td><StyleParams style={actualStyle} /></td>
+                            <td><StyleParams style={paramStyle} /></td>
                             <td className="vse-tc vse-muted">{g.count}</td>
                             <td><select className="vse-role-sel-sm" value={choiceKeyForRole(roleCatalog, g.currentRole ?? "?")} onChange={e => {
                               const newRole = roleForChoice(roleCatalog, e.target.value, actualStyle);
