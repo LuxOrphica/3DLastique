@@ -24,6 +24,7 @@ from flask_cors import CORS
 from role_cleanup import normalize_active_role
 from stitch_logic import find_stitch_operation_codes, load_stitch_operation_codes, normalize_stitch_role
 from visual_standard import ROLE_STYLES
+from vse_keys import compute_group_key, compute_elem_key
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
@@ -175,7 +176,9 @@ def _upsert_element_override(node_id, path_d, new_role):
     data = _load_node_annotations()
     node = _ensure_node_bucket(data, node_id)
     prefix = (path_d or "")[:80]
-    elem_key = hashlib.sha1(f"{node_id}|{prefix}".encode("utf-8")).hexdigest()[:16]
+    elem_key, prefix = compute_elem_key(node_id, prefix)
+    if not elem_key:
+        return
     node["element_overrides"][elem_key] = {
         "role": new_role,
         "path_d_prefix": prefix,
@@ -315,34 +318,8 @@ def _parse_style_attr(style_text):
     return out
 
 
-def _is_blackish_hex(value):
-    value = str(value or "").strip().lower()
-    if value in {"#1a1a1a", "#221f1f", "#000000"}:
-        return True
-    if not value.startswith("#") or len(value) != 7:
-        return False
-    try:
-        r = int(value[1:3], 16)
-        g = int(value[3:5], 16)
-        b = int(value[5:7], 16)
-    except Exception:
-        return False
-    return r < 55 and g < 55 and b < 55
-
-
-def _is_redish_hex(value):
-    value = str(value or "").strip().lower()
-    if value in {"#e02020", "#c8102e", "#eb2123", "#ee4c42", "#f14a41"}:
-        return True
-    if not value.startswith("#") or len(value) != 7:
-        return False
-    try:
-        r = int(value[1:3], 16)
-        g = int(value[3:5], 16)
-        b = int(value[5:7], 16)
-    except Exception:
-        return False
-    return r >= 180 and g <= 90 and b <= 90
+# Phase 2.2: _is_blackish_hex / _is_redish_hex removed — they were only used
+# by the old _normalize_state_entities, which is now a thin passthrough.
 
 
 def _svg_entities(svg_path):
@@ -466,18 +443,9 @@ def _entity_group_key(ent):
     if data_sk:
         parts = data_sk.split("|")
         if len(parts) >= 4:
-            return f"{ent['role']}|{parts[0]}|{parts[1]}|{parts[2]}|{parts[3]}"
-    return f"{ent['role']}|{ent['stroke']}|{ent['fill']}|{round(ent['width'],1)}|{str(bool(ent['dashed'])).lower()}"
-
-
-_CONTOUR_ROLES = frozenset((
-    "contour_outer",
-    "contour_cut",
-    "contour_fold",
-    "contour_hidden",
-    "boundary_fragment",
-))
-_STITCH_EDGE_MAX_LEN = 80.0
+            stroke, fill, width, dashed = parts[0], parts[1], parts[2], parts[3]
+            return compute_group_key(ent["role"], stroke, fill, width, dashed)
+    return compute_group_key(ent["role"], ent["stroke"], ent["fill"], ent["width"], ent["dashed"])
 
 
 def _parse_simple_line(prefix):
@@ -489,107 +457,21 @@ def _parse_simple_line(prefix):
     return (x1, y1, x2, y2)
 
 
-def _line_length(seg):
-    if not seg:
-        return 0.0
-    x1, y1, x2, y2 = seg
-    return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
-
-
-def _segments_intersect(a, b, tol=1.0):
-    if not a or not b:
-        return False
-    ax1, ay1, ax2, ay2 = a
-    bx1, by1, bx2, by2 = b
-
-    def orient(px, py, qx, qy, rx, ry):
-        val = (qy - py) * (rx - qx) - (qx - px) * (ry - qy)
-        if abs(val) <= tol:
-            return 0
-        return 1 if val > 0 else 2
-
-    def on_seg(px, py, qx, qy, rx, ry):
-        return (
-            min(px, rx) - tol <= qx <= max(px, rx) + tol
-            and min(py, ry) - tol <= qy <= max(py, ry) + tol
-        )
-
-    o1 = orient(ax1, ay1, ax2, ay2, bx1, by1)
-    o2 = orient(ax1, ay1, ax2, ay2, bx2, by2)
-    o3 = orient(bx1, by1, bx2, by2, ax1, ay1)
-    o4 = orient(bx1, by1, bx2, by2, ax2, ay2)
-
-    if o1 != o2 and o3 != o4:
-        return True
-    if o1 == 0 and on_seg(ax1, ay1, bx1, by1, ax2, ay2):
-        return True
-    if o2 == 0 and on_seg(ax1, ay1, bx2, by2, ax2, ay2):
-        return True
-    if o3 == 0 and on_seg(bx1, by1, ax1, ay1, bx2, by2):
-        return True
-    if o4 == 0 and on_seg(bx1, by1, ax2, ay2, bx2, by2):
-        return True
-    return False
-
-
-def _path_crosses_contour_simple(path_seg, contour_segs):
-    if not path_seg or not contour_segs:
-        return False
-    if _line_length(path_seg) > _STITCH_EDGE_MAX_LEN:
-        return False
-    for contour_seg in contour_segs:
-        if _segments_intersect(path_seg, contour_seg):
-            return True
-    return False
-
-
 def _normalize_state_entities(orig_entities):
-    contour_widths = [
-        round(float(ent.get("width", 0) or 0), 2)
-        for ent in orig_entities
-        if (ent.get("role") == "contour_outer"
-            and _is_blackish_hex(ent.get("stroke"))
-            and ent.get("fill") in {"none", ""}
-            and not ent.get("dashed"))
-    ]
-    max_contour_width = max(contour_widths) if contour_widths else 0
+    # Phase 2.2: orig.svg already contains post-processed roles in data-role
+    # attributes (see export_static.build_annotated_orig_svg lines 146-148:
+    # reclassify_thin_contours + sanitize_color_role_conflicts +
+    # normalize_fragmented_stitches are applied there). Re-running those rules
+    # here with a different implementation caused the UI to show different
+    # roles than what was actually rendered in std.svg.
+    #
+    # Now we only apply normalize_active_role to collapse any deprecated role
+    # names that may still appear in older orig.svg files written before the
+    # role_cleanup migration. Everything else is taken verbatim from orig.svg,
+    # which guarantees UI ↔ render consistency by construction.
     normalized = []
     for ent in orig_entities:
         role = ent.get("role") or "unknown"
-        if (
-            role == "contour_outer"
-            and max_contour_width >= 1.35
-            and round(float(ent.get("width", 0) or 0), 2) < 1.4
-            and round(float(ent.get("width", 0) or 0), 2) <= max_contour_width - 0.15
-            and _is_blackish_hex(ent.get("stroke"))
-            and ent.get("fill") in {"none", ""}
-            and not ent.get("dashed")
-        ):
-            role = "break_line"
-            ent = dict(ent)
-            ent["role"] = role
-        if (
-            role == "break_line"
-            and round(float(ent.get("width", 0) or 0), 2) >= 1.35
-            and _is_blackish_hex(ent.get("stroke"))
-            and ent.get("fill") in {"none", ""}
-            and not ent.get("dashed")
-        ):
-            role = "contour_outer"
-            ent = dict(ent)
-            ent["role"] = role
-        if _is_redish_hex(ent.get("stroke")) and ent.get("dashed"):
-            role = "stitch_thru"
-            ent = dict(ent)
-            ent["role"] = role
-        elif _is_redish_hex(ent.get("stroke")) and role in {"boundary_lining", "boundary_interlining"}:
-            role = "stitch_edge"
-            ent = dict(ent)
-            ent["role"] = role
-        if role in {"stitch_thru", "stitch_edge"}:
-            role = normalize_stitch_role(role, bool(ent.get("dashed")))
-            ent = dict(ent)
-            ent["role"] = role
         normalized_role = normalize_active_role(role)
         if normalized_role != role:
             ent = dict(ent)
@@ -719,14 +601,14 @@ def _build_node_state(node_id):
             role = item.get("new_role") or ""
             if not prefix or not role:
                 continue
-            elem_key = hashlib.sha1(f"{node_id}|{prefix}".encode("utf-8")).hexdigest()[:16]
+            elem_key, _ = compute_elem_key(node_id, prefix)
             tmp[elem_key] = {"role": role, "path_d_prefix": prefix}
         element_overrides = tmp
     elements = []
     matched_element_keys = set()
     for ent in orig_entities:
         prefix = ent["path_d_prefix"]
-        elem_key = hashlib.sha1(f"{node_id}|{prefix}".encode("utf-8")).hexdigest()[:16]
+        elem_key, _ = compute_elem_key(node_id, prefix)
         saved = element_overrides.get(elem_key)
         match_status = "matched"
         if not saved:
@@ -1082,53 +964,24 @@ def save_registry():
 
     _write_json(REGISTRY_PATH, registry)
 
-    if node_id:
-        try:
-            existing = json.loads(NODE_STYLE_OVERRIDES_PATH.read_text(encoding="utf-8"))
-        except Exception:
-            existing = {}
-        if not isinstance(existing, dict):
-            existing = {}
+    # Phase 1: node_annotations.json is the single source of truth for group overrides.
+    # Legacy node_style_overrides.json is now read-only bridge (see _build_node_state fallback).
+    if node_id and isinstance(node_style_overrides, list):
         cleaned = []
-        if isinstance(node_style_overrides, list):
-            for item in node_style_overrides:
-                if not isinstance(item, dict):
-                    continue
-                key_strs = [str(k) for k in (item.get("key_strs") or []) if str(k).strip()]
-                new_role = str(item.get("new_role") or "").strip()
-                from_role = str(item.get("from_role") or "").strip()
-                if not key_strs or not new_role or new_role == "?":
-                    continue
-                cleaned.append({
-                    "key_strs": sorted(set(key_strs)),
-                    "from_role": from_role,
-                    "new_role": new_role,
-                })
-        if cleaned:
-            existing[node_id] = cleaned
-        else:
-            existing.pop(node_id, None)
-        _write_json(NODE_STYLE_OVERRIDES_PATH, existing)
+        for item in node_style_overrides:
+            if not isinstance(item, dict):
+                continue
+            key_strs = [str(k) for k in (item.get("key_strs") or []) if str(k).strip()]
+            new_role = str(item.get("new_role") or "").strip()
+            from_role = str(item.get("from_role") or "").strip()
+            if not key_strs or not new_role or new_role == "?":
+                continue
+            cleaned.append({
+                "key_strs": sorted(set(key_strs)),
+                "from_role": from_role,
+                "new_role": new_role,
+            })
         _upsert_group_overrides(node_id, cleaned)
-
-    def _export_node_bg():
-        global last_status
-        last_status = {"state": "building", "message": f"Обновление нода {node_id}...", "ts": time.time()}
-        try:
-            env = dict(os.environ)
-            env["VSE_NODE_ID_FILTER"] = node_id
-            result = subprocess.run(
-                [sys.executable, str(EXPORT_SCRIPT)],
-                capture_output=True, text=True, timeout=120, env=env, cwd=str(ROOT)
-            )
-            out = (result.stdout or "").strip()
-            err = (result.stderr or "").strip()
-            if result.returncode != 0:
-                raise RuntimeError((err or out)[-1500:])
-            message = out.splitlines()[-1] if out else "done"
-            last_status = {"state": "ok", "message": message, "ts": time.time()}
-        except Exception as exc:
-            last_status = {"state": "error", "message": str(exc), "ts": time.time()}
 
     if node_id:
         last_status = {"state": "building", "message": f"Реестр сохранён, обновляем нод {node_id}...", "ts": time.time()}
@@ -1187,8 +1040,42 @@ def status():
 
 @app.route("/api/node-status", methods=["GET"])
 def get_node_status():
-    data = _load_review_status_data()
-    return jsonify(data)
+    # Phase 1: collect review statuses from node_annotations.json (source of truth)
+    # and backfill from legacy approved_nodes.json for nodes not yet migrated.
+    # Output shape kept identical to legacy: { approved: [...], complex: [...] }
+    # for backwards compatibility with existing UI.
+    annotations = _load_node_annotations()
+    nodes = annotations.get("nodes", {}) if isinstance(annotations, dict) else {}
+
+    approved = set()
+    complex_ = set()
+
+    # 1. New source of truth: node_annotations.json
+    for node_id, node in nodes.items():
+        if not isinstance(node, dict):
+            continue
+        status = node.get("review_status")
+        if status == "approved":
+            approved.add(node_id)
+        elif status == "complex":
+            complex_.add(node_id)
+
+    # 2. Legacy backfill: approved_nodes.json (read-only bridge).
+    #    Only add node_ids that are NOT in node_annotations.json,
+    #    so a node that was "approved" in legacy but later set to "complex"
+    #    (or "pending") in node_annotations.json keeps its new status.
+    legacy = _load_review_status_data()
+    for node_id in legacy.get("approved", []):
+        if node_id not in nodes:
+            approved.add(node_id)
+    for node_id in legacy.get("complex", []):
+        if node_id not in nodes:
+            complex_.add(node_id)
+
+    return jsonify({
+        "approved": sorted(approved),
+        "complex": sorted(complex_),
+    })
 
 
 @app.route("/api/elem-override", methods=["GET"])
@@ -1309,40 +1196,27 @@ def regenerate_node(node_id):
 
 @app.route("/api/elem-override", methods=["POST"])
 def set_elem_override():
+    # Phase 1: writes only to node_annotations.json via _upsert_element_override.
+    # Legacy elem_overrides.json is now read-only bridge (see _build_node_state fallback).
     body = request.get_json(force=True) or {}
     node_id  = body.get("node_id", "")
     path_d   = body.get("path_d", "")   # first ~40 chars of d attribute
     new_role = body.get("new_role", "")
     if not node_id or not path_d or not new_role:
         return jsonify({"ok": False, "error": "node_id, path_d, new_role required"}), 400
-    try:
-        data = json.loads(ELEM_OVERRIDES_PATH.read_text(encoding="utf-8"))
-    except Exception:
-        data = {}
-    node_overrides = data.get(node_id, [])
-    # Replace existing override for same path_d if present
-    node_overrides = [o for o in node_overrides if o.get("path_d") != path_d]
-    node_overrides.append({"path_d": path_d, "new_role": new_role})
-    data[node_id] = node_overrides
-    ELEM_OVERRIDES_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     _upsert_element_override(node_id, path_d, new_role)
     return jsonify({"ok": True})
 
 
 @app.route("/api/node-status", methods=["POST"])
 def set_node_status():
+    # Phase 1: writes only to node_annotations.json via _upsert_review_status.
+    # Legacy approved_nodes.json is now read-only bridge (see get_node_status / _legacy_review_status).
     body = request.get_json(force=True) or {}
     node_id = body.get("node_id", "")
     new_status = body.get("status", "")  # "approved" | "complex" | "pending"
     if not node_id:
         return jsonify({"ok": False, "error": "node_id required"}), 400
-    data = _load_review_status_data()
-    for key in ("approved", "complex"):
-        if node_id in data.get(key, []):
-            data[key].remove(node_id)
-    if new_status in ("approved", "complex"):
-        data.setdefault(new_status, []).append(node_id)
-    APPROVED_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     _upsert_review_status(node_id, new_status or "pending")
     return jsonify({"ok": True, "status": new_status, "node_id": node_id})
 
