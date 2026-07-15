@@ -12,6 +12,7 @@ from visual_standard import style_attr, get_style, ROLE_STYLES
 from role_cleanup import normalize_active_role
 from bbox import get_content_bbox
 from hardware_symbols import render_zipper_clusters
+from vse_keys import compute_group_key, compute_elem_key
 
 REGISTRY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "style_registry.json")
 NODE_STYLE_OVERRIDES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "node_style_overrides.json")
@@ -178,12 +179,38 @@ def apply_node_style_override(node_id, style_key, role, node_style_overrides):
     return role
 
 
+def _normalized_group_key(key):
+    """Re-run a stored group_key through the current formula.
+
+    Overrides saved before vse_keys were keyed by _group_key_for_role_and_path,
+    which took the width straight from _path_data_sk — rounded to 2 decimals. The
+    current formula rounds to 1, so a stored "…|0.75|false" no longer equals the
+    "…|0.8|false" now computed for the same element, and comparing the raw strings
+    dropped the override on the next regenerate (verified on ac00402_gloves_mittens:
+    a manual break_line silently reverted to fill_interlining). Normalizing both
+    sides lets pre-existing annotations keep matching.
+    """
+    parts = str(key or "").split("|")
+    if len(parts) < 5:
+        return str(key or "")
+    return compute_group_key(parts[0], parts[1], parts[2], parts[3], parts[4])
+
+
 def apply_node_annotation_group_override(node_id, style_key, role, node_annotations):
     if not node_id or not style_key or not role:
         return role
     group_overrides = _node_group_overrides(node_id, node_annotations)
     if style_key in group_overrides:
         payload = group_overrides.get(style_key) or {}
+        new_role = payload.get("role")
+        if new_role:
+            return new_role
+    target_key = _normalized_group_key(style_key)
+    for saved_key, payload in group_overrides.items():
+        if not isinstance(payload, dict):
+            continue
+        if _normalized_group_key(saved_key) != target_key:
+            continue
         new_role = payload.get("role")
         if new_role:
             return new_role
@@ -207,13 +234,14 @@ def _group_key_for_role_and_path(role, p):
     sk = _path_data_sk(p)
     parts = str(sk or "").split("|")
     if len(parts) >= 4:
-        return f"{role}|{parts[0]}|{parts[1]}|{parts[2]}|{parts[3]}"
-    color_hex = _normalize_color(p.get("color"))
-    fill_raw = p.get("fill")
-    fill_hex = _normalize_color(fill_raw) if fill_raw else "none"
-    w = round(p.get("width") or 0, 2)
-    dash = bool(p.get("dashes") and p.get("dashes") != "[] 0")
-    return f"{role}|{color_hex}|{fill_hex}|{w}|{str(dash).lower()}"
+        stroke, fill, w, dashed = parts[0], parts[1], parts[2], parts[3]
+    else:
+        stroke = _normalize_color(p.get("color"))
+        fill_raw = p.get("fill")
+        fill = _normalize_color(fill_raw) if fill_raw else "none"
+        w = p.get("width") or 0
+        dashed = bool(p.get("dashes") and p.get("dashes") != "[] 0")
+    return compute_group_key(role, stroke, fill, w, dashed)
 
 
 def _parse_style_attr(style_text):
@@ -242,8 +270,8 @@ def _orig_entity_group_key(role, data_sk, stroke, fill, width, dashed):
     if data_sk:
         parts = data_sk.split("|")
         if len(parts) >= 4:
-            return f"{role}|{parts[0]}|{parts[1]}|{parts[2]}|{parts[3]}"
-    return f"{role}|{stroke}|{fill}|{round(width,1)}|{str(bool(dashed)).lower()}"
+            stroke, fill, width, dashed = parts[0], parts[1], parts[2], parts[3]
+    return compute_group_key(role, stroke, fill, width, dashed)
 
 
 def _load_orig_identity_buckets(node_id, svg_out):
@@ -299,8 +327,7 @@ def _element_key_for_path(node_id, p, role):
     prefix = (d or "")[:80]
     if not prefix:
         return "", ""
-    elem_key = hashlib.sha1(f"{node_id}|{prefix}".encode("utf-8")).hexdigest()[:16]
-    return elem_key, prefix
+    return compute_elem_key(node_id, prefix)
 
 
 def _trace_key_list(value):
@@ -1324,7 +1351,12 @@ def sanitize_color_role_conflicts(render_classified):
     result = []
     for role, p in render_classified:
         fixed = role
-        if role == "break_line" and _is_black_stroke(p) and (p.get("width") or 0) >= 1.35:
+        if (
+            role == "break_line"
+            and not p.get("_vse_manual_role_override")
+            and _is_black_stroke(p)
+            and (p.get("width") or 0) >= 1.35
+        ):
             fixed = "contour_outer"
         fill = p.get("fill")
         red_line_role_conflict = (
@@ -1765,8 +1797,10 @@ def standardize(ai_path, svg_out, elem_overrides=None):
         p["_vse_elem_key"] = elem_key
         p["_vse_elem_keys"] = [elem_key] if elem_key else []
         p["_vse_path_d_prefix"] = prefix
+        role_before_manual = role
         role = normalize_active_role(apply_node_annotation_group_override(node_id, group_key, role, node_annotations))
         role = normalize_active_role(apply_node_annotation_element_override(node_id, p, role, node_annotations))
+        p["_vse_manual_role_override"] = role != role_before_manual
         p["_vse_final_role"] = role
         classified.append((role, p))
     classified = normalize_fragmented_stitches(classified)

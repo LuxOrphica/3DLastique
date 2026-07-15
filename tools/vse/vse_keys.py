@@ -27,10 +27,13 @@ Design choices:
   - elem_key is SHA-1(node_id | path_d_prefix[:80])[:16] — already consistent
     across the codebase, but factored here so future changes happen in one place.
 
-Legacy data in node_annotations.json written with the old formulas still works:
-  - _build_node_state has a Pass 2 "fallback_matched" path that matches by
-    key_strs intersection when the exact group_key does not match.
-  - So old overrides migrate gracefully to the new keys as nodes are re-edited.
+Legacy data in node_annotations.json written with the old formulas does NOT match
+these keys on its own: _group_key_for_role_and_path used to pass the width through
+from _path_data_sk at 2 decimals, so annotations exist keyed on e.g.
+"fill_interlining|#1a1a1a|#1a1a1a|0.75|false" while this formula now emits "0.8".
+engine._normalized_group_key re-runs both sides through compute_group_key so those
+overrides keep matching; the key_strs fallback does not help here, as it stores the
+4-part data_sk without the role and never equals a 5-part group_key.
 """
 
 import hashlib
