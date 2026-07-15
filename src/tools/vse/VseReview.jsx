@@ -24,6 +24,7 @@ const ROLE_STYLES = {
   fill_elastic:        { stroke: "#666666", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   material_sweat_band: { stroke: "#666666", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   component_half_belt: { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
+  component_visor:     { stroke: "#1A1A1A", "stroke-width": "1.5",  "stroke-dasharray": "none" },
   fill_cord:           { stroke: "#333333", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_velcro:         { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
   fill_velcro_hook:    { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
@@ -48,6 +49,7 @@ const ROLE_STYLES = {
   line_gathered_edge:  { stroke: "#777777", "stroke-width": "0.45", "stroke-dasharray": "none" },
   arrow:               { stroke: "none",    "stroke-width": "0",    "stroke-dasharray": "none" },
   stitch_symbol:       { stroke: "#1A1A1A", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  label:               { stroke: "#222222", "stroke-width": "0",    "stroke-dasharray": "none" },
   // Прочее
   unknown:             { stroke: "#999999", "stroke-width": "0.5",  "stroke-dasharray": "none" },
 };
@@ -65,109 +67,6 @@ const ROLE_GROUPS = [
 
 const ROLES = ROLE_GROUPS.flatMap(g => g.roles);
 
-const ROLE_LABELS = {
-  "?":                   "— не назначено —",
-  // Контуры
-  "contour_outer":       "Контур детали",
-  "construction_line":   "Конструктивная линия",
-  "contour_hidden":      "Невидимый контур / пунктир",
-  // Строчки / швы
-  "seam_line":           "Линия шва",
-  "stitch_edge":         "Строчка по краю",
-  "stitch_thru":         "Строчка сквозная",
-  "stitch_Bt":           "Закрепка / bar tack (Bc/Bt)",
-  // Границы
-  "boundary_fragment":   "Прокладка (Padding)",
-  "boundary_interlining":"Флизелин (Interlining)",
-  // Заливки
-  "fill_interlining":    "Штриховка прокладки",
-  "fill_fabric":         "Штриховка ткани",
-  "fill_fabric_gray":    "Серая ткань / нейтральная заливка",
-  "fill_dark_fabric":    "Темная ткань / темная деталь",
-  "fill_contrast":       "Контрастная деталь",
-  "fill_tape":           "Тесьма / лента",
-  "fill_elastic":        "Резинка / elastic band",
-  "material_sweat_band": "Внутренняя поясная лента",
-  "component_half_belt": "Полупояс / регулировочный хлястик",
-  "fill_cord":           "Шнур / cord",
-  "fill_velcro":         "Липучка: не уточнено",
-  "fill_velcro_hook":    "Липучка: крючковая часть",
-  "fill_velcro_loop":    "Липучка: петельная часть",
-  "fill_material_mask":  "Маска материала",
-  "fill_pu_tape":        "PU tape / полиуретановая лента",
-  "fill_piping":         "Кант / piping",
-  "fill_glue":           "Клеевая зона / glue",
-  "fill_shape":          "Заливка (прочее)",
-  // Фурнитура
-  "hw_zipper":           "Молния",
-  "hw_zipper_tape":      "Молния",
-  "hw_loop":             "Петля / рамка",
-  // Аннотации
-  "callout_line":        "Выноска",
-  "callout_zoom":        "Выноска к увеличению",
-  "break_line":          "Линия обрыва",
-  "line_elastic":        "Резинка / эластичная линия",
-  "line_fur":            "Мех / ворсовая линия",
-  "line_gathered_edge":  "Мятый / сборенный край материала",
-  "arrow":               "Стрелка",
-  "stitch_symbol":       "Символ строчки (vvvv)",
-  // Прочее
-  "unknown":             "Неизвестно",
-};
-
-const ROLE_GROUP_LABELS = {
-  "— не назначено —": "— не назначено —",
-  "Контуры и конструкция": "Контуры и конструкция",
-  "Строчки / швы": "Строчки / швы",
-  "Материалы и слои": "Материалы и слои",
-  "Ленты, резинки, шнуры": "Ленты, резинки, шнуры",
-  "Фурнитура": "Фурнитура",
-  "Выноски и обозначения": "Выноски и обозначения",
-  "Прочее": "Прочее",
-};
-
-const ROLE_LABELS_CLEAN = {
-  "?": "— не назначено —",
-  contour_outer: "Контур детали",
-  contour_hidden: "Невидимый контур / пунктир",
-  seam_line: "Линия шва",
-  stitch_edge: "Строчка по краю",
-  stitch_thru: "Сквозная строчка",
-  stitch_Bt: "Закрепка / bar tack (Bc/Bt)",
-  boundary_fragment: "Прокладка / padding",
-  boundary_interlining: "Флизелин / interlining",
-  fill_interlining: "Штриховка прокладки",
-  fill_fabric: "Штриховка ткани",
-  fill_fabric_gray: "Серая ткань / нейтральная заливка",
-  fill_dark_fabric: "Темная ткань / темная деталь",
-  fill_contrast: "Контрастная деталь",
-  fill_tape: "Тесьма / лента",
-  fill_elastic: "Резинка / elastic band",
-  material_sweat_band: "Внутренняя поясная лента",
-  component_half_belt: "Полупояс / регулировочный хлястик",
-  fill_cord: "Шнур / cord",
-  fill_velcro: "Липучка: не уточнено",
-  fill_velcro_hook: "Липучка: крючковая часть",
-  fill_velcro_loop: "Липучка: петельная часть",
-  fill_material_mask: "Маска материала",
-  fill_pu_tape: "PU tape / полиуретановая лента",
-  fill_piping: "Кант / piping",
-  fill_glue: "Клеевая зона / glue",
-  fill_shape: "Заливка / прочее",
-  hw_zipper: "Молния",
-  hw_zipper_tape: "Тесьма молнии",
-  hw_loop: "Петля / рамка",
-  callout_line: "Выноска",
-  callout_zoom: "Выноска к увеличению",
-  break_line: "Линия обрыва",
-  line_elastic: "Резинка / эластичная линия",
-  line_fur: "Мех / ворсовая линия",
-  line_gathered_edge: "Мятый / сборенный край материала",
-  arrow: "Стрелка",
-  stitch_symbol: "Символ строчки",
-  unknown: "Неизвестно",
-};
-
 const ROLE_GROUPS_UI = [
   { label: "— не назначено —", roles: ["?"] },
   { label: "Контуры и конструкция", roles: ["contour_outer", "construction_line", "contour_hidden", "break_line"] },
@@ -178,49 +77,6 @@ const ROLE_GROUPS_UI = [
   { label: "Выноски и обозначения", roles: ["callout_line", "callout_zoom", "arrow", "label"] },
   { label: "Прочее", roles: ["unknown"] },
 ];
-
-const ROLE_LABELS_UI = {
-  "?": "— не назначено —",
-  contour_outer: "Контур детали",
-  construction_line: "Конструктивная линия",
-  contour_hidden: "Скрытый контур / пунктир",
-  seam_line: "Линия шва",
-  stitch_edge: "Строчка по краю",
-  stitch_thru: "Сквозная строчка",
-  stitch_Bt: "Закрепка / bar tack (Bc/Bt)",
-  boundary_fragment: "Прокладка / padding",
-  boundary_interlining: "Флизелин / interlining",
-  fill_interlining: "Заливка прокладки",
-  fill_fabric: "Заливка ткани",
-  fill_fabric_gray: "Серая ткань / нейтральная заливка",
-  fill_dark_fabric: "Темная ткань / темная деталь",
-  fill_contrast: "Контрастная деталь",
-  fill_tape: "Тесьма / лента",
-  fill_elastic: "Резинка / elastic band",
-  material_sweat_band: "Внутренняя поясная лента",
-  component_half_belt: "Полупояс / регулировочный хлястик",
-  fill_cord: "Шнур / cord",
-  fill_velcro: "Липучка: не уточнено",
-  fill_velcro_hook: "Липучка: крючковая часть",
-  fill_velcro_loop: "Липучка: петельная часть",
-  fill_material_mask: "Маска материала",
-  fill_pu_tape: "PU tape / полиуретановая лента",
-  fill_piping: "Кант / piping",
-  fill_glue: "Клеевая зона / glue",
-  fill_shape: "Заливка / прочее",
-  hw_zipper: "Молния",
-  hw_zipper_tape: "Тесьма молнии",
-  hw_loop: "Петля / рамка",
-  callout_line: "Выноска",
-  callout_zoom: "Выноска к увеличению",
-  break_line: "Линия обрыва",
-  line_elastic: "Резинка / эластичная линия",
-  line_fur: "Мех / ворсовая линия",
-  line_gathered_edge: "Мятый / собранный край",
-  arrow: "Стрелка",
-  stitch_symbol: "Символ строчки",
-  unknown: "Неизвестно",
-};
 
 const REMOVED_ROLE_OPTIONS = new Set([
   "_skip",
@@ -262,26 +118,35 @@ const REMOVED_ROLE_OPTIONS = new Set([
   "stitch_zigzag",
 ]);
 
-const roleLabel = role => ROLE_LABELS_UI[role] || role;
+// Phase 4: role_catalog.json (loaded from /api/role-catalog) is the single
+// source of truth for role labels. Hardcoded ROLE_LABELS_UI was removed.
+// roleLabel() takes roleCatalog as first arg; if catalog is unavailable
+// (e.g. fetch failed), it returns the raw role key — UI shows "contour_outer"
+// instead of "Контур детали", but it's a safe degradation, not a crash.
+const roleLabel = (roleCatalog, role) => {
+  const entry = roleCatalog?.roles?.[role];
+  return entry?.label_ru || role || "";
+};
 
 function roleCatalogEntry(roleCatalog, role) {
   return roleCatalog?.roles?.[role] || null;
 }
 
 function roleCatalogLabel(roleCatalog, role) {
-  return roleCatalogEntry(roleCatalog, role)?.label_ru || roleLabel(role);
+  return roleLabel(roleCatalog, role);
 }
 
 function activeRoleChoices(roleCatalog) {
   if (Array.isArray(roleCatalog?.role_choices) && roleCatalog.role_choices.length) {
     return roleCatalog.role_choices;
   }
+  // Fallback: build from ROLE_GROUPS_UI + raw role keys (no hardcoded labels).
   return ROLE_GROUPS_UI.flatMap(group =>
     group.roles
       .filter(role => !REMOVED_ROLE_OPTIONS.has(role))
       .map(role => ({
         choice_key: role,
-        label_ru: roleLabel(role),
+        label_ru: role,  // raw key — UI will show e.g. "contour_outer" until catalog loads
         group: group.label,
         role,
       }))
@@ -326,12 +191,6 @@ function roleObjectLabel(roleCatalog, role) {
   return entry?.label_ru || "";
 }
 
-function roleMetaLine(roleCatalog, role) {
-  const entry = roleCatalogEntry(roleCatalog, role);
-  if (!entry) return "";
-  return "";
-}
-
 function roleMetaTitle(roleCatalog, role) {
   const entry = roleCatalogEntry(roleCatalog, role);
   if (!entry) return "";
@@ -345,25 +204,26 @@ function roleMetaTitle(roleCatalog, role) {
   return bits.join(" · ");
 }
 
+// Phase 4: objectLabelForRole now uses only the catalog.
+// roleObjectLabel returns:
+//   - object_roles[label_ru] if the role has an object_role (e.g. "hardware.zipper")
+//   - label_ru up to ":" (e.g. "Флизелин: заливка" → "Флизелин")
+//   - label_ru as-is if no ":"
+//   - "" if catalog is unavailable
+// If catalog returns "", we fall back to the full role label (e.g. "Шнур: тело").
 function objectLabelForRole(role, roleCatalog = null) {
-  const catalogLabel = roleObjectLabel(roleCatalog, role);
-  if (catalogLabel) return catalogLabel;
-  const r = role || "";
-  if (r === "fill_elastic" || r === "line_elastic") return "Резинка / elastic band";
-  if (r === "line_gathered_edge") return "Окантовка / край";
-  if (r.startsWith("hw_zipper")) return "Молния";
-  if (r.startsWith("boundary_interlining") || r === "fill_interlining") return "Флизелин / interlining";
-  if (r.startsWith("stitch_")) return "Строчка";
-  if (r.startsWith("callout_") || r === "arrow") return "Выноска / обозначение";
-  if (r.startsWith("contour_")) return "Контур / форма";
-  if (r.startsWith("fill_")) return roleLabel(role);
-  return roleLabel(role);
+  const objectLabel = roleObjectLabel(roleCatalog, role);
+  if (objectLabel) return objectLabel;
+  return roleLabel(roleCatalog, role);
 }
 
-function layerLabelForRole(role, style = {}) {
-  const r = role || "";
-  if (r.startsWith("fill_") || (style.fill && style.fill !== "none")) return "заливка";
-  return "обводка";
+function summarizeGroupKey(groupKey) {
+  const parts = String(groupKey || "").split("|");
+  if (parts.length >= 5) {
+    const [role, stroke, fill, width, dashed] = parts;
+    return `${role} · ${stroke} · ${width} · ${dashed === "true" ? "пунктир" : "сплошная"}${fill && fill !== "none" ? ` · ${fill}` : ""}`;
+  }
+  return String(groupKey || "—");
 }
 
 function StyleParams({ style }) {
@@ -395,16 +255,14 @@ function StyleParams({ style }) {
   );
 }
 
+// Phase 4: fill_white_detail was missing from ROLE_GROUPS_UI historically;
+// the runtime splice is kept as a safety net (cheap, idempotent).
 for (const groups of [ROLE_GROUPS, ROLE_GROUPS_UI]) {
   const fillGroup = groups.find(group => Array.isArray(group.roles) && group.roles.includes("fill_material_mask"));
   if (fillGroup && !fillGroup.roles.includes("fill_white_detail")) {
     fillGroup.roles.splice(fillGroup.roles.indexOf("fill_material_mask") + 1, 0, "fill_white_detail");
   }
 }
-
-ROLE_LABELS.fill_white_detail = "Видимая белая деталь";
-ROLE_LABELS_CLEAN.fill_white_detail = "Видимая белая деталь";
-ROLE_LABELS_UI.fill_white_detail = "Видимая белая деталь";
 
 function RoleOptions({ roleCatalog = null } = {}) {
   const byGroup = new Map();
@@ -533,35 +391,6 @@ function hexDistance(a, b) {
   } catch { return 999; }
 }
 
-function applyHighlight(container, targetColor, targetWidth, mode, targetRole, keyStrs) {
-  const els = [...container.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
-    .filter(el => !el.closest("defs"));
-  els.forEach(el => {
-    let match = false;
-    // Always use data-role for matching — both orig and std SVGs carry the attribute.
-    // This ensures the same semantic elements are highlighted in both panels.
-    if (targetRole) {
-      match = !!el.closest(`[data-role="${targetRole}"]`);
-    } else if (keyStrs && keyStrs.length > 0) {
-      const sk = el.getAttribute("data-sk");
-      match = sk != null && keyStrs.includes(sk);
-    } else {
-      const elColor = normalizeHex(resolveAttr(el, "stroke"));
-      const elWidthRaw = resolveAttr(el, "stroke-width");
-      const elWidth = elWidthRaw ? parseFloat(elWidthRaw) : 1;
-      match = hexDistance(elColor, normalizeHex(targetColor)) < 30
-           && Math.abs(elWidth - targetWidth) < 0.5;
-    }
-    el.style.opacity = match ? "1" : "0.06";
-    el.style.filter  = match ? "drop-shadow(0 0 4px #C8A84B)" : "";
-  });
-}
-
-function clearHighlight(container) {
-  container.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")
-    .forEach(el => { el.style.opacity = ""; el.style.filter = ""; });
-}
-
 function sanitizeSvg(svgText, prefix) {
   return svgText
     .replace(/\bid="([^"]+)"/g,            (_, id) => `id="${prefix}_${id}"`)
@@ -683,33 +512,6 @@ function collectRelatedStdIndices(els, baseIndices, hoveredRole) {
 }
 
 // Zoomable SVG panel — plain <img> for display, CSS overlay for highlight
-function applyRoleOverridesToSvg(svgText, roleOverrides) {
-  if (!svgText || !roleOverrides || Object.keys(roleOverrides).length === 0) return svgText;
-  let result = svgText;
-  Object.entries(roleOverrides).forEach(([mapKey, newRole]) => {
-    const oldRole = mapKey.split('|')[0];
-    if (!oldRole || oldRole === newRole) return;
-    const newStyle = ROLE_STYLES[newRole];
-    if (!newStyle) return;
-    // Replace style attr for elements with data-role="oldRole"
-    // SVG format: style="..." data-role="oldRole"
-    result = result.replace(
-      new RegExp(`(style=")([^"]*)(")([^/\\n>]*data-role="${oldRole}")`, 'g'),
-      (match, s, oldSty, e, rest) => {
-        let sty = oldSty;
-        if (newStyle.stroke) sty = sty.replace(/stroke:[^;]+/, `stroke:${newStyle.stroke}`);
-        if (newStyle["stroke-width"]) sty = sty.replace(/stroke-width:[^;]+/, `stroke-width:${newStyle["stroke-width"]}`);
-        if (newStyle["stroke-dasharray"]) {
-          const da = newStyle["stroke-dasharray"] === "none" ? "none" : newStyle["stroke-dasharray"];
-          sty = sty.replace(/stroke-dasharray:[^;]+/, `stroke-dasharray:${da}`);
-        }
-        return `${s}${sty}${e}${rest}`;
-      }
-    );
-  });
-  return result;
-}
-
 function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides, elemOverrides, selectedElemKey, selectedElemIndex, singleOverride, onElementClick }) {
   const wrapRef  = useRef(null);
   const hlRef    = useRef(null); // ref to query SVG elements
@@ -861,23 +663,50 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
     const els = [...hidden.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
       .filter(el => !el.closest("defs"));
 
+    const hoveredGroupKeys = new Set([
+      hoveredEntry?.groupKey,
+      ...(hoveredEntry?.groupKeys || []),
+    ].map(s => String(s || "").trim()).filter(Boolean));
+    const hoveredRole = String(hoveredEntry?.role || "").trim();
+    for (const keyStr of hoveredEntry?.key_strs || []) {
+      const text = String(keyStr || "").trim();
+      if (!hoveredRole || !text) continue;
+      const parts = text.split("|");
+      if (parts[0] === hoveredRole) {
+        hoveredGroupKeys.add(text);
+      } else if (parts.length >= 4) {
+        hoveredGroupKeys.add(`${hoveredRole}|${parts.slice(0, 4).join("|")}`);
+      }
+    }
     const indices = new Set();
     els.forEach((el, idx) => {
       let match = false;
-      const dataRole = el.getAttribute("data-role");
-      if (dataRole) {
-        match = dataRole === hoveredEntry.role;
-      } else if (mode === "std") {
-        match = !!el.closest(`[data-role="${hoveredEntry.role}"]`);
+      const groupKey = el.getAttribute("data-group-key");
+      const groupKeys = [
+        groupKey,
+        ...(el.getAttribute("data-group-keys") || "").split(","),
+        ...(el.getAttribute("data-source-group-keys") || "").split(","),
+      ].map(s => String(s || "").trim()).filter(Boolean);
+      if (hoveredGroupKeys.size && groupKeys.some(key => hoveredGroupKeys.has(key))) {
+        match = true;
+      } else if (hoveredGroupKeys.size && mode === "std") {
+        match = false;
       } else {
-        const elColor  = normalizeHex(resolveAttr(el, "stroke"));
-        const elW      = parseFloat(resolveAttr(el, "stroke-width") || "1");
-        const elDash   = resolveAttr(el, "stroke-dasharray") || "";
-        const elDashed = elDash !== "" && elDash !== "none" && elDash !== "0" && elDash !== "[] 0";
-        const colorOk  = hexDistance(elColor, normalizeHex(hoveredEntry.stroke)) < 30;
-        const widthOk  = Math.abs(elW - hoveredEntry.width) < 0.5;
-        const dashOk   = elDashed === Boolean(hoveredEntry.dashed);
-        match = colorOk && widthOk && dashOk;
+        const dataRole = el.getAttribute("data-role");
+        if (dataRole) {
+        match = dataRole === hoveredEntry.role;
+        } else if (mode === "std") {
+          match = !!el.closest(`[data-role="${hoveredEntry.role}"]`);
+        } else {
+          const elColor  = normalizeHex(resolveAttr(el, "stroke"));
+          const elW      = parseFloat(resolveAttr(el, "stroke-width") || "1");
+          const elDash   = resolveAttr(el, "stroke-dasharray") || "";
+          const elDashed = elDash !== "" && elDash !== "none" && elDash !== "0" && elDash !== "[] 0";
+          const colorOk  = hexDistance(elColor, normalizeHex(hoveredEntry.stroke)) < 30;
+          const widthOk  = Math.abs(elW - hoveredEntry.width) < 0.5;
+          const dashOk   = elDashed === Boolean(hoveredEntry.dashed);
+          match = colorOk && widthOk && dashOk;
+        }
       }
       if (match) indices.add(idx);
     });
@@ -1397,7 +1226,7 @@ function ContractMonitorPanel({ trace, loading, error, filter, onFilterChange, o
 
 function TabCompare({ manifest, buildTs, onNodeUpdated }) {
   const [activeId, setActiveId] = useState(() => firstWorkNode(manifest)?.id);
-  const [hoveredIdx, setHoveredIdx] = useState(null);
+  const [hoveredRowKey, setHoveredRowKey] = useState(null);
   const [nodeQuery, setNodeQuery] = useState("");
   const [activeSection, setActiveSection] = useState("");
   const [nodeState, setNodeState] = useState(null);
@@ -1415,6 +1244,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
   const [contractFilter, setContractFilter] = useState("all");
   const [renderedGroupStyles, setRenderedGroupStyles] = useState({});
   const [roleCatalog, setRoleCatalog] = useState(null);
+  const [expandedSemanticGroups, setExpandedSemanticGroups] = useState({});
   const NS_KEY = "vse_node_statuses_v2";
 
   const [nodeStatuses, setNodeStatuses] = useState(() => {
@@ -1464,7 +1294,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
   };
 
   useEffect(() => {
-    setHoveredIdx(null);
+    setHoveredRowKey(null);
     setNodeState(null);
     setNodeStateError("");
     setGroupDrafts({});
@@ -1574,7 +1404,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     const next = firstWorkNode(sectionNodes);
     if (next) {
       setActiveId(next.id);
-      setHoveredIdx(null);
+      setHoveredRowKey(null);
     }
   };
 
@@ -1603,6 +1433,59 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
       };
     });
   }, [nodeState, groupDrafts, renderedGroupStyles]);
+
+  const semanticRows = useMemo(() => {
+    const buckets = new Map();
+    groups.forEach(group => {
+      const role = group.currentRole || "unknown";
+      const bucket = buckets.get(role) || {
+        rowKey: `role:${role}`,
+        kind: "semantic",
+        currentRole: role,
+        count: 0,
+        groups: [],
+        groupKeys: [],
+        key_strs: [],
+      };
+      bucket.count += group.count || 0;
+      bucket.groups.push(group);
+      bucket.groupKeys.push(group.mapKey);
+      for (const keyStr of group.key_strs || []) {
+        if (keyStr && !bucket.key_strs.includes(keyStr)) bucket.key_strs.push(keyStr);
+      }
+      buckets.set(role, bucket);
+    });
+
+    const rows = [];
+    [...buckets.values()]
+      .sort((a, b) => objectLabelForRole(a.currentRole, roleCatalog).localeCompare(objectLabelForRole(b.currentRole, roleCatalog), "ru"))
+      .forEach(bucket => {
+        const first = bucket.groups[0];
+        const variantSummary = bucket.groups
+          .map(g => summarizeGroupKey(g.mapKey).replace(`${g.detected_role} · `, ""))
+          .slice(0, 4)
+          .join(" / ");
+        rows.push({
+          ...bucket,
+          mapKey: bucket.rowKey,
+          entry: first?.entry || { role: bucket.currentRole },
+          renderedStyle: bucket.groups.length === 1 ? first?.renderedStyle : null,
+          variantSummary,
+        });
+        if (expandedSemanticGroups[bucket.rowKey]) {
+          bucket.groups.forEach(group => {
+            rows.push({
+              ...group,
+              rowKey: `group:${group.mapKey}`,
+              kind: "group",
+              parentKey: bucket.rowKey,
+              groupKeys: [group.mapKey],
+            });
+          });
+        }
+      });
+    return rows;
+  }, [groups, roleCatalog, expandedSemanticGroups]);
 
   const selectedState = useMemo(() => {
     const rows = nodeState?.elements || [];
@@ -1648,9 +1531,15 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     }
   }, [selectedEl, selectedState]);
 
-  const safeIdx = hoveredIdx !== null && hoveredIdx < groups.length ? hoveredIdx : null;
-  const hoveredGroup = safeIdx !== null ? groups[safeIdx] ?? null : null;
-  const hoveredEntry = hoveredGroup ? { ...hoveredGroup.entry, key_strs: hoveredGroup.key_strs } : null;
+  const hoveredGroup = hoveredRowKey ? semanticRows.find(row => (row.rowKey || row.mapKey) === hoveredRowKey) || null : null;
+  const hoveredEntry = hoveredGroup
+    ? {
+        ...hoveredGroup.entry,
+        groupKey: hoveredGroup.kind === "group" ? hoveredGroup.mapKey : "",
+        groupKeys: hoveredGroup.groupKeys || (hoveredGroup.mapKey ? [hoveredGroup.mapKey] : []),
+        key_strs: hoveredGroup.key_strs,
+      }
+    : null;
 
   const assignedCount = groups.filter(g => g.currentRole && g.currentRole !== "?" && g.currentRole !== "unknown").length;
   const allAssigned = groups.length > 0 && assignedCount === groups.length;
@@ -1728,7 +1617,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
               const isApproved = nodeStatuses.approved?.includes(n.id);
               const isComplex = nodeStatuses.complex?.includes(n.id);
               return (
-                <button key={n.id} className={`vse-node-tab${activeId === n.id ? " active" : ""}${isApproved ? " vse-node-tab-done" : ""}${isComplex ? " vse-node-tab-has-styles" : ""}`} onClick={() => { setActiveId(n.id); setHoveredIdx(null); }} title={`${n.label} ${n.code}`}>
+                <button key={n.id} className={`vse-node-tab${activeId === n.id ? " active" : ""}${isApproved ? " vse-node-tab-done" : ""}${isComplex ? " vse-node-tab-has-styles" : ""}`} onClick={() => { setActiveId(n.id); setHoveredRowKey(null); }} title={`${n.label} ${n.code}`}>
                   <span className="vse-node-tab-main"><span className="vse-node-tab-title">{n.label}</span><span className="vse-code">{n.code}</span></span>
                   {isApproved && <span className="vse-node-done-mark">Готово</span>}
                   {isComplex && <span className="vse-node-done-mark" style={{background:"#C8A84B"}}>Сложный</span>}
@@ -1765,18 +1654,18 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                             return (
                               <>
                           <td>
-                            <div className="vse-object-cell" title={roleMetaTitle(roleCatalog, selectedDisplayRole) || undefined}>
+                            <div className="vse-object-cell" title={`${roleMetaTitle(roleCatalog, selectedDisplayRole) || ""}${selectedState?.group_key ? ` · ${selectedState.group_key}` : ""}`.trim() || undefined}>
                               <strong>{objectLabelForRole(selectedDisplayRole, roleCatalog)}</strong>
-                              {roleMetaLine(roleCatalog, selectedDisplayRole) && (
-                                <span title={roleMetaTitle(roleCatalog, selectedDisplayRole) || undefined}>{roleMetaLine(roleCatalog, selectedDisplayRole)}</span>
-                              )}
-                            </div>
+                              <div style={{fontSize:"11px", color:"#7a7a7a", marginTop:"2px", lineHeight:1.15}}>
+                                <code style={{fontSize:"10px"}}>{summarizeGroupKey(selectedState?.group_key || selectedEl?.groupKey || "")}</code>
+                              </div>
+                              </div>
                           </td>
                           <td><StyleParams style={selectedParamStyle} /></td>
                           <td className="vse-tc vse-muted">1</td>
                           <td style={{display:"flex",gap:"4px",alignItems:"center"}}>
                             <div style={{display:"flex",flexDirection:"column",gap:"2px",flex:1}}>
-                              <span style={{fontSize:"11px",color:"#C8A84B"}}>Выбрано: {roleLabel(selectedState?.detected_role || selectedEl.role)}</span>
+                              <span style={{fontSize:"11px",color:"#C8A84B"}}>Выбрано: {roleLabel(roleCatalog, selectedState?.detected_role || selectedEl.role)}</span>
                               <select className="vse-role-sel-sm" style={{flex:1}} value={choiceKeyForRole(roleCatalog, selectedDisplayRole)} onChange={e => {
                                 const newRole = roleForChoice(roleCatalog, e.target.value, selectedActualStyle);
                                 const elemKey = selectedState?.elem_key || selectedEl?.elemKey;
@@ -1791,30 +1680,65 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                           })()}
                         </tr>
                       )}
-                      {groups.map((g, idx) => {
-                        const isHov = safeIdx === idx;
-                        const assigned = g.currentRole && g.currentRole !== "?";
-                        const actualStyle = resolveActualStyle(g.entry);
-                        const paramStyle = g.renderedStyle || resolveDisplayStyle(g.entry, g.currentRole);
-                        return (
-                          <tr key={g.mapKey} className={`vse-inspector-row${isHov ? " hovered" : ""}${assigned ? " vse-row-filled" : ""}${Object.prototype.hasOwnProperty.call(groupDrafts, g.mapKey) ? " vse-row-override" : ""}`} onMouseEnter={() => setHoveredIdx(idx)} onMouseLeave={() => setHoveredIdx(null)}>
-                            <td>
-                              <div className="vse-object-cell" title={roleMetaTitle(roleCatalog, g.currentRole) || undefined}>
-                                <strong>{objectLabelForRole(g.currentRole, roleCatalog)}</strong>
-                                {roleMetaLine(roleCatalog, g.currentRole) && (
-                                  <span title={roleMetaTitle(roleCatalog, g.currentRole) || undefined}>{roleMetaLine(roleCatalog, g.currentRole)}</span>
-                                )}
-                              </div>
-                            </td>
-                            <td><StyleParams style={paramStyle} /></td>
-                            <td className="vse-tc vse-muted">{g.count}</td>
-                            <td><select className="vse-role-sel-sm" value={choiceKeyForRole(roleCatalog, g.currentRole ?? "?")} onChange={e => {
-                              const newRole = roleForChoice(roleCatalog, e.target.value, actualStyle);
-                              setGroupDrafts(prev => ({ ...prev, [g.mapKey]: newRole }));
-                            }}><RoleOptions roleCatalog={roleCatalog} /></select></td>
-                          </tr>
-                        );
-                      })}
+      {semanticRows.map((row) => {
+        const isSemantic = row.kind === "semantic";
+        const rowGroups = isSemantic ? row.groups : [row];
+        const rowKey = row.rowKey || row.mapKey;
+        const isHov = hoveredRowKey === rowKey;
+        const assigned = row.currentRole && row.currentRole !== "?";
+        const hasDraft = rowGroups.some(g => Object.prototype.hasOwnProperty.call(groupDrafts, g.mapKey));
+        const actualStyle = resolveActualStyle(rowGroups[0]?.entry || row.entry);
+        const paramStyle = isSemantic && rowGroups.length > 1
+          ? null
+          : (row.renderedStyle || resolveDisplayStyle(row.entry, row.currentRole));
+        const expanded = isSemantic && expandedSemanticGroups[row.rowKey];
+        const label = objectLabelForRole(row.currentRole, roleCatalog);
+        const variantCount = rowGroups.length;
+        return (
+          <tr key={rowKey} className={`vse-inspector-row${isHov ? " hovered" : ""}${assigned ? " vse-row-filled" : ""}${hasDraft ? " vse-row-override" : ""}${isSemantic ? " vse-row-semantic" : " vse-row-variant"}`} onMouseEnter={() => setHoveredRowKey(rowKey)} onMouseLeave={() => setHoveredRowKey(null)}>
+            <td>
+              <div className="vse-object-cell" title={isSemantic ? (row.groupKeys || []).join(" | ") : `${roleMetaTitle(roleCatalog, row.currentRole) || ""}${row.mapKey ? ` · ${row.mapKey}` : ""}`.trim() || undefined}>
+                <div style={{display:"flex", alignItems:"center", gap:6}}>
+                  {isSemantic && variantCount > 1 ? (
+                    <button type="button" title={expanded ? "Скрыть варианты" : "Показать варианты"} onClick={e => {
+                      e.stopPropagation();
+                      setExpandedSemanticGroups(prev => ({ ...prev, [row.rowKey]: !prev[row.rowKey] }));
+                    }} style={{width:18, height:18, border:"1px solid #d8c08a", background:"#fff", borderRadius:3, cursor:"pointer", padding:0, lineHeight:"16px", fontSize:12}}>
+                      {expanded ? "-" : "+"}
+                    </button>
+                  ) : (
+                    <span style={{width:18, display:"inline-block"}} />
+                  )}
+                  <strong>{label}</strong>
+                </div>
+                <div style={{fontSize:"11px", color:"#7a7a7a", marginTop:"2px", lineHeight:1.15, paddingLeft:18}}>
+                  {isSemantic ? (
+                    variantCount > 1 ? `${variantCount} вариантов: ${row.variantSummary}` : summarizeGroupKey(rowGroups[0]?.mapKey)
+                  ) : (
+                    <code style={{fontSize:"10px"}}>{summarizeGroupKey(row.mapKey)}</code>
+                  )}
+                </div>
+              </div>
+            </td>
+            <td>
+              {paramStyle ? (
+                <StyleParams style={paramStyle} />
+              ) : (
+                <span className="vse-muted" style={{fontSize:"11px"}}>{variantCount} вариантов</span>
+              )}
+            </td>
+            <td className="vse-tc vse-muted">{row.count}</td>
+            <td><select className="vse-role-sel-sm" value={choiceKeyForRole(roleCatalog, row.currentRole ?? "?")} onChange={e => {
+              const newRole = roleForChoice(roleCatalog, e.target.value, actualStyle);
+              setGroupDrafts(prev => {
+                const next = { ...prev };
+                rowGroups.forEach(g => { next[g.mapKey] = newRole; });
+                return next;
+              });
+            }}><RoleOptions roleCatalog={roleCatalog} /></select></td>
+          </tr>
+        );
+      })}
                     </tbody>
                   </table>
                 </div>
@@ -1906,7 +1830,7 @@ function TabCallouts({ calloutGraph, meanings, setMeanings }) {
 }
 
 // Tab 3: Style registry
-function TabRegistry({ registry, setRegistry, manifest }) {
+function TabRegistry({ registry, setRegistry, manifest, roleCatalog }) {
   const filled = registry.filter(r => r.role !== "?").length;
 
   // node_id -> origSvg url
@@ -1948,7 +1872,7 @@ function TabRegistry({ registry, setRegistry, manifest }) {
                 }}
               >
                 {ROLES.map(r => (
-                  <option key={r} value={r}>{ROLE_LABELS[r] || r}</option>
+                  <option key={r} value={r}>{roleLabel(roleCatalog, r)}</option>
                 ))}
               </select>
             </div>
@@ -1970,159 +1894,6 @@ function TabRegistry({ registry, setRegistry, manifest }) {
   );
 }
 
-// ── Tab 4 (removed — merged into TabCompare) ─────────────────────────────────
-function TabInspector_REMOVED({ manifest, registry, setRegistry }) {
-  const [activeId, setActiveId]   = useState(manifest[0]?.id);
-  const [mode, setMode]           = useState("orig"); // "orig" | "std"
-  const [hoveredIdx, setHovered]  = useState(null);
-  const svgRef                    = useRef(null);
-  const [svgHtml, setSvgHtml]     = useState("");
-
-  const node = manifest.find(n => n.id === activeId);
-
-  // Styles for this node
-  const nodeStyles = registry
-    .map((entry, i) => ({ entry, i }))
-    .filter(({ entry }) => entry.files?.includes(activeId));
-
-  // Load SVG as text
-  useEffect(() => {
-    if (!node) return;
-    const url = mode === "orig" ? node.origSvg : node.stdSvg;
-    fetch(url + "?" + Date.now())
-      .then(r => r.text())
-      .then(setSvgHtml);
-  }, [activeId, mode]);
-
-  // Apply highlight when hovered style changes
-  useEffect(() => {
-    const container = svgRef.current;
-    if (!container) return;
-
-    const paths = container.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse");
-
-    if (hoveredIdx === null) {
-      // Reset all
-      paths.forEach(el => {
-        el.style.opacity = "";
-        el.style.filter  = "";
-      });
-      return;
-    }
-
-    const { entry } = nodeStyles[hoveredIdx] || {};
-    if (!entry) return;
-
-    const targetColor = normalizeHex(entry.stroke);
-    const targetWidth = entry.width;
-
-    if (mode === "std") {
-      // Standardized SVG: match by data-role on ancestor <g>
-      const targetRole = entry.role;
-      paths.forEach(el => {
-        const inRole = !!el.closest(`[data-role="${targetRole}"]`);
-        el.style.opacity = inRole ? "1" : "0.07";
-        el.style.filter  = inRole ? "drop-shadow(0 0 3px #C8A84B)" : "";
-      });
-    } else {
-      // Original SVG: match by stroke color (В± tolerance)
-      paths.forEach(el => {
-        const elColor = parseStroke(el);
-        const elWidth = parseStrokeWidth(el);
-        const colorMatch = elColor === targetColor;
-        // width match with tolerance
-        const widthMatch = elWidth === null || Math.abs((elWidth || 0) - targetWidth) < 0.4;
-        const match = colorMatch && widthMatch;
-        el.style.opacity = match ? "1" : "0.07";
-        el.style.filter  = match ? "drop-shadow(0 0 3px #C8A84B)" : "";
-      });
-    }
-  }, [hoveredIdx, svgHtml, mode]);
-
-  return (
-    <div className="vse-inspector">
-      {/* Node selector */}
-      <div className="vse-node-tabs" style={{ marginBottom: 12 }}>
-        {manifest.map(n => (
-          <button
-            key={n.id}
-            className={`vse-node-tab${activeId === n.id ? " active" : ""}`}
-            onClick={() => { setActiveId(n.id); setHovered(null); }}
-          >
-            {n.label} <span className="vse-code">{n.code}</span>
-          </button>
-        ))}
-        <div style={{ flex: 1 }} />
-        <div className="vse-mode-toggle">
-          <button className={mode === "orig" ? "active" : ""} onClick={() => setMode("orig")}>Оригинал</button>
-          <button className={mode === "std"  ? "active" : ""} onClick={() => setMode("std")}>Стандарт</button>
-        </div>
-      </div>
-
-      <div className="vse-inspector-body">
-        {/* SVG viewer */}
-        <div className="vse-inspector-svg-wrap">
-          <div
-            ref={svgRef}
-            className="vse-inspector-svg"
-            dangerouslySetInnerHTML={{ __html: svgHtml }}
-          />
-        </div>
-
-        {/* Style table */}
-        <div className="vse-inspector-panel">
-          <div className="vse-inspector-panel-hdr">
-            Стили узла — наведи чтобы подсветить
-          </div>
-          <table className="vse-table">
-            <thead>
-              <tr>
-                <th>Превью</th>
-                <th>Цвет</th>
-                <th>w</th>
-                <th>Роль</th>
-              </tr>
-            </thead>
-            <tbody>
-              {nodeStyles.map(({ entry, i }, idx) => (
-                <tr
-                  key={i}
-                  className={`vse-inspector-row${hoveredIdx === idx ? " hovered" : ""}${entry.role !== "?" ? " vse-row-filled" : ""}`}
-                  onMouseEnter={() => setHovered(idx)}
-                  onMouseLeave={() => setHovered(null)}
-                >
-                  <td className="vse-tc">
-                    <LineSwatch color={entry.stroke} width={entry.width} dashed={entry.dashed} />
-                  </td>
-                  <td>
-                    <ColorDot hex={entry.stroke} />
-                    <code>{entry.stroke}</code>
-                  </td>
-                  <td className="vse-tc vse-muted">{entry.width}</td>
-                  <td>
-                    <select
-                      className="vse-role-sel-sm"
-                      value={entry.role}
-                      onChange={e => {
-                        const next = [...registry];
-                        next[i] = { ...next[i], role: e.target.value };
-                        setRegistry(next);
-                      }}
-                    >
-                      {ROLES.map(r => (
-                        <option key={r} value={r}>{ROLE_LABELS[r] || r}</option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // в"Ђв"Ђ Main в"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђ
 export default function VseReview() {
@@ -2248,7 +2019,7 @@ export default function VseReview() {
           />
         )}
         {tab === "callouts" && <TabCallouts calloutGraph={calloutGraph} meanings={meanings} setMeanings={setMeanings} />}
-        {tab === "registry" && <TabRegistry registry={registry} setRegistry={setRegistry} manifest={manifest} />}
+        {tab === "registry" && <TabRegistry registry={registry} setRegistry={setRegistry} manifest={manifest} roleCatalog={roleCatalog} />}
       </div>
     </div>
   );
