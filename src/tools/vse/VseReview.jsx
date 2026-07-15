@@ -1706,7 +1706,10 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                           <td className="vse-tc vse-muted">1</td>
                           <td style={{display:"flex",gap:"4px",alignItems:"center"}}>
                             <div style={{display:"flex",flexDirection:"column",gap:"2px",flex:1}}>
-                              <span style={{fontSize:"11px",color:"#C8A84B"}}>Выбрано: {roleLabel(roleCatalog, selectedState?.detected_role || selectedEl.role)}</span>
+                              {/* detected_role, not the user's pick — the pick is in the select below.
+                                  Labelling it "Выбрано" read as a claim about the selection and
+                                  contradicted both the entity title and the select. */}
+                              <span style={{fontSize:"11px",color:"#C8A84B"}}>Распознано: {roleLabel(roleCatalog, selectedState?.detected_role || selectedEl.role)}</span>
                               <select className="vse-role-sel-sm" style={{flex:1}} value={choiceKeyForRole(roleCatalog, selectedDisplayRole)} onChange={e => {
                                 const newRole = roleForChoice(roleCatalog, e.target.value, selectedActualStyle, selectedDisplayRole);
                                 const elemKey = selectedState?.elem_key || selectedEl?.elemKey;
