@@ -1706,10 +1706,16 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                           <td className="vse-tc vse-muted">1</td>
                           <td style={{display:"flex",gap:"4px",alignItems:"center"}}>
                             <div style={{display:"flex",flexDirection:"column",gap:"2px",flex:1}}>
-                              {/* detected_role, not the user's pick — the pick is in the select below.
-                                  Labelling it "Выбрано" read as a claim about the selection and
-                                  contradicted both the entity title and the select. */}
-                              <span style={{fontSize:"11px",color:"#C8A84B"}}>Распознано: {roleLabel(roleCatalog, selectedState?.detected_role || selectedEl.role)}</span>
+                              {/* The engine's own guess, which an override never rewrites — the pick
+                                  is in the select below. Shown only where it contradicts the pick,
+                                  which is the one thing it is good for: marking an element as
+                                  carrying manual work. When the guess was accepted it just repeated
+                                  the entity title. */}
+                              {(() => {
+                                const detected = selectedState?.detected_role || selectedEl.role;
+                                if (!detected || detected === selectedDisplayRole) return null;
+                                return <span style={{fontSize:"11px",color:"#C8A84B"}}>⟲ движок считал: {roleLabel(roleCatalog, detected)}</span>;
+                              })()}
                               <select className="vse-role-sel-sm" style={{flex:1}} value={choiceKeyForRole(roleCatalog, selectedDisplayRole)} onChange={e => {
                                 const newRole = roleForChoice(roleCatalog, e.target.value, selectedActualStyle, selectedDisplayRole);
                                 const elemKey = selectedState?.elem_key || selectedEl?.elemKey;
