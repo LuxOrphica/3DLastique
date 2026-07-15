@@ -517,6 +517,12 @@ function collectRelatedStdIndices(els, baseIndices, hoveredRole) {
   return expanded;
 }
 
+// The flag can sit on the element or on a wrapping <g>, matching how api_server
+// resolves it (_svg_entities walks ancestors).
+function isTraceIgnored(el) {
+  return !!el?.closest?.('[data-trace-ignore="1"]');
+}
+
 // Zoomable SVG panel — plain <img> for display, CSS overlay for highlight
 function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides, elemOverrides, selectedElemKey, selectedElemIndex, singleOverride, onElementClick }) {
   const wrapRef  = useRef(null);
@@ -737,10 +743,15 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
     if (!onElementClick || mode !== "std") return;
     if (dragging.current?.moved) return;
     let path = e.target.closest("path, line, polyline, polygon, circle, ellipse, rect");
+    // Generated geometry (stitch symbols, zipper teeth) is marked data-trace-ignore by
+    // the engine: it has no source element, so no elem_key, so nothing to write a draft
+    // against. Selecting it still armed singleOverride, which repainted the preview while
+    // saveCompareChanges — which only reads elementDrafts — silently dropped the change.
+    if (path && isTraceIgnored(path)) path = null;
     if ((!path || !hlRef.current?.contains(path)) && hlRef.current) {
       // Missed thin stroke — find nearest path within 12px
       const allEls = [...hlRef.current.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
-        .filter(el => !el.closest("defs"));
+        .filter(el => !el.closest("defs") && !isTraceIgnored(el));
       let best = null, bestDist = 12;
       for (const el of allEls) {
         const bb = el.getBoundingClientRect();
