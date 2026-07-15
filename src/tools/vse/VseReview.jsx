@@ -170,11 +170,17 @@ function choiceKeyForRole(roleCatalog, role) {
   return found?.choice_key || role || "unknown";
 }
 
-function roleForChoice(roleCatalog, choiceKey, style = {}) {
+// currentRole makes role -> choice_key -> role a round-trip identity. Without it,
+// re-picking the choice a role already belongs to can silently switch the variant:
+// roleLayerKind() prefers fill, so boundary_interlining on a group whose fill is not
+// "none" (real data: boundary_interlining|#29b473|#1a1a1a|2.0|false) resolved back to
+// fill_interlining under the same visible label "Флизелин".
+function roleForChoice(roleCatalog, choiceKey, style = {}, currentRole = null) {
   const choice = activeRoleChoices(roleCatalog).find(item => item.choice_key === choiceKey);
   if (!choice) return choiceKey || "unknown";
   if (choice.role) return choice.role;
   const variants = choice.variants || {};
+  if (currentRole && Object.values(variants).includes(currentRole)) return currentRole;
   const layer = roleLayerKind(style);
   return variants[layer] || variants.fill || variants.stroke || variants.symbol || Object.values(variants)[0] || "unknown";
 }
@@ -1416,9 +1422,12 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
       const fill = parts[2] || "none";
       const width = parseFloat(parts[3] || "0") || 0.5;
       const dashed = parts[4] === "true";
+      // baseRole = persisted role, ignoring drafts. semanticRows buckets on it so a
+      // row keeps its identity while its role is being edited (see semanticRows).
+      const baseRole = group.override_role || group.final_role || group.detected_role || "unknown";
       const currentRole = Object.prototype.hasOwnProperty.call(groupDrafts, group.group_key)
         ? groupDrafts[group.group_key]
-        : (group.override_role || group.final_role || group.detected_role || "unknown");
+        : baseRole;
       return {
         mapKey: group.group_key,
         indices: [idx],
@@ -1427,6 +1436,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
         detected_role: group.detected_role || "unknown",
         override_role: group.override_role || null,
         final_role: group.final_role || group.detected_role || "unknown",
+        baseRole,
         currentRole,
         entry: { role: currentRole, stroke, fill, width, dashed },
         renderedStyle: renderedGroupStyles[group.group_key] || null,
@@ -1435,13 +1445,19 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
   }, [nodeState, groupDrafts, renderedGroupStyles]);
 
   const semanticRows = useMemo(() => {
+    // Bucket on baseRole (persisted), never on currentRole (draft). Bucketing on the
+    // role being edited made rowKey — and therefore the React key — change on every
+    // pick: the row remounted, re-sorted to a new position, and merged into whatever
+    // row already held the target role, taking its sibling groups along on the next
+    // edit. expandedSemanticGroups is keyed by rowKey too, so expansion state moved
+    // with the role instead of staying on the row.
     const buckets = new Map();
     groups.forEach(group => {
-      const role = group.currentRole || "unknown";
+      const role = group.baseRole || "unknown";
       const bucket = buckets.get(role) || {
         rowKey: `role:${role}`,
         kind: "semantic",
-        currentRole: role,
+        baseRole: role,
         count: 0,
         groups: [],
         groupKeys: [],
@@ -1458,17 +1474,31 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
 
     const rows = [];
     [...buckets.values()]
-      .sort((a, b) => objectLabelForRole(a.currentRole, roleCatalog).localeCompare(objectLabelForRole(b.currentRole, roleCatalog), "ru"))
+      // Tie-break on baseRole: several roles share one object label ("Ткань" covers
+      // fill_fabric / fill_fabric_gray / fill_dark_fabric), and label-only compare
+      // left their order unstable between renders.
+      .sort((a, b) => {
+        const byLabel = objectLabelForRole(a.baseRole, roleCatalog)
+          .localeCompare(objectLabelForRole(b.baseRole, roleCatalog), "ru");
+        return byLabel !== 0 ? byLabel : a.baseRole.localeCompare(b.baseRole);
+      })
       .forEach(bucket => {
         const first = bucket.groups[0];
+        // Variants can be edited individually once expanded, so a bucket's groups may
+        // disagree; mixed rows must not pretend to hold a single role.
+        const draftedRoles = [...new Set(bucket.groups.map(g => g.currentRole))];
+        const mixed = draftedRoles.length > 1;
+        const currentRole = mixed ? null : draftedRoles[0];
         const variantSummary = bucket.groups
           .map(g => summarizeGroupKey(g.mapKey).replace(`${g.detected_role} · `, ""))
           .slice(0, 4)
           .join(" / ");
         rows.push({
           ...bucket,
+          currentRole,
+          mixed,
           mapKey: bucket.rowKey,
-          entry: first?.entry || { role: bucket.currentRole },
+          entry: first?.entry || { role: currentRole || bucket.baseRole },
           renderedStyle: bucket.groups.length === 1 ? first?.renderedStyle : null,
           variantSummary,
         });
@@ -1667,7 +1697,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                             <div style={{display:"flex",flexDirection:"column",gap:"2px",flex:1}}>
                               <span style={{fontSize:"11px",color:"#C8A84B"}}>Выбрано: {roleLabel(roleCatalog, selectedState?.detected_role || selectedEl.role)}</span>
                               <select className="vse-role-sel-sm" style={{flex:1}} value={choiceKeyForRole(roleCatalog, selectedDisplayRole)} onChange={e => {
-                                const newRole = roleForChoice(roleCatalog, e.target.value, selectedActualStyle);
+                                const newRole = roleForChoice(roleCatalog, e.target.value, selectedActualStyle, selectedDisplayRole);
                                 const elemKey = selectedState?.elem_key || selectedEl?.elemKey;
                                 setSingleOverride({ role: selectedState?.detected_role || selectedEl.role, newRole });
                                 if (elemKey) setElementDrafts(prev => ({ ...prev, [elemKey]: newRole }));
@@ -1685,14 +1715,13 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
         const rowGroups = isSemantic ? row.groups : [row];
         const rowKey = row.rowKey || row.mapKey;
         const isHov = hoveredRowKey === rowKey;
-        const assigned = row.currentRole && row.currentRole !== "?";
+        const assigned = row.mixed || (row.currentRole && row.currentRole !== "?");
         const hasDraft = rowGroups.some(g => Object.prototype.hasOwnProperty.call(groupDrafts, g.mapKey));
-        const actualStyle = resolveActualStyle(rowGroups[0]?.entry || row.entry);
         const paramStyle = isSemantic && rowGroups.length > 1
           ? null
           : (row.renderedStyle || resolveDisplayStyle(row.entry, row.currentRole));
         const expanded = isSemantic && expandedSemanticGroups[row.rowKey];
-        const label = objectLabelForRole(row.currentRole, roleCatalog);
+        const label = row.mixed ? "Разные роли" : objectLabelForRole(row.currentRole, roleCatalog);
         const variantCount = rowGroups.length;
         return (
           <tr key={rowKey} className={`vse-inspector-row${isHov ? " hovered" : ""}${assigned ? " vse-row-filled" : ""}${hasDraft ? " vse-row-override" : ""}${isSemantic ? " vse-row-semantic" : " vse-row-variant"}`} onMouseEnter={() => setHoveredRowKey(rowKey)} onMouseLeave={() => setHoveredRowKey(null)}>
@@ -1728,14 +1757,21 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
               )}
             </td>
             <td className="vse-tc vse-muted">{row.count}</td>
-            <td><select className="vse-role-sel-sm" value={choiceKeyForRole(roleCatalog, row.currentRole ?? "?")} onChange={e => {
-              const newRole = roleForChoice(roleCatalog, e.target.value, actualStyle);
+            <td><select className="vse-role-sel-sm" value={row.mixed ? "" : choiceKeyForRole(roleCatalog, row.currentRole ?? "?")} onChange={e => {
               setGroupDrafts(prev => {
                 const next = { ...prev };
-                rowGroups.forEach(g => { next[g.mapKey] = newRole; });
+                // Resolve the variant per group: a bucket can hold both filled and
+                // stroke-only groups, and deriving the variant once from groups[0]
+                // handed stroke-only elements a fill role.
+                rowGroups.forEach(g => {
+                  next[g.mapKey] = roleForChoice(roleCatalog, e.target.value, resolveActualStyle(g.entry), g.currentRole);
+                });
                 return next;
               });
-            }}><RoleOptions roleCatalog={roleCatalog} /></select></td>
+            }}>
+              {row.mixed && <option value="" disabled>— разные роли —</option>}
+              <RoleOptions roleCatalog={roleCatalog} />
+            </select></td>
           </tr>
         );
       })}
