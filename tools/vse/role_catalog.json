@@ -96,6 +96,12 @@
         "material.cord.body",
         "material.cord.tip"
       ]
+    },
+    "component.visor": {
+      "label_ru": "Козырёк",
+      "parts": [
+        "component.visor.body"
+      ]
     }
   },
   "roles": {
@@ -569,6 +575,17 @@
       "legacy_roles": [
         "unknown"
       ]
+    },
+    "component_visor": {
+      "role_id": "component.visor.body",
+      "label_ru": "Козырёк",
+      "family": "material",
+      "entity_type": "component",
+      "object_role": "component.visor",
+      "part_role": "component.visor.body",
+      "legacy_roles": [
+        "component_visor"
+      ]
     }
   },
   "role_choices": [
@@ -731,6 +748,12 @@
       "label_ru": "Полупояс / регулировочный хлястик",
       "group": "Материалы и слои",
       "role": "component_half_belt"
+    },
+    {
+      "choice_key": "component.visor",
+      "label_ru": "Козырёк",
+      "group": "Материалы и слои",
+      "role": "component_visor"
     },
     {
       "choice_key": "material.cord",

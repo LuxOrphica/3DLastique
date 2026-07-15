@@ -207,6 +207,16 @@ ROLE_STYLES = {
         "opacity":          "0.85",
         "_label": "Полупояс / регулировочный хлястик",
     },
+    "component_visor": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "1.5",
+        "stroke-dasharray": "none",
+        "fill":             "none",
+        "stroke-linecap":   "butt",
+        "stroke-linejoin":  "round",
+        "opacity":          "1",
+        "_label": "Козырёк / visor",
+    },
     "fill_velcro": {
         "stroke":           "#1A1A1A",
         "stroke-width":     "0.75",
