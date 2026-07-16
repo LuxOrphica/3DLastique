@@ -223,6 +223,13 @@ function objectLabelForRole(role, roleCatalog = null) {
   return roleLabel(roleCatalog, role);
 }
 
+function pluralPravki(n) {
+  const mod10 = n % 10, mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return "правка";
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return "правки";
+  return "правок";
+}
+
 function summarizeGroupKey(groupKey) {
   const parts = String(groupKey || "").split("|");
   if (parts.length >= 5) {
@@ -1586,6 +1593,30 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
   const allAssigned = groups.length > 0 && assignedCount === groups.length;
   const reviewStatus = nodeState?.review_status || (nodeStatuses.approved?.includes(activeId) ? "approved" : nodeStatuses.complex?.includes(activeId) ? "complex" : "pending");
 
+  // Count only drafts that actually differ from the persisted role. Re-picking a
+  // role that is already set writes a draft entry (see the selects), so a raw
+  // Object.keys count would overstate "unsaved edits". Nothing is written to disk
+  // until Применить, so this number is the whole story of what's pending.
+  const dirtyCount = useMemo(() => {
+    const groupBase = new Map(groups.map(g => [g.mapKey, g.baseRole]));
+    const elemBase = new Map((nodeState?.elements || []).map(e =>
+      [e.elem_key, e.override_role || e.final_role || e.detected_role || "unknown"]));
+    let n = 0;
+    for (const [k, role] of Object.entries(groupDrafts)) {
+      if (role !== groupBase.get(k)) n += 1;
+    }
+    for (const [k, role] of Object.entries(elementDrafts)) {
+      if (role !== elemBase.get(k)) n += 1;
+    }
+    return n;
+  }, [groups, groupDrafts, elementDrafts, nodeState]);
+
+  const discardDrafts = () => {
+    setGroupDrafts({});
+    setElementDrafts({});
+    setSingleOverride(null);
+  };
+
   const saveCompareChanges = async () => {
     if (!activeId || !nodeState) return;
     setSaving(true);
@@ -1686,6 +1717,13 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
               {groups.length > 0 ? (
                 <div className="vse-node-styles">
                   <div className="vse-node-styles-hdr"><span>Наведи на строку: подсветка на оригинале и стандарте</span><span>Роли из node-state</span><span className="vse-assign-progress">{assignedCount} / {groups.length}</span></div>
+                  {dirtyCount > 0 && (
+                    <div style={{display:"flex",alignItems:"center",gap:8,padding:"6px 10px",margin:"0 0 6px",background:"rgba(200,168,75,0.14)",border:"1px solid #C8A84B",borderRadius:5}}>
+                      <span style={{color:"#C8A84B",fontSize:12,fontWeight:600,flex:1}}>● {dirtyCount} {pluralPravki(dirtyCount)} — не сохранено</span>
+                      <button type="button" onClick={saveCompareChanges} disabled={saving || !nodeState} style={{fontSize:12,fontWeight:600,padding:"4px 10px",borderRadius:4,border:"none",background:"#C8A84B",color:"#1a1a1a",cursor:saving?"default":"pointer"}}>{saving ? "Применяю…" : "Применить и пересобрать"}</button>
+                      <button type="button" onClick={discardDrafts} disabled={saving} style={{fontSize:12,padding:"4px 8px",borderRadius:4,border:"1px solid #8a7a45",background:"transparent",color:"#C8A84B",cursor:saving?"default":"pointer"}}>Сбросить</button>
+                    </div>
+                  )}
                   <table className="vse-table">
                     <thead><tr><th style={{width:"190px"}}>Сущность</th><th>Параметры</th><th style={{width:"44px"}}>Кол.</th><th style={{width:"220px"}}>Назначить роль</th></tr></thead>
                     <tbody>
@@ -1737,6 +1775,9 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
         const isHov = hoveredRowKey === rowKey;
         const assigned = row.mixed || (row.currentRole && row.currentRole !== "?");
         const hasDraft = rowGroups.some(g => Object.prototype.hasOwnProperty.call(groupDrafts, g.mapKey));
+        // A draft only counts as a real edit if it changed the role away from baseRole.
+        const rowDirty = rowGroups.some(g =>
+          Object.prototype.hasOwnProperty.call(groupDrafts, g.mapKey) && groupDrafts[g.mapKey] !== g.baseRole);
         const paramStyle = isSemantic && rowGroups.length > 1
           ? null
           : (row.renderedStyle || resolveDisplayStyle(row.entry, row.currentRole));
@@ -1777,7 +1818,8 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
               )}
             </td>
             <td className="vse-tc vse-muted">{row.count}</td>
-            <td><select className="vse-role-sel-sm" value={row.mixed ? "" : choiceKeyForRole(roleCatalog, row.currentRole ?? "?")} onChange={e => {
+            <td><div style={{display:"flex",alignItems:"center",gap:6}}>
+              <select className="vse-role-sel-sm" style={{flex:1}} value={row.mixed ? "" : choiceKeyForRole(roleCatalog, row.currentRole ?? "?")} onChange={e => {
               setGroupDrafts(prev => {
                 const next = { ...prev };
                 // Resolve the variant per group: a bucket can hold both filled and
@@ -1791,7 +1833,9 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
             }}>
               {row.mixed && <option value="" disabled>— разные роли —</option>}
               <RoleOptions roleCatalog={roleCatalog} />
-            </select></td>
+              </select>
+              {rowDirty && <span title="Несохранённая правка" style={{color:"#C8A84B",fontSize:13,lineHeight:1}}>●</span>}
+            </div></td>
           </tr>
         );
       })}
@@ -1804,7 +1848,11 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
 
               <div className="vse-generate-bar">
                 <button data-testid="compare-save-regenerate" className={`vse-generate-btn${saving ? " vse-save-btn-busy" : ""}${!allAssigned ? " vse-generate-btn-partial" : ""}`} onClick={saveCompareChanges} disabled={saving || !nodeState}>
-                  {saving ? "Генерация..." : allAssigned ? "Сгенерировать стандарт →" : `Сгенерировать (${assignedCount}/${groups.length} ролей распознано)`}
+                  {saving
+                    ? "Пересобираю…"
+                    : dirtyCount > 0
+                      ? `Применить ${dirtyCount} ${pluralPravki(dirtyCount)} и пересобрать`
+                      : "Пересобрать стандарт"}
                 </button>
                 {saveStatus.state === "ok" && <span className="vse-build-ok">OK: {saveStatus.message}</span>}
                 {saveStatus.state === "error" && <span className="vse-build-error">Ошибка: {saveStatus.message}</span>}
