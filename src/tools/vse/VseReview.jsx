@@ -1846,6 +1846,14 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                     <code style={{fontSize:"10px"}}>{summarizeGroupKey(row.mapKey)}</code>
                   )}
                 </div>
+                {/* Only while a draft is active: confirm what the role is being changed
+                    FROM, the same cue the selected-element row gives. Gated on rowDirty so
+                    it stays absent on untouched rows and clears once Применить runs. */}
+                {rowDirty && !row.mixed && row.currentRole !== row.baseRole && (
+                  <div style={{fontSize:"11px", color:"#C8A84B", marginTop:"2px", lineHeight:1.15, paddingLeft:18}}>
+                    ⟲ было: {roleLabel(roleCatalog, row.baseRole)}
+                  </div>
+                )}
               </div>
             </td>
             <td>
