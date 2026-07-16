@@ -1259,6 +1259,11 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
   const [elementDrafts, setElementDrafts] = useState({});
   const [selectedEl, setSelectedEl] = useState(null);
   const [singleOverride, setSingleOverride] = useState(null);
+  // "element" = override just the clicked path; "group" = override every path with
+  // the same style. Before this, clicking a path always wrote an element override
+  // and the table always wrote a group override — two mechanisms with no visible
+  // difference. Now the scope is one explicit choice at the point of editing.
+  const [selectedScope, setSelectedScope] = useState("element");
   const [saveStatus, setSaveStatus] = useState({ state: "idle", message: "" });
   const [saving, setSaving] = useState(false);
   const [contractOpen, setContractOpen] = useState(false);
@@ -1572,6 +1577,30 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
   });
   const selectedParamStyle = selectedDisplayStyle;
 
+  const selectedGroupKey = selectedState?.group_key || selectedEl?.groupKey || "";
+  const selectedElemKeyVal = selectedState?.elem_key || selectedEl?.elemKey || "";
+  const selectedGroup = selectedGroupKey ? groups.find(g => g.mapKey === selectedGroupKey) : null;
+  const selectedGroupCount = selectedGroup?.count ?? null;
+
+  // Route a role pick to the bucket the scope names, and clear the other bucket so
+  // the two overrides can't disagree on the same element. singleOverride still drives
+  // the selected element's live preview regardless of scope.
+  const applySelectedRole = (newRole, scope) => {
+    setSingleOverride({ role: selectedState?.detected_role || selectedEl?.role, newRole });
+    if (scope === "group" && selectedGroupKey) {
+      setGroupDrafts(prev => ({ ...prev, [selectedGroupKey]: newRole }));
+      if (selectedElemKeyVal) setElementDrafts(prev => { const n = { ...prev }; delete n[selectedElemKeyVal]; return n; });
+    } else if (selectedElemKeyVal) {
+      setElementDrafts(prev => ({ ...prev, [selectedElemKeyVal]: newRole }));
+      if (selectedGroupKey) setGroupDrafts(prev => { const n = { ...prev }; delete n[selectedGroupKey]; return n; });
+    }
+  };
+
+  const changeSelectedScope = scope => {
+    setSelectedScope(scope);
+    if (singleOverride?.newRole) applySelectedRole(singleOverride.newRole, scope);
+  };
+
   useEffect(() => {
     if (!selectedEl) return;
     if (!selectedEl.elemKey && selectedState?.elem_key) {
@@ -1707,7 +1736,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
           <div className="vse-panels-sticky">
             <div className="vse-dual-panels">
               <ZoomableSvgPanel url={node.origSvg + "?t=" + buildTs} label="ОРИГИНАЛ" hdrClass="orig" hoveredEntry={hoveredEntry} mode="orig" svgPrefix={`${activeId}_orig`} />
-              <ZoomableSvgPanel url={node.stdSvg + "?t=" + buildTs} label="СТАНДАРТ" hdrClass="std" hoveredEntry={hoveredEntry} mode="std" svgPrefix={`${activeId}_std`} roleOverrides={groupDrafts} elemOverrides={elementDrafts} selectedElemKey={selectedEl?.elemKey || selectedState?.elem_key || ""} selectedElemIndex={selectedEl?.idx ?? null} singleOverride={singleOverride} onElementClick={el => { setSelectedEl(el); setSingleOverride(null); }} />
+              <ZoomableSvgPanel url={node.stdSvg + "?t=" + buildTs} label="СТАНДАРТ" hdrClass="std" hoveredEntry={hoveredEntry} mode="std" svgPrefix={`${activeId}_std`} roleOverrides={groupDrafts} elemOverrides={elementDrafts} selectedElemKey={selectedEl?.elemKey || selectedState?.elem_key || ""} selectedElemIndex={selectedEl?.idx ?? null} singleOverride={singleOverride} onElementClick={el => { setSelectedEl(el); setSingleOverride(null); setSelectedScope("element"); }} />
             </div>
           </div>
 
@@ -1741,7 +1770,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                               </div>
                           </td>
                           <td><StyleParams style={selectedParamStyle} /></td>
-                          <td className="vse-tc vse-muted">1</td>
+                          <td className="vse-tc vse-muted">{selectedScope === "group" ? (selectedGroupCount || 1) : 1}</td>
                           <td style={{display:"flex",gap:"4px",alignItems:"center"}}>
                             <div style={{display:"flex",flexDirection:"column",gap:"2px",flex:1}}>
                               {/* The engine's own guess, which an override never rewrites — the pick
@@ -1756,12 +1785,21 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                               })()}
                               <select className="vse-role-sel-sm" style={{flex:1}} value={choiceKeyForRole(roleCatalog, selectedDisplayRole)} onChange={e => {
                                 const newRole = roleForChoice(roleCatalog, e.target.value, selectedActualStyle, selectedDisplayRole);
-                                const elemKey = selectedState?.elem_key || selectedEl?.elemKey;
-                                setSingleOverride({ role: selectedState?.detected_role || selectedEl.role, newRole });
-                                if (elemKey) setElementDrafts(prev => ({ ...prev, [elemKey]: newRole }));
+                                applySelectedRole(newRole, selectedScope);
                               }}><RoleOptions roleCatalog={roleCatalog} /></select>
+                              <div style={{display:"flex",flexDirection:"column",gap:"1px",marginTop:"3px",fontSize:"11px",color:"#c9c2ad"}}>
+                                <span style={{color:"#8a8571",fontSize:"10px"}}>Применить к:</span>
+                                <label style={{display:"flex",alignItems:"center",gap:"5px",cursor:"pointer"}}>
+                                  <input type="radio" name="vse-scope" checked={selectedScope === "element"} onChange={() => changeSelectedScope("element")} />
+                                  только этому элементу
+                                </label>
+                                <label style={{display:"flex",alignItems:"center",gap:"5px",cursor: selectedGroupCount ? "pointer" : "not-allowed", opacity: selectedGroupCount ? 1 : 0.4}}>
+                                  <input type="radio" name="vse-scope" disabled={!selectedGroupCount} checked={selectedScope === "group"} onChange={() => changeSelectedScope("group")} />
+                                  всем {selectedGroupCount || 0} с таким же стилем
+                                </label>
+                              </div>
                             </div>
-                            <button title="Снять выделение" style={{fontSize:"11px",padding:"2px 5px",background:"#444",border:"none",borderRadius:"3px",cursor:"pointer",color:"#aaa"}} onClick={() => { setSelectedEl(null); setSingleOverride(null); }}>✕</button>
+                            <button title="Снять выделение" style={{fontSize:"11px",padding:"2px 5px",background:"#444",border:"none",borderRadius:"3px",cursor:"pointer",color:"#aaa"}} onClick={() => { setSelectedEl(null); setSingleOverride(null); setSelectedScope("element"); }}>✕</button>
                           </td>
                               </>
                             );
