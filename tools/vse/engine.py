@@ -156,6 +156,15 @@ def _node_element_overrides(node_id, node_annotations):
     return element_overrides if isinstance(element_overrides, dict) else {}
 
 
+def _node_merge_groups(node_id, node_annotations):
+    if not node_id:
+        return []
+    nodes = node_annotations.get("nodes", {}) if isinstance(node_annotations, dict) else {}
+    node = nodes.get(node_id, {}) if isinstance(nodes, dict) else {}
+    groups = node.get("merge_groups", []) if isinstance(node, dict) else []
+    return groups if isinstance(groups, list) else []
+
+
 def _has_node_group_overrides(node_id, node_annotations):
     return bool(_node_group_overrides(node_id, node_annotations))
 
@@ -1165,6 +1174,84 @@ def normalize_fragmented_stitches(classified):
     return normalized
 
 
+def _path_endpoints(p):
+    pts = []
+    for item in p.get("items", []):
+        if not item:
+            continue
+        if item[0] == "l" and len(item) >= 3:
+            pts.extend([item[1], item[2]])
+        elif item[0] == "c" and len(item) >= 5:
+            pts.extend([item[1], item[4]])
+    if not pts and p.get("rect"):
+        r = fitz.Rect(p["rect"])
+        pts = [fitz.Point(r.x0, r.y0), fitz.Point(r.x1, r.y1)]
+    return pts
+
+
+def apply_explicit_merges(classified, node_id, node_annotations):
+    """User-declared merges: fuse the exact elements named in a merge group into one
+    straight line, ignoring gap distance. Bound to the group's role, so the merged line
+    renders in that role's style. This is the manual escape hatch for fragments too far
+    apart for the automatic same-role stitch merge to reach.
+    """
+    groups = _node_merge_groups(node_id, node_annotations)
+    if not groups:
+        return classified
+
+    by_key = {}
+    for idx, (_role, p) in enumerate(classified):
+        for k in (p.get("_vse_elem_keys") or [p.get("_vse_elem_key")]):
+            if k and k not in by_key:
+                by_key[k] = idx
+
+    consumed = set()
+    merged_out = []
+    for g in groups:
+        keys = [str(k) for k in (g.get("elem_keys") or []) if str(k)]
+        role = normalize_active_role(g.get("role") or "")
+        members = [by_key[k] for k in keys if k in by_key and by_key[k] not in consumed]
+        members = list(dict.fromkeys(members))
+        if len(members) < 2 or not role:
+            continue
+        member_paths = [classified[i][1] for i in members]
+        pts = []
+        for mp in member_paths:
+            pts.extend(_path_endpoints(mp))
+        if len(pts) < 2:
+            continue
+        # The two farthest-apart endpoints define the merged line (works for
+        # horizontal, vertical and diagonal runs alike).
+        p0, p1, best = pts[0], pts[1], -1.0
+        for a in range(len(pts)):
+            for b in range(a + 1, len(pts)):
+                d = (pts[a].x - pts[b].x) ** 2 + (pts[a].y - pts[b].y) ** 2
+                if d > best:
+                    best, p0, p1 = d, pts[a], pts[b]
+        source = dict(member_paths[0])
+        source["items"] = [("l", fitz.Point(p0.x, p0.y), fitz.Point(p1.x, p1.y))]
+        source["rect"] = fitz.Rect(min(p0.x, p1.x), min(p0.y, p1.y), max(p0.x, p1.x), max(p0.y, p1.y))
+        source["closePath"] = False
+        source["fill"] = None
+        elem_keys, group_keys = _merge_trace_identity(member_paths)
+        source["_vse_elem_keys"] = elem_keys
+        source["_vse_group_keys"] = group_keys
+        if elem_keys:
+            source["_vse_elem_key"] = elem_keys[0]
+        if group_keys:
+            source["_vse_group_key"] = group_keys[0]
+        source["_vse_manual_role_override"] = True
+        source["_vse_final_role"] = role
+        merged_out.append((role, source))
+        consumed.update(members)
+
+    if not consumed:
+        return classified
+    result = [rp for i, rp in enumerate(classified) if i not in consumed]
+    result.extend(merged_out)
+    return result
+
+
 _CONTOUR_ROLES = frozenset(("contour_outer", "contour_cut", "contour_fold", "contour_hidden"))
 
 
@@ -1371,7 +1458,12 @@ def sanitize_color_role_conflicts(render_classified):
             dashes = p.get("dashes")
             is_dashed = bool(dashes) and str(dashes) not in ("[] 0", "[]", "")
             if role in {"stitch_thru", "stitch_edge"}:
-                fixed = normalize_stitch_role(role, is_dashed)
+                # A manual role assignment is the user's explicit intent, so do not
+                # renormalize it back by dash pattern. This is what lets a fragmented
+                # through-stitch be unified: tag the solid end-caps stitch_thru and they
+                # survive to the merge pass instead of being forced to stitch_edge here.
+                if not p.get("_vse_manual_role_override"):
+                    fixed = normalize_stitch_role(role, is_dashed)
             else:
                 fixed = "stitch_thru" if is_dashed else "stitch_edge"
         result.append((fixed, p))
@@ -1804,6 +1896,7 @@ def standardize(ai_path, svg_out, elem_overrides=None):
         p["_vse_final_role"] = role
         classified.append((role, p))
     classified = normalize_fragmented_stitches(classified)
+    classified = apply_explicit_merges(classified, node_id, node_annotations)
 
     render_classified = []
     zipper_paths = []
