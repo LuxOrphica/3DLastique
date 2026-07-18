@@ -418,14 +418,19 @@ function cssAttrEscape(value) {
   return String(value ?? "").replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
 
-function buildSvgOverrideCss({ roleOverrides, elemOverrides, selectedElemKey, singleOverride }) {
-  const shapeSel = "path, line, polyline, polygon, rect, circle, ellipse";
+function buildSvgOverrideCss({ roleOverrides, elemOverrides, selectedElemKey, singleOverride, mergeSelectedKeys }) {
+  const shapeTags = ["path", "line", "polyline", "polygon", "rect", "circle", "ellipse"];
+  // Scope every shape tag as a descendant of the key selector AND match the keyed
+  // element itself. Writing `[key] path, line, polyline, …` would leave line/polyline/…
+  // as BARE selectors matching every such shape in the SVG — which turned whole
+  // drawings blue when a rect-heavy node was selected.
+  const scoped = base => [base, ...shapeTags.map(t => `${base} ${t}`)].join(",\n");
+
   const groupRules = Object.entries(roleOverrides || {}).map(([groupKey, newRole]) => {
     const ds = resolveDisplayStyle({}, newRole);
     const g = cssAttrEscape(groupKey);
     return `
-[data-group-key="${g}"],
-[data-group-key="${g}"] ${shapeSel} {
+${scoped(`[data-group-key="${g}"]`)} {
   stroke: ${ds.stroke} !important;
   stroke-width: ${ds.width} !important;
   stroke-dasharray: ${ds.dasharray === "none" ? "none" : ds.dasharray} !important;
@@ -437,8 +442,7 @@ function buildSvgOverrideCss({ roleOverrides, elemOverrides, selectedElemKey, si
     const ds = resolveDisplayStyle({}, newRole);
     const e = cssAttrEscape(elemKey);
     return `
-[data-elem-key="${e}"],
-[data-elem-key="${e}"] ${shapeSel} {
+${scoped(`[data-elem-key="${e}"]`)} {
   stroke: ${ds.stroke} !important;
   stroke-width: ${ds.width} !important;
   stroke-dasharray: ${ds.dasharray === "none" ? "none" : ds.dasharray} !important;
@@ -450,8 +454,7 @@ function buildSvgOverrideCss({ roleOverrides, elemOverrides, selectedElemKey, si
     const ds = resolveDisplayStyle({}, singleOverride.newRole);
     const e = cssAttrEscape(selectedElemKey);
     return `
-[data-elem-key="${e}"],
-[data-elem-key="${e}"] ${shapeSel} {
+${scoped(`[data-elem-key="${e}"]`)} {
   stroke: ${ds.stroke} !important;
   stroke-width: ${ds.width} !important;
   stroke-dasharray: ${ds.dasharray === "none" ? "none" : ds.dasharray} !important;
@@ -459,7 +462,20 @@ function buildSvgOverrideCss({ roleOverrides, elemOverrides, selectedElemKey, si
 }`;
   })() : "";
 
-  return [groupRules, elemRules, singleRule].filter(Boolean).join("\n");
+  // Highlight for merge selection — keyed so it hits the visible SVG. Gold #C8A84B is
+  // the app's selection accent. Recolor + a soft gold glow only: no stroke-width bump
+  // (it looked too fat on thin lines) and no opacity override (that would light up
+  // faint layers). The element keeps its own thickness and dash.
+  const mergeSelRule = (mergeSelectedKeys || []).map(k => {
+    const e = cssAttrEscape(k);
+    return `
+${scoped(`[data-elem-key="${e}"]`)} {
+  stroke: #C8A84B !important;
+  filter: drop-shadow(0 0 2px #C8A84B) drop-shadow(0 0 2px #C8A84B) !important;
+}`;
+  }).join("\n");
+
+  return [groupRules, elemRules, singleRule, mergeSelRule].filter(Boolean).join("\n");
 }
 
 function injectSvgOverrideStyle(svgText, cssText) {
@@ -531,7 +547,7 @@ function isTraceIgnored(el) {
 }
 
 // Zoomable SVG panel — plain <img> for display, CSS overlay for highlight
-function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides, elemOverrides, selectedElemKey, selectedElemIndex, singleOverride, onElementClick }) {
+function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides, elemOverrides, selectedElemKey, selectedElemIndex, singleOverride, onElementClick, mergeSelectedKeys }) {
   const wrapRef  = useRef(null);
   const hlRef    = useRef(null); // ref to query SVG elements
   const [svgHtml, setSvgHtml] = useState(""); // SVG content managed by React
@@ -594,19 +610,22 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
     if (!hlRef.current || !ready) return;
     const els = [...hlRef.current.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
       .filter(el => !el.closest("defs"));
+    const mergeSet = new Set(mergeSelectedKeys || []);
     els.forEach((p, idx) => {
       const byKey = selectedElemKey && p.getAttribute("data-elem-key") === selectedElemKey;
       const byIndex = !selectedElemKey && Number.isInteger(selectedElemIndex) && idx === selectedElemIndex;
       if (byKey || byIndex) p.setAttribute("data-selected", "1");
       else p.removeAttribute("data-selected");
+      if (mergeSet.size && mergeSet.has(p.getAttribute("data-elem-key"))) p.setAttribute("data-merge-sel", "1");
+      else p.removeAttribute("data-merge-sel");
     });
-  }, [selectedElemKey, selectedElemIndex, svgHtml, ready]);
+  }, [selectedElemKey, selectedElemIndex, svgHtml, ready, mergeSelectedKeys]);
 
   const displayHtml = useMemo(() => {
     if (mode !== "std") return svgHtml;
-    const cssText = buildSvgOverrideCss({ roleOverrides, elemOverrides, selectedElemKey, singleOverride });
+    const cssText = buildSvgOverrideCss({ roleOverrides, elemOverrides, selectedElemKey, singleOverride, mergeSelectedKeys });
     return injectSvgOverrideStyle(svgHtml, cssText);
-  }, [svgHtml, mode, roleOverrides, elemOverrides, selectedElemKey, singleOverride]);
+  }, [svgHtml, mode, roleOverrides, elemOverrides, selectedElemKey, singleOverride, mergeSelectedKeys]);
   const [scale, setScale]     = useState(1);
   const [pan,   setPan]       = useState({ x: 0, y: 0 });
   // Set of path indices that should be highlighted (index into `els` query)
@@ -779,6 +798,7 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
     onElementClick({
       role,
       idx,
+      addToSelection: e.shiftKey || e.ctrlKey || e.metaKey,
       elemKey: path.getAttribute("data-elem-key") || "",
       groupKey: path.getAttribute("data-group-key") || "",
       pathD: path.getAttribute("d") || path.getAttribute("points") || "",
@@ -1264,6 +1284,11 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
   // and the table always wrote a group override — two mechanisms with no visible
   // difference. Now the scope is one explicit choice at the point of editing.
   const [selectedScope, setSelectedScope] = useState("element");
+  // Shift-click accumulates elements here; the merge bar fuses them into one line
+  // regardless of distance, bound to a role (см. apply_explicit_merges в engine.py).
+  const [mergeSelection, setMergeSelection] = useState([]);
+  const [mergeRole, setMergeRole] = useState("stitch_thru");
+  const [merging, setMerging] = useState(false);
   const [saveStatus, setSaveStatus] = useState({ state: "idle", message: "" });
   const [saving, setSaving] = useState(false);
   const [contractOpen, setContractOpen] = useState(false);
@@ -1608,6 +1633,31 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     }
   }, [selectedEl, selectedState]);
 
+  // Default the merge role to the shared role of the selection, when they agree.
+  useEffect(() => {
+    if (!mergeSelection.length) return;
+    const roles = [...new Set(mergeSelection.map(m => m.role).filter(Boolean))];
+    if (roles.length === 1) setMergeRole(roles[0]);
+  }, [mergeSelection]);
+
+  // Clear a stale merge selection when switching nodes.
+  useEffect(() => { setMergeSelection([]); }, [activeId]);
+
+  // Esc drops any selection (merge set + single element). Functional updates keep the
+  // listener stable, so it's registered once. Ignored while typing in a field.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key !== "Escape") return;
+      const tag = (e.target?.tagName || "").toLowerCase();
+      if (tag === "input" || tag === "textarea") return;
+      setMergeSelection(prev => (prev.length ? [] : prev));
+      setSelectedEl(prev => (prev ? null : prev));
+      setSingleOverride(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   const hoveredGroup = hoveredRowKey ? semanticRows.find(row => (row.rowKey || row.mapKey) === hoveredRowKey) || null : null;
   const hoveredEntry = hoveredGroup
     ? {
@@ -1695,6 +1745,57 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     }
   };
 
+  const applyMerge = async () => {
+    const elem_keys = [...new Set(mergeSelection.map(m => m.elemKey).filter(Boolean))];
+    if (!activeId || elem_keys.length < 2) return;
+    setMerging(true);
+    setSaveStatus({ state: "building", message: "Объединяю…" });
+    try {
+      // Merge-only save: the endpoint leaves role overrides untouched when they are
+      // absent, so this does not disturb pending or saved role edits.
+      const merge_groups = [...(nodeState?.merge_groups || []), { elem_keys, role: mergeRole }];
+      const putRes = await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ merge_groups }),
+      });
+      if (!putRes.ok) throw new Error(`PUT failed: HTTP ${putRes.status}`);
+      const regenRes = await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
+      const regenData = await regenRes.json();
+      if (!regenRes.ok || regenData?.ok === false) throw new Error(regenData?.error || `Regenerate failed: HTTP ${regenRes.status}`);
+      clearNodeCache("");
+      onNodeUpdated?.();
+      await refreshNodeState();
+      setMergeSelection([]);
+      setSaveStatus({ state: "ok", message: "Объединено, нод пересобран." });
+    } catch (err) {
+      setSaveStatus({ state: "error", message: String(err?.message || err) });
+    } finally {
+      setMerging(false);
+    }
+  };
+
+  const removeMergeGroup = async (idx) => {
+    if (!activeId) return;
+    setMerging(true);
+    try {
+      const merge_groups = (nodeState?.merge_groups || []).filter((_, i) => i !== idx);
+      await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
+        method: "PUT", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ merge_groups }),
+      });
+      await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
+      clearNodeCache("");
+      onNodeUpdated?.();
+      await refreshNodeState();
+      setSaveStatus({ state: "ok", message: "Объединение снято." });
+    } catch (err) {
+      setSaveStatus({ state: "error", message: String(err?.message || err) });
+    } finally {
+      setMerging(false);
+    }
+  };
+
   return (
     <div className="vse-compare">
       <div className="vse-node-picker">
@@ -1736,13 +1837,62 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
           <div className="vse-panels-sticky">
             <div className="vse-dual-panels">
               <ZoomableSvgPanel url={node.origSvg + "?t=" + buildTs} label="ОРИГИНАЛ" hdrClass="orig" hoveredEntry={hoveredEntry} mode="orig" svgPrefix={`${activeId}_orig`} />
-              <ZoomableSvgPanel url={node.stdSvg + "?t=" + buildTs} label="СТАНДАРТ" hdrClass="std" hoveredEntry={hoveredEntry} mode="std" svgPrefix={`${activeId}_std`} roleOverrides={groupDrafts} elemOverrides={elementDrafts} selectedElemKey={selectedEl?.elemKey || selectedState?.elem_key || ""} selectedElemIndex={selectedEl?.idx ?? null} singleOverride={singleOverride} onElementClick={el => { setSelectedEl(el); setSingleOverride(null); setSelectedScope("element"); }} />
+              <ZoomableSvgPanel url={node.stdSvg + "?t=" + buildTs} label="СТАНДАРТ" hdrClass="std" hoveredEntry={hoveredEntry} mode="std" svgPrefix={`${activeId}_std`} roleOverrides={groupDrafts} elemOverrides={elementDrafts} selectedElemKey={selectedEl?.elemKey || selectedState?.elem_key || ""} selectedElemIndex={selectedEl?.idx ?? null} singleOverride={singleOverride} mergeSelectedKeys={mergeSelection.map(m => m.elemKey)} onElementClick={el => {
+                if (el.addToSelection && el.elemKey) {
+                  setMergeSelection(prev => {
+                    // Seed from the current single selection so the natural flow
+                    // "click A, Ctrl+click B" ends up with both in the set, not just B.
+                    let base = prev;
+                    if (!prev.length && selectedEl?.elemKey && selectedEl.elemKey !== el.elemKey) {
+                      base = [{ elemKey: selectedEl.elemKey, role: selectedEl.role, pathD: selectedEl.pathD }];
+                    }
+                    return base.some(m => m.elemKey === el.elemKey)
+                      ? base.filter(m => m.elemKey !== el.elemKey)
+                      : [...base, { elemKey: el.elemKey, role: el.role, pathD: el.pathD }];
+                  });
+                  // Fold the single selection into the merge set — drop its own UI.
+                  setSelectedEl(null); setSingleOverride(null);
+                  return;
+                }
+                setSelectedEl(el); setSingleOverride(null); setSelectedScope("element");
+              }} />
             </div>
           </div>
 
           <div className="vse-annotate-right-sticky">
             <div className="vse-annotate-right">
               {nodeStateError && <div className="vse-empty-roles"><strong>Ошибка загрузки node-state.</strong><span>{nodeStateError}</span></div>}
+              {(mergeSelection.length > 0 || (nodeState?.merge_groups || []).length > 0) && (
+                <div style={{display:"flex",flexDirection:"column",gap:6,padding:"8px 10px",margin:"0 0 8px",background:"rgba(200,168,75,0.14)",border:"1px solid #C8A84B",borderRadius:6}}>
+                  {mergeSelection.length > 0 && (
+                    <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                      <span style={{fontSize:12,fontWeight:600,color:"#C8A84B"}}>Для объединения: {mergeSelection.length}</span>
+                      <span style={{fontSize:11,color:"#7a8794"}}>роль:</span>
+                      <select className="vse-role-sel-sm" value={choiceKeyForRole(roleCatalog, mergeRole)} onChange={e => setMergeRole(roleForChoice(roleCatalog, e.target.value))}>
+                        <RoleOptions roleCatalog={roleCatalog} />
+                      </select>
+                      <button type="button" onClick={applyMerge} disabled={merging || mergeSelection.length < 2}
+                        style={{fontSize:12,fontWeight:600,padding:"4px 10px",borderRadius:4,border:"none",background:"#C8A84B",color:"#fff",cursor:merging||mergeSelection.length<2?"default":"pointer",opacity:mergeSelection.length<2?0.5:1}}>
+                        {merging ? "Объединяю…" : "Объединить"}
+                      </button>
+                      <button type="button" onClick={() => setMergeSelection([])} disabled={merging}
+                        style={{fontSize:12,padding:"4px 8px",borderRadius:4,border:"1px solid #5c7180",background:"transparent",color:"#C8A84B",cursor:"pointer"}}>Очистить</button>
+                      <span style={{fontSize:11,color:"#7a8794"}}>Ctrl/Shift-клик по фрагментам · Esc — снять</span>
+                    </div>
+                  )}
+                  {(nodeState?.merge_groups || []).length > 0 && (
+                    <div style={{display:"flex",flexDirection:"column",gap:3}}>
+                      {(nodeState.merge_groups).map((g, i) => (
+                        <div key={i} style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180"}}>
+                          <span>Объединено {g.elem_keys?.length || 0} → {roleLabel(roleCatalog, g.role)}</span>
+                          <button type="button" title="Снять объединение" onClick={() => removeMergeGroup(i)} disabled={merging}
+                            style={{fontSize:11,padding:"1px 6px",borderRadius:3,border:"1px solid #b06a5a",background:"transparent",color:"#b06a5a",cursor:"pointer"}}>✕ снять</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
               {groups.length > 0 ? (
                 <div className="vse-node-styles">
                   <div className="vse-node-styles-hdr"><span>Наведи на строку: подсветка на оригинале и стандарте</span><span>Роли из node-state</span><span className="vse-assign-progress">{assignedCount} / {groups.length}</span></div>
