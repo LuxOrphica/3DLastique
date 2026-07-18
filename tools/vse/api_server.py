@@ -651,6 +651,7 @@ def _build_node_state(node_id):
         "review_status": review_status,
         "groups": list(grouped.values()),
         "elements": elements,
+        "merge_groups": node_ann.get("merge_groups", []) if isinstance(node_ann, dict) else [],
         "operation_codes": operation_codes,
         "warnings": top_warnings,
     }
@@ -1130,49 +1131,73 @@ def put_node_annotations(node_id):
     manifest = _load_manifest_index()
     node_id, _ = _canonical_node_id(node_id, manifest)
     body = request.get_json(force=True) or {}
-    group_overrides = body.get("group_overrides") or {}
-    element_overrides = body.get("element_overrides") or {}
+    # None for any field = leave it untouched, so a merge-only save does not wipe role
+    # overrides and vice versa.
+    group_overrides = body.get("group_overrides")
+    element_overrides = body.get("element_overrides")
     review_status = body.get("review_status")
-    if not isinstance(group_overrides, dict) or not isinstance(element_overrides, dict):
-        return jsonify({"ok": False, "error": "group_overrides and element_overrides must be objects"}), 400
+    merge_groups = body.get("merge_groups")
+    if group_overrides is not None and not isinstance(group_overrides, dict):
+        return jsonify({"ok": False, "error": "group_overrides must be an object"}), 400
+    if element_overrides is not None and not isinstance(element_overrides, dict):
+        return jsonify({"ok": False, "error": "element_overrides must be an object"}), 400
+    if merge_groups is not None and not isinstance(merge_groups, list):
+        return jsonify({"ok": False, "error": "merge_groups must be an array"}), 400
     if review_status is not None and review_status not in ("approved", "complex", "pending"):
         return jsonify({"ok": False, "error": "review_status must be approved, complex, or pending"}), 400
     current_state = _build_node_state(node_id)
     data = _load_node_annotations()
     node = _ensure_node_bucket(data, node_id)
     timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-    normalized_groups = {}
-    for group_key, payload in group_overrides.items():
-        if not isinstance(payload, dict):
-            continue
-        role = payload.get("role")
-        if role in (None, ""):
-            continue
-        normalized_groups[str(group_key)] = {
-            "role": role,
-            "key_strs": sorted(set(str(k) for k in (payload.get("key_strs") or []) if str(k).strip())),
-            "updated_at": payload.get("updated_at") or timestamp,
-            **({"from_role": payload.get("from_role")} if payload.get("from_role") else {}),
-        }
-    normalized_elements = {}
-    for elem_key, payload in element_overrides.items():
-        if not isinstance(payload, dict):
-            continue
-        role = payload.get("role")
-        if role in (None, ""):
-            continue
-        prefix = str(payload.get("path_d_prefix") or "")[:80]
-        normalized_elements[str(elem_key)] = {
-            "role": role,
-            "path_d_prefix": prefix,
-            "updated_at": payload.get("updated_at") or timestamp,
-            **({"from_role": payload.get("from_role")} if payload.get("from_role") else {}),
-        }
     node["source_hash"] = current_state.get("source_hash", "")
     node["identity_version"] = IDENTITY_VERSION
     node["extraction_version"] = EXTRACTION_VERSION
-    node["group_overrides"] = normalized_groups
-    node["element_overrides"] = normalized_elements
+    if group_overrides is not None:
+        normalized_groups = {}
+        for group_key, payload in group_overrides.items():
+            if not isinstance(payload, dict):
+                continue
+            role = payload.get("role")
+            if role in (None, ""):
+                continue
+            normalized_groups[str(group_key)] = {
+                "role": role,
+                "key_strs": sorted(set(str(k) for k in (payload.get("key_strs") or []) if str(k).strip())),
+                "updated_at": payload.get("updated_at") or timestamp,
+                **({"from_role": payload.get("from_role")} if payload.get("from_role") else {}),
+            }
+        node["group_overrides"] = normalized_groups
+    if element_overrides is not None:
+        normalized_elements = {}
+        for elem_key, payload in element_overrides.items():
+            if not isinstance(payload, dict):
+                continue
+            role = payload.get("role")
+            if role in (None, ""):
+                continue
+            prefix = str(payload.get("path_d_prefix") or "")[:80]
+            normalized_elements[str(elem_key)] = {
+                "role": role,
+                "path_d_prefix": prefix,
+                "updated_at": payload.get("updated_at") or timestamp,
+                **({"from_role": payload.get("from_role")} if payload.get("from_role") else {}),
+            }
+        node["element_overrides"] = normalized_elements
+    if merge_groups is not None:
+        normalized_merges = []
+        for g in merge_groups:
+            if not isinstance(g, dict):
+                continue
+            keys = sorted({str(k).strip() for k in (g.get("elem_keys") or []) if str(k).strip()})
+            role = g.get("role")
+            if len(keys) < 2 or role in (None, ""):
+                continue
+            normalized_merges.append({
+                "elem_keys": keys,
+                "role": role,
+                "updated_at": g.get("updated_at") or timestamp,
+            })
+        node["merge_groups"] = normalized_merges
     if review_status is not None:
         node["review_status"] = review_status
     node["updated_at"] = timestamp
