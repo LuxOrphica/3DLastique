@@ -286,8 +286,9 @@
       "source_hash": "03194099d2408056ab9c872288ff819913489b00",
       "identity_version": 1,
       "extraction_version": 1,
-      "review_status": "pending",
-      "updated_at": "2026-07-10T19:29:59Z"
+      "review_status": "approved",
+      "updated_at": "2026-07-16T21:30:08Z",
+      "merge_groups": []
     },
     "ac00009": {
       "group_overrides": {},
@@ -397,14 +398,14 @@
         "388d9340ecbb5106": {
           "role": "callout_line",
           "path_d_prefix": "M 88.49 41.88 L 33.98 112.19 L 76.99 165.41",
-          "updated_at": "2026-06-16T17:24:39Z"
+          "updated_at": "2026-07-17T23:02:15Z"
         }
       },
       "source_hash": "3b0e1f4fffa930e6f7ee10156ed0c1e6d9c7017a",
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-06-16T17:24:39Z"
+      "updated_at": "2026-07-17T23:02:15Z"
     },
     "cl00027": {
       "group_overrides": {},
@@ -413,7 +414,7 @@
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-06-16T17:26:48Z"
+      "updated_at": "2026-07-17T23:12:49Z"
     },
     "ac00204_cap_s_half_belt": {
       "group_overrides": {
@@ -448,7 +449,8 @@
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-06-26T14:34:42Z"
+      "updated_at": "2026-07-17T23:00:28Z",
+      "merge_groups": []
     },
     "dc00015": {
       "group_overrides": {},
@@ -575,46 +577,71 @@
           "key_strs": [
             "#1a1a1a|#ffffff|1.5|false"
           ],
-          "updated_at": "2026-06-26T13:34:53Z"
+          "updated_at": "2026-07-18T15:26:39Z"
         }
       },
       "element_overrides": {
         "1e98665d4b8b4e19": {
           "role": "component_half_belt",
           "path_d_prefix": "M 197.98 112.85 C 197.98 112.85 117.48 104.91 108.37 103.95 L 110.08 75.38 L 176",
-          "updated_at": "2026-06-26T13:34:53Z"
+          "updated_at": "2026-07-18T15:26:39Z"
         },
         "ec72924eab080923": {
           "role": "component_half_belt",
           "path_d_prefix": "M 209.89 147.82 L 187.66 150.65 C 187.66 150.65 186.73 130.93 187.75 124.09 C 19",
-          "updated_at": "2026-06-26T13:34:53Z"
+          "updated_at": "2026-07-18T15:26:39Z"
+        },
+        "c3260926e1e86790": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 207.36 142.63 L 207.67 146.11 L 204.19 146.50",
+          "updated_at": "2026-07-18T15:26:39Z"
+        },
+        "d5bfc38f575e0ac9": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 193.16 147.74 L 189.68 148.14 C 189.68 148.14 189.66 146.77 189.65 144.64",
+          "updated_at": "2026-07-18T15:26:39Z"
+        },
+        "b34bbf278d3db696": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 181.30 85.87 C 180.60 84.73 179.97 83.74 179.44 82.91",
+          "updated_at": "2026-07-18T15:26:39Z"
         },
         "da86663ff1bf8df6": {
           "role": "component_half_belt",
           "path_d_prefix": "M 221.11 73.24 L 250.68 73.24 C 251.87 80.38 251.81 103.95 251.81 103.95 L 221.1",
-          "updated_at": "2026-06-26T13:34:53Z"
+          "updated_at": "2026-07-18T15:26:39Z"
         },
         "d4802b702cce89df": {
           "role": "stitch_thru",
           "path_d_prefix": "M 281.06 180.71 L 277.56 180.71",
-          "updated_at": "2026-06-26T13:34:53Z"
+          "updated_at": "2026-07-18T15:26:39Z"
         },
         "439748c5af851e39": {
           "role": "stitch_thru",
           "path_d_prefix": "M 260.98 231.00 L 257.48 230.94",
-          "updated_at": "2026-06-26T13:34:53Z"
+          "updated_at": "2026-07-18T15:26:39Z"
         },
         "d6b0d5500736616e": {
           "role": "stitch_thru",
           "path_d_prefix": "M 90.93 179.40 L 94.43 179.40",
-          "updated_at": "2026-06-26T13:34:53Z"
+          "updated_at": "2026-07-18T15:26:39Z"
         }
       },
       "source_hash": "21e0a92248e8b82ccb928c5efdc6ef2d1ae7547c",
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-06-26T13:34:53Z"
+      "updated_at": "2026-07-18T15:26:59Z",
+      "merge_groups": [
+        {
+          "elem_keys": [
+            "14432f569d76fca6",
+            "d5bfc38f575e0ac9"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-18T15:26:53Z"
+        }
+      ]
     },
     "ac00006": {
       "group_overrides": {},
@@ -781,22 +808,37 @@
     "ac00205_cap_s_half_belt": {
       "group_overrides": {},
       "element_overrides": {
+        "74ba89c9d5af0424": {
+          "role": "contour_outer",
+          "path_d_prefix": "M 31.09 168.42 L 112.43 168.42 C 145.79 165.19 167.04 143.97 167.04 113.81 C 167",
+          "updated_at": "2026-07-17T14:15:10Z"
+        },
         "233d506aca6cb15d": {
           "role": "line_gathered_edge",
           "path_d_prefix": "M 166.59 136.19 C 165.90 135.84 167.73 135.50 168.53 135.83 C 167.73 135.50 163.",
-          "updated_at": "2026-07-14T23:17:30Z"
+          "updated_at": "2026-07-17T14:15:10Z"
+        },
+        "697e300df8c9312c": {
+          "role": "contour_outer",
+          "path_d_prefix": "M 324.60 167.93 L 243.26 167.93 C 209.90 164.70 188.65 143.48 188.65 113.33 C 18",
+          "updated_at": "2026-07-17T14:15:10Z"
         },
         "7dff2f98fffb0cdb": {
           "role": "line_gathered_edge",
           "path_d_prefix": "M 189.10 135.71 C 189.79 135.35 187.96 135.01 187.16 135.35 C 187.96 135.01 192.",
-          "updated_at": "2026-07-14T23:17:30Z"
+          "updated_at": "2026-07-17T14:15:10Z"
+        },
+        "ffaa07d10d211f23": {
+          "role": "construction_line",
+          "path_d_prefix": "M 160.85 130.63 C 160.85 133.09 162.84 135.08 165.29 135.08 C 167.75 135.08 169.",
+          "updated_at": "2026-07-17T14:15:10Z"
         }
       },
       "source_hash": "21b94c8d302863ef8731bd9e94693d4817c440de",
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-07-14T23:17:30Z"
+      "updated_at": "2026-07-17T14:15:10Z"
     },
     "ac00206_cap_s_half_belt": {
       "group_overrides": {
@@ -805,33 +847,48 @@
           "key_strs": [
             "#1a1a1a|none|1.0|false"
           ],
-          "updated_at": "2026-07-14T23:20:48Z"
+          "updated_at": "2026-07-16T22:15:30Z"
         },
         "break_line|#1a1a1a|none|0.8|false": {
           "role": "line_gathered_edge",
           "key_strs": [
             "#1a1a1a|none|0.75|false"
           ],
-          "updated_at": "2026-07-14T23:20:48Z"
+          "updated_at": "2026-07-16T22:15:30Z"
         }
       },
       "element_overrides": {
+        "dbd960a5ca850c95": {
+          "role": "contour_outer",
+          "path_d_prefix": "M 30.01 155.01 L 111.35 155.01 C 144.71 151.78 165.96 130.56 165.96 100.40 C 165",
+          "updated_at": "2026-07-16T22:15:30Z"
+        },
         "a1eef278561671ee": {
           "role": "line_gathered_edge",
           "path_d_prefix": "M 165.51 122.78 C 164.82 122.43 166.65 122.09 167.45 122.42 C 166.65 122.09 162.",
-          "updated_at": "2026-07-14T23:20:48Z"
+          "updated_at": "2026-07-16T22:15:30Z"
+        },
+        "a14908e9cf090c32": {
+          "role": "contour_outer",
+          "path_d_prefix": "M 390.52 154.52 L 309.18 154.52 C 275.82 151.29 254.57 130.07 254.57 99.92 C 254",
+          "updated_at": "2026-07-16T22:15:30Z"
         },
         "53d069c951f3e439": {
           "role": "line_gathered_edge",
           "path_d_prefix": "M 255.02 122.30 C 255.71 121.94 253.88 121.60 253.08 121.94 C 253.88 121.60 258.",
-          "updated_at": "2026-07-14T23:20:48Z"
+          "updated_at": "2026-07-16T22:15:30Z"
+        },
+        "a6c2d3ef47165a95": {
+          "role": "callout_line",
+          "path_d_prefix": "M 226.01 151.01 L 219.16 104.12",
+          "updated_at": "2026-07-16T22:15:30Z"
         }
       },
       "source_hash": "ec193e445fd354f2c3d547f3e077b86f54b4eace",
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-07-14T23:20:48Z"
+      "updated_at": "2026-07-16T22:15:30Z"
     },
     "ac00306_cap_s_visor": {
       "group_overrides": {
@@ -866,6 +923,595 @@
       "extraction_version": 1,
       "review_status": "pending",
       "updated_at": "2026-07-14T23:22:20Z"
+    },
+    "ac00012": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "review_status": "approved"
+    },
+    "cl00031": {
+      "group_overrides": {},
+      "element_overrides": {
+        "c01ee4733e995845": {
+          "role": "break_line",
+          "path_d_prefix": "M 319.72 281.00 L 319.72 476.16 L 144.50 476.25",
+          "updated_at": "2026-07-16T14:27:22Z"
+        }
+      },
+      "source_hash": "458ba443727051e35d25fb21f5ce5a97b187c0b5",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-16T14:27:22Z"
+    },
+    "cl00030": {
+      "group_overrides": {},
+      "element_overrides": {
+        "1c06e28e96440a78": {
+          "role": "break_line",
+          "path_d_prefix": "M 229.28 17.37 L 229.28 215.39 L 52.13 215.39",
+          "updated_at": "2026-07-16T14:31:44Z"
+        }
+      },
+      "source_hash": "a952466d37111bc9f1023e96b6e706f0ec7313c2",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-16T14:31:44Z"
+    },
+    "cl00025": {
+      "group_overrides": {},
+      "element_overrides": {
+        "9f1d56920840fe74": {
+          "role": "break_line",
+          "path_d_prefix": "M 239.30 14.84 L 239.30 213.87 L 56.14 213.87",
+          "updated_at": "2026-07-16T14:32:17Z"
+        }
+      },
+      "source_hash": "77bbb5e53b9eb55b074788e17fcc62608f0fbfbc",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "approved",
+      "updated_at": "2026-07-16T14:32:17Z"
+    },
+    "cl00033": {
+      "group_overrides": {},
+      "element_overrides": {
+        "53d942b17776b4c2": {
+          "role": "break_line",
+          "path_d_prefix": "M 57.50 222.75 L 220.53 222.75 L 220.53 7.92",
+          "updated_at": "2026-07-16T14:32:43Z"
+        }
+      },
+      "source_hash": "cdb758de0caa075c10ea4c52455c3bacfa07149c",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-16T14:32:43Z"
+    },
+    "cl00024": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "584770fe9850b37fbb50541f71480927e36a3192",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "approved",
+      "updated_at": "2026-07-17T23:11:33Z"
+    },
+    "ac00203_cap_s_half_belt": {
+      "group_overrides": {},
+      "element_overrides": {
+        "5febaaa308a81282": {
+          "role": "hw_ring",
+          "path_d_prefix": "M 113.12 175.64 C 113.08 169.44 118.53 164.40 125.27 164.37 C 132.00 164.34 137.",
+          "updated_at": "2026-07-17T22:57:53Z"
+        },
+        "3899c13d50d375c0": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 99.77 232.62 C 99.77 232.62 99.82 231.41 100.01 229.13",
+          "updated_at": "2026-07-17T22:57:53Z"
+        },
+        "b69501c307b090f7": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 103.51 203.35 C 103.71 202.23 103.92 201.08 104.15 199.91",
+          "updated_at": "2026-07-17T22:57:53Z"
+        },
+        "49d4741f52db2342": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 79.33 232.62 C 79.33 232.62 79.38 231.41 79.57 229.13",
+          "updated_at": "2026-07-17T22:57:53Z"
+        },
+        "42e525d33ee2023b": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 240.96 77.92 L 244.46 77.92",
+          "updated_at": "2026-07-17T22:57:53Z"
+        },
+        "c00a718244d4b996": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 245.46 98.80 L 241.96 98.80",
+          "updated_at": "2026-07-17T22:57:53Z"
+        },
+        "8d94186b6e1d8be4": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 199.46 181.49 L 202.96 181.49",
+          "updated_at": "2026-07-17T22:57:53Z"
+        },
+        "307da24d1b40542c": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 270.42 181.44 L 273.92 181.44",
+          "updated_at": "2026-07-17T22:57:53Z"
+        },
+        "ed4ffb1634de7542": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 209.06 233.24 L 205.56 233.24",
+          "updated_at": "2026-07-17T22:57:53Z"
+        }
+      },
+      "source_hash": "8d8a7fab8131d52dfca58d9e8f04d89f845b0304",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-17T22:57:53Z",
+      "merge_groups": [
+        {
+          "elem_keys": [
+            "1207284697066729",
+            "ba9dd7c3a98a3347"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-17T22:50:37Z"
+        },
+        {
+          "elem_keys": [
+            "1207284697066729",
+            "49d4741f52db2342"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-17T22:51:01Z"
+        },
+        {
+          "elem_keys": [
+            "1207284697066729",
+            "49d4741f52db2342"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-17T22:52:02Z"
+        },
+        {
+          "elem_keys": [
+            "6e1505ed86782a61",
+            "fe996f79b80258bc"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-17T22:54:51Z"
+        },
+        {
+          "elem_keys": [
+            "42e525d33ee2023b",
+            "6e1505ed86782a61"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-17T22:55:32Z"
+        }
+      ]
+    },
+    "fh00001": {
+      "group_overrides": {},
+      "element_overrides": {
+        "1220d19ed0be3ea8": {
+          "role": "line_fur",
+          "path_d_prefix": "M 481.96 193.30 C 481.09 191.58 480.10 196.80 480.90 198.83 C 480.10 196.80 471.",
+          "updated_at": "2026-07-16T14:49:13Z"
+        },
+        "6ce33593f7874444": {
+          "role": "line_fur",
+          "path_d_prefix": "M 682.24 152.07 C 673.81 172.69 685.47 143.67 686.40 140.42 C 685.37 144.03 677.",
+          "updated_at": "2026-07-16T14:49:13Z"
+        }
+      },
+      "source_hash": "1bd1b556613c10640115b086fa0fd7dbb9a39f42",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-16T14:49:13Z"
+    },
+    "ac00200_cap_s_half_belt": {
+      "group_overrides": {},
+      "element_overrides": {
+        "ed6bc4f0e44f91da": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 93.81 223.87 C 93.81 223.87 93.86 222.66 94.04 220.38",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "f52a605bfbfe6dc7": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 97.55 194.60 C 97.75 193.48 97.96 192.33 98.18 191.16",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "7bed868f02b7063d": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 73.37 223.87 C 73.37 223.87 73.42 222.66 73.60 220.38",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "77a831c977ee0cc9": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 77.13 194.46 C 77.33 193.34 77.54 192.19 77.77 191.02",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "eee1f522c2b0bbb9": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 74.79 166.19 L 78.29 166.19",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "f694f92080bab57e": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 145.52 166.19 L 149.02 166.19",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "5fe0f027bfd89ed8": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 97.30 220.57 L 100.80 220.57",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "744891f5d439c709": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 145.19 220.57 L 148.69 220.57",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "e80f4bc523c15321": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 182.19 118.24 L 182.50 121.72",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "6b7da54a127ebc25": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 184.84 147.95 L 185.15 151.44 L 181.68 151.88",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "bb5b83b2593c743a": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 172.63 153.02 L 169.16 153.46 C 169.16 153.46 169.14 152.10 169.13 149.96",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "edb470964e0c311d": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 160.97 99.06 C 160.20 98.08 159.50 97.15 158.91 96.23",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "cf1ffceb1d79ef9d": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 237.37 171.81 L 240.87 171.80",
+          "updated_at": "2026-07-16T22:10:53Z"
+        },
+        "0303cfae1ad7c2f9": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 283.52 171.77 L 287.02 171.77",
+          "updated_at": "2026-07-16T22:10:53Z"
+        }
+      },
+      "source_hash": "bf7ae815e6727cd8df39a760838edbb9c968d458",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-16T22:10:53Z"
+    },
+    "ac00010": {
+      "group_overrides": {
+        "unknown|#1a1a1a|none|1.0|false": {
+          "role": "contour_outer",
+          "key_strs": [
+            "#1a1a1a|none|1.0|false"
+          ],
+          "updated_at": "2026-07-17T14:13:25Z"
+        }
+      },
+      "element_overrides": {
+        "c65018eeeedc7663": {
+          "role": "callout_line",
+          "path_d_prefix": "M 163.80 35.33 L 154.05 57.83 Z",
+          "updated_at": "2026-07-17T14:13:25Z"
+        }
+      },
+      "source_hash": "2ae4ae29fa9c23698d8ce440d2d422f7f6281fbd",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-17T14:13:25Z"
+    },
+    "ac00201_cap_s_half_belt": {
+      "group_overrides": {},
+      "element_overrides": {
+        "7e556e55e928b2dd": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 95.79 104.02 C 95.71 106.16 95.67 107.51 95.67 107.51",
+          "updated_at": "2026-07-16T22:16:02Z"
+        }
+      },
+      "source_hash": "bf171a2d4626609c3d04a7294a7cd798da57a66e",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-16T22:16:02Z"
+    },
+    "ac00209_cap_s_half_belt": {
+      "group_overrides": {
+        "fill_white_detail|#d2d2d2|#ffffff|0.5|false": {
+          "role": "line_gathered_edge",
+          "key_strs": [
+            "#d2d2d2|#ffffff|0.5|false",
+            "#d2d2d2|#ffffff|0.5|false|D"
+          ],
+          "updated_at": "2026-07-17T14:55:09Z"
+        },
+        "fill_white_detail|#d2d2d2|#ffffff|0.8|false": {
+          "role": "line_gathered_edge",
+          "key_strs": [
+            "#d2d2d2|#ffffff|0.75|false"
+          ],
+          "updated_at": "2026-07-17T14:55:09Z"
+        }
+      },
+      "element_overrides": {
+        "278fbb1338bc4f54": {
+          "role": "stitch_Bt",
+          "path_d_prefix": "M 88.97 240.48 C 89.41 236.87 90.02 232.53 90.85 227.54",
+          "updated_at": "2026-07-17T14:55:09Z"
+        },
+        "7ee21b623f56b3b2": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 89.26 194.97 L 92.76 194.97",
+          "updated_at": "2026-07-17T14:55:09Z"
+        },
+        "356c451ee05dad3f": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 159.65 249.35 L 163.15 249.35",
+          "updated_at": "2026-07-17T14:55:09Z"
+        },
+        "4b4724653d29bf13": {
+          "role": "line_gathered_edge",
+          "path_d_prefix": "M 301.21 222.24 C 300.10 242.68 303.43 273.06 303.43 222.24 Z",
+          "updated_at": "2026-07-17T14:55:09Z"
+        }
+      },
+      "source_hash": "d613f05c0a86aa2a2638ca5a8cd47abbead673e8",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-17T14:55:09Z",
+      "merge_groups": [
+        {
+          "elem_keys": [
+            "539687f1aaeb0255",
+            "7a1156ab27ee401f"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-17T14:51:13Z"
+        }
+      ]
+    },
+    "ac00202_cap_s_half_belt": {
+      "group_overrides": {},
+      "element_overrides": {
+        "ee8fbcecde4b5800": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 94.42 40.74 L 94.42 37.24 L 97.92 37.24",
+          "updated_at": "2026-07-17T22:48:58Z"
+        },
+        "5ce15579ab708cd5": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 214.26 37.20 L 217.76 37.20",
+          "updated_at": "2026-07-17T22:48:58Z"
+        },
+        "7893cb308164a722": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 174.57 138.30 L 178.07 138.29",
+          "updated_at": "2026-07-17T22:48:58Z"
+        },
+        "2ef80e50f15750a0": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 245.53 138.25 L 249.03 138.25",
+          "updated_at": "2026-07-17T22:48:58Z"
+        },
+        "166907bff68df851": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 233.65 196.06 C 233.61 194.92 233.56 193.75 233.50 192.56",
+          "updated_at": "2026-07-17T22:48:58Z"
+        },
+        "5105d51e97d9c445": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 230.90 166.64 C 230.69 165.40 230.47 164.25 230.25 163.20",
+          "updated_at": "2026-07-17T22:48:58Z"
+        }
+      },
+      "source_hash": "ec54a320173213f82bfd66b8463f3901aff6beed",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "merge_groups": [
+        {
+          "elem_keys": [
+            "12c4d2e94833a215",
+            "4635740ae402671f"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-17T22:42:42Z"
+        },
+        {
+          "elem_keys": [
+            "166907bff68df851",
+            "b5a784bb9e8d15f5"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-17T22:46:14Z"
+        },
+        {
+          "elem_keys": [
+            "166907bff68df851",
+            "5105d51e97d9c445"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-17T22:46:56Z"
+        },
+        {
+          "elem_keys": [
+            "166907bff68df851",
+            "5105d51e97d9c445"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-17T22:47:34Z"
+        },
+        {
+          "elem_keys": [
+            "4bbe00497b6af279",
+            "b6b49e9319e798fe"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-17T22:48:08Z"
+        },
+        {
+          "elem_keys": [
+            "166907bff68df851",
+            "5105d51e97d9c445"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-17T22:49:40Z"
+        }
+      ],
+      "updated_at": "2026-07-17T22:49:40Z",
+      "review_status": "pending"
+    },
+    "cl00026_for_shirt": {
+      "group_overrides": {},
+      "element_overrides": {
+        "5646ac6e90dc6927": {
+          "role": "callout_line",
+          "path_d_prefix": "M 96.78 241.03 L 247.17 241.03 L 247.17 26.20",
+          "updated_at": "2026-07-17T23:12:15Z"
+        }
+      },
+      "source_hash": "9c74ee0dc2bb56717357cf1aeb9aad33aa20ea57",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "approved",
+      "updated_at": "2026-07-17T23:12:15Z"
+    },
+    "cl00017_for_shirt": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "96ee3872dafb21cd9803aeb803abe8f45728628e",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-17T23:13:11Z"
+    },
+    "cl00018_detachable_collar": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "75dee8672490961fd35199d0ec5a3074a65144ba",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-17T23:13:32Z"
+    },
+    "cl00019": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "13ff80ff631403c1360587d2a8295863d809af8a",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "approved",
+      "updated_at": "2026-07-17T23:14:28Z"
+    },
+    "cl00021_for_shirt": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "c3a45e7e7a4a2a0d775035d7ad8f336582c722cc",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-17T23:14:43Z"
+    },
+    "ve00001_horizontal_ventilation": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "review_status": "approved"
+    },
+    "ve00016_horizontal_ventilation": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "review_status": "approved"
+    },
+    "fz00002_without_placket": {
+      "group_overrides": {},
+      "element_overrides": {
+        "49243980109a3a03": {
+          "role": "hw_zipper_tape",
+          "path_d_prefix": "M 100.86 129.54 L 100.86 136.74 L 159.27 136.74 L 159.27 129.54",
+          "updated_at": "2026-07-18T16:39:43Z"
+        }
+      },
+      "source_hash": "5c567b2d8067b77b567de15ee8353c785e437295",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-18T16:39:43Z"
+    },
+    "fp00001_m_knitted": {
+      "group_overrides": {},
+      "element_overrides": {
+        "50b849744d2ec076": {
+          "role": "callout_line",
+          "path_d_prefix": "M 157.08 183.16 L 188.52 183.16",
+          "updated_at": "2026-07-18T16:42:34Z"
+        },
+        "2a93e6a17e200bce": {
+          "role": "callout_line",
+          "path_d_prefix": "M 170.41 180.83 L 165.20 184.99",
+          "updated_at": "2026-07-18T16:42:34Z"
+        },
+        "506aeba5fed5372a": {
+          "role": "callout_line",
+          "path_d_prefix": "M 165.21 180.83 L 159.99 184.99",
+          "updated_at": "2026-07-18T16:42:34Z"
+        },
+        "5a01737f7fae17c2": {
+          "role": "callout_line",
+          "path_d_prefix": "M 485.75 223.76 L 458.08 223.76",
+          "updated_at": "2026-07-18T16:42:34Z"
+        },
+        "c942857aeb17e832": {
+          "role": "callout_line",
+          "path_d_prefix": "M 485.75 199.76 L 458.08 199.76",
+          "updated_at": "2026-07-18T16:42:34Z"
+        },
+        "7e2aa27ab7c4522f": {
+          "role": "callout_line",
+          "path_d_prefix": "M 479.97 197.16 L 479.97 225.87",
+          "updated_at": "2026-07-18T16:42:34Z"
+        }
+      },
+      "source_hash": "5910b2fdda210039fd1bacff8052fe426ce08328",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-18T16:42:34Z"
+    },
+    "sh00050": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "260db20c5175d69ebeaa1e99b6cea7151c8156d8",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "approved",
+      "updated_at": "2026-07-18T16:54:27Z"
+    },
+    "ac00008_remove": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "3fb731b595abbcd9c386b89191e79a858e8d773a",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-07-18T17:46:50Z"
     }
   }
 }
