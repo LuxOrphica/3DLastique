@@ -652,6 +652,7 @@ def _build_node_state(node_id):
         "groups": list(grouped.values()),
         "elements": elements,
         "merge_groups": node_ann.get("merge_groups", []) if isinstance(node_ann, dict) else [],
+        "splits": node_ann.get("splits", []) if isinstance(node_ann, dict) else [],
         "operation_codes": operation_codes,
         "warnings": top_warnings,
     }
@@ -1137,12 +1138,15 @@ def put_node_annotations(node_id):
     element_overrides = body.get("element_overrides")
     review_status = body.get("review_status")
     merge_groups = body.get("merge_groups")
+    splits = body.get("splits")
     if group_overrides is not None and not isinstance(group_overrides, dict):
         return jsonify({"ok": False, "error": "group_overrides must be an object"}), 400
     if element_overrides is not None and not isinstance(element_overrides, dict):
         return jsonify({"ok": False, "error": "element_overrides must be an object"}), 400
     if merge_groups is not None and not isinstance(merge_groups, list):
         return jsonify({"ok": False, "error": "merge_groups must be an array"}), 400
+    if splits is not None and not isinstance(splits, list):
+        return jsonify({"ok": False, "error": "splits must be an array"}), 400
     if review_status is not None and review_status not in ("approved", "complex", "pending"):
         return jsonify({"ok": False, "error": "review_status must be approved, complex, or pending"}), 400
     current_state = _build_node_state(node_id)
@@ -1198,6 +1202,26 @@ def put_node_annotations(node_id):
                 "updated_at": g.get("updated_at") or timestamp,
             })
         node["merge_groups"] = normalized_merges
+    if splits is not None:
+        normalized_splits = []
+        for sp in splits:
+            if not isinstance(sp, dict):
+                continue
+            elem_key = str(sp.get("elem_key") or "").strip()
+            try:
+                x = float(sp.get("x"))
+                y = float(sp.get("y"))
+            except (TypeError, ValueError):
+                continue
+            if not elem_key:
+                continue
+            normalized_splits.append({
+                "elem_key": elem_key,
+                "x": x,
+                "y": y,
+                "updated_at": sp.get("updated_at") or timestamp,
+            })
+        node["splits"] = normalized_splits
     if review_status is not None:
         node["review_status"] = review_status
     node["updated_at"] = timestamp
