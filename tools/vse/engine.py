@@ -165,6 +165,15 @@ def _node_merge_groups(node_id, node_annotations):
     return groups if isinstance(groups, list) else []
 
 
+def _node_splits(node_id, node_annotations):
+    if not node_id:
+        return []
+    nodes = node_annotations.get("nodes", {}) if isinstance(node_annotations, dict) else {}
+    node = nodes.get(node_id, {}) if isinstance(nodes, dict) else {}
+    splits = node.get("splits", []) if isinstance(node, dict) else []
+    return splits if isinstance(splits, list) else []
+
+
 def _has_node_group_overrides(node_id, node_annotations):
     return bool(_node_group_overrides(node_id, node_annotations))
 
@@ -1189,11 +1198,213 @@ def _path_endpoints(p):
     return pts
 
 
+def _lerp(a, b, t):
+    return fitz.Point(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t)
+
+
+def _items_bbox2(items):
+    pts = []
+    for it in items:
+        if it[0] == "l" and len(it) >= 3:
+            pts.extend([it[1], it[2]])
+        elif it[0] == "c" and len(it) >= 5:
+            pts.extend([it[1], it[2], it[3], it[4]])
+    if not pts:
+        return None
+    xs = [p.x for p in pts]
+    ys = [p.y for p in pts]
+    return fitz.Rect(min(xs), min(ys), max(xs), max(ys))
+
+
+def _nearest_on_line(a, b, x, y):
+    dx, dy = b.x - a.x, b.y - a.y
+    L2 = dx * dx + dy * dy
+    if L2 < 1e-9:
+        return 0.0, a, (a.x - x) ** 2 + (a.y - y) ** 2
+    t = ((x - a.x) * dx + (y - a.y) * dy) / L2
+    t = max(0.0, min(1.0, t))
+    px, py = a.x + t * dx, a.y + t * dy
+    return t, fitz.Point(px, py), (px - x) ** 2 + (py - y) ** 2
+
+
+def _cubic_point(p0, c1, c2, p3, t):
+    u = 1 - t
+    x = u * u * u * p0.x + 3 * u * u * t * c1.x + 3 * u * t * t * c2.x + t * t * t * p3.x
+    y = u * u * u * p0.y + 3 * u * u * t * c1.y + 3 * u * t * t * c2.y + t * t * t * p3.y
+    return fitz.Point(x, y)
+
+
+def _nearest_on_cubic(p0, c1, c2, p3, x, y, samples=32):
+    best_t, best_pt, best_d2 = 0.0, p0, float("inf")
+    for k in range(samples + 1):
+        t = k / samples
+        pt = _cubic_point(p0, c1, c2, p3, t)
+        d2 = (pt.x - x) ** 2 + (pt.y - y) ** 2
+        if d2 < best_d2:
+            best_t, best_pt, best_d2 = t, pt, d2
+    return best_t, best_pt, best_d2
+
+
+def _nearest_on_items(items, x, y):
+    """(item_index, t, dist2) of the nearest point on a path to (x, y)."""
+    best = (None, 0.0, float("inf"))
+    for i, it in enumerate(items):
+        if it[0] == "l" and len(it) >= 3:
+            t, _pt, d2 = _nearest_on_line(it[1], it[2], x, y)
+        elif it[0] == "c" and len(it) >= 5:
+            t, _pt, d2 = _nearest_on_cubic(it[1], it[2], it[3], it[4], x, y)
+        else:
+            continue
+        if d2 < best[2]:
+            best = (i, t, d2)
+    return best
+
+
+def _split_cubic(p0, c1, c2, p3, t):
+    """De Casteljau: split one cubic into two, returning both as ('c', …) items."""
+    A = _lerp(p0, c1, t)
+    B = _lerp(c1, c2, t)
+    C = _lerp(c2, p3, t)
+    D = _lerp(A, B, t)
+    E = _lerp(B, C, t)
+    F = _lerp(D, E, t)
+    return ("c", p0, A, D, F), ("c", F, E, C, p3)
+
+
+def _split_items_at(items, item_index, t):
+    it = items[item_index]
+    if it[0] == "l" and len(it) >= 3:
+        p = _lerp(it[1], it[2], t)
+        first = list(items[:item_index]) + [("l", it[1], p)]
+        second = [("l", p, it[2])] + list(items[item_index + 1:])
+        return first, second
+    if it[0] == "c" and len(it) >= 5:
+        c_first, c_second = _split_cubic(it[1], it[2], it[3], it[4], t)
+        first = list(items[:item_index]) + [c_first]
+        second = [c_second] + list(items[item_index + 1:])
+        return first, second
+    return items, []
+
+
+def _split_items_multi(items, points):
+    """Split a path into parts at each (x, y): the part whose nearest point is closest
+    gets split there. Returns a list of item-lists (one per resulting part)."""
+    parts = [items]
+    for (x, y) in points:
+        best = None  # (dist2, part_index, item_index, t)
+        for pi, part in enumerate(parts):
+            ii, t, d2 = _nearest_on_items(part, x, y)
+            if ii is None:
+                continue
+            if best is None or d2 < best[0]:
+                best = (d2, pi, ii, t)
+        if best is None:
+            continue
+        _d2, pi, ii, t = best
+        first, second = _split_items_at(parts[pi], ii, t)
+        if first and second:
+            parts = parts[:pi] + [first, second] + parts[pi + 1:]
+    return parts
+
+
+def apply_explicit_splits(classified, node_id, node_annotations):
+    """User-declared splits: cut an element into separate parts at clicked points, so
+    each part can then carry its own role. Stored per node as splits [{elem_key, x, y}].
+    """
+    splits = _node_splits(node_id, node_annotations)
+    if not splits:
+        return classified
+    by_elem = {}
+    for sp in splits:
+        k = str(sp.get("elem_key") or "")
+        try:
+            x = float(sp.get("x"))
+            y = float(sp.get("y"))
+        except (TypeError, ValueError):
+            continue
+        if k:
+            by_elem.setdefault(k, []).append((x, y))
+    if not by_elem:
+        return classified
+
+    result = []
+    for role, p in classified:
+        ek = str(p.get("_vse_elem_key") or "")
+        pts = by_elem.get(ek)
+        items = [it for it in (p.get("items") or []) if it and it[0] in ("l", "c")]
+        if not pts or not items:
+            result.append((role, p))
+            continue
+        parts = _split_items_multi(items, pts)
+        if len(parts) < 2:
+            result.append((role, p))
+            continue
+        for i, part_items in enumerate(parts):
+            np = dict(p)
+            np["items"] = part_items
+            np["rect"] = _items_bbox2(part_items) or p.get("rect")
+            np["closePath"] = False
+            part_key, part_prefix = compute_elem_key(node_id, f"{ek}|s{i}")
+            np["_vse_elem_key"] = part_key
+            np["_vse_elem_keys"] = [part_key]
+            np["_vse_path_d_prefix"] = part_prefix
+            result.append((role, np))
+    return result
+
+
+def _chain_fragments(fragments):
+    """Join fragments into one continuous item list by nearest endpoints, preserving
+    each fragment's own geometry (curves stay curves). Each next fragment attaches to
+    whichever free end of the growing chain its nearest endpoint reaches, flipped if
+    needed; gaps are bridged with a straight connector. This keeps a curved fragment
+    from being flattened or merged by the wrong end.
+    """
+    chain = list(fragments[0])
+    remaining = [list(f) for f in fragments[1:]]
+    while remaining:
+        ends = _path_start_end({"items": chain})
+        if not ends:
+            break
+        cs, ce = ends
+        best = None  # (dist, idx, reversed, side)
+        for i, f in enumerate(remaining):
+            fe = _path_start_end({"items": f})
+            if not fe:
+                continue
+            fstart, fend = fe
+            for dist, rev, side in (
+                (_pt_dist(ce, fstart), False, "end"),
+                (_pt_dist(ce, fend), True, "end"),
+                (_pt_dist(cs, fend), False, "start"),
+                (_pt_dist(cs, fstart), True, "start"),
+            ):
+                if best is None or dist < best[0]:
+                    best = (dist, i, rev, side)
+        if best is None:
+            break
+        dist, idx, rev, side = best
+        frag = remaining.pop(idx)
+        if rev:
+            frag = _reverse_items(frag)
+        fstart, fend = _path_start_end({"items": frag})
+        if side == "end":
+            if dist > 1e-3:
+                chain.append(("l", ce, fstart))
+            chain.extend(frag)
+        else:
+            pre = list(frag)
+            if dist > 1e-3:
+                pre.append(("l", fend, cs))
+            chain = pre + chain
+    return chain
+
+
 def apply_explicit_merges(classified, node_id, node_annotations):
     """User-declared merges: fuse the exact elements named in a merge group into one
-    straight line, ignoring gap distance. Bound to the group's role, so the merged line
-    renders in that role's style. This is the manual escape hatch for fragments too far
-    apart for the automatic same-role stitch merge to reach.
+    continuous line, ignoring gap distance, bound to the group's role. Fragments are
+    chained by nearest endpoints so curved pieces keep their shape and join at the right
+    ends. This is the manual escape hatch for fragments too far apart for the automatic
+    same-role stitch merge to reach.
     """
     groups = _node_merge_groups(node_id, node_annotations)
     if not groups:
@@ -1215,22 +1426,24 @@ def apply_explicit_merges(classified, node_id, node_annotations):
         if len(members) < 2 or not role:
             continue
         member_paths = [classified[i][1] for i in members]
-        pts = []
+        fragments = []
         for mp in member_paths:
-            pts.extend(_path_endpoints(mp))
-        if len(pts) < 2:
+            items = [it for it in (mp.get("items") or []) if it and it[0] in ("l", "c")]
+            if not items:
+                eps = _path_endpoints(mp)
+                if len(eps) >= 2:
+                    items = [("l", eps[0], eps[-1])]
+            if items:
+                fragments.append(items)
+        if len(fragments) < 2:
             continue
-        # The two farthest-apart endpoints define the merged line (works for
-        # horizontal, vertical and diagonal runs alike).
-        p0, p1, best = pts[0], pts[1], -1.0
-        for a in range(len(pts)):
-            for b in range(a + 1, len(pts)):
-                d = (pts[a].x - pts[b].x) ** 2 + (pts[a].y - pts[b].y) ** 2
-                if d > best:
-                    best, p0, p1 = d, pts[a], pts[b]
+        merged_items = _chain_fragments(fragments)
+        bbox = _items_bbox2(merged_items)
+        if bbox is None:
+            continue
         source = dict(member_paths[0])
-        source["items"] = [("l", fitz.Point(p0.x, p0.y), fitz.Point(p1.x, p1.y))]
-        source["rect"] = fitz.Rect(min(p0.x, p1.x), min(p0.y, p1.y), max(p0.x, p1.x), max(p0.y, p1.y))
+        source["items"] = merged_items
+        source["rect"] = bbox
         source["closePath"] = False
         source["fill"] = None
         elem_keys, group_keys = _merge_trace_identity(member_paths)
@@ -1896,6 +2109,7 @@ def standardize(ai_path, svg_out, elem_overrides=None):
         p["_vse_final_role"] = role
         classified.append((role, p))
     classified = normalize_fragmented_stitches(classified)
+    classified = apply_explicit_splits(classified, node_id, node_annotations)
     classified = apply_explicit_merges(classified, node_id, node_annotations)
 
     render_classified = []
