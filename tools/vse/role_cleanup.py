@@ -36,7 +36,6 @@ RARE_ROLES_TO_UNKNOWN = frozenset({
     "boundary_zone",
     "dim_line",
     "fill_binding",
-    "hw_buckle",
     "hw_buckle_fill",
     "hw_button",
     "hw_buttonhole",

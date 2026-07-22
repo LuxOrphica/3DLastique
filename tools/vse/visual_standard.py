@@ -184,11 +184,11 @@ ROLE_STYLES = {
         "_label": "Тесьма / лента",
     },
     "fill_elastic": {
-        "stroke":           "#666666",
-        "stroke-width":     "0.5",
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "1.0",
         "stroke-dasharray": "none",
         "fill":             "#8F9092",
-        "opacity":          "0.75",
+        "opacity":          "1",
         "_label": "Резинка / elastic band",
     },
     "material_sweat_band": {
@@ -311,6 +311,16 @@ ROLE_STYLES = {
         "stroke-linejoin":  "round",
         "opacity":          "1",
         "_label": "Петля / рамка",
+    },
+    "hw_buckle": {
+        "stroke":           "#1A1A1A",
+        "stroke-width":     "1.5",
+        "stroke-dasharray": "none",
+        "fill":             "#3A3A3A",
+        "stroke-linecap":   "butt",
+        "stroke-linejoin":  "round",
+        "opacity":          "1",
+        "_label": "Пряжка / buckle",
     },
     # ── Аннотации ─────────────────────────────────────────────────────────────
     "break_line": {

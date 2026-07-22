@@ -586,6 +586,17 @@
       "legacy_roles": [
         "component_visor"
       ]
+    },
+    "hw_buckle": {
+      "role_id": "hardware.buckle.frame",
+      "label_ru": "Пряжка",
+      "family": "hardware",
+      "entity_type": "component",
+      "object_role": "hardware.buckle",
+      "part_role": "hardware.buckle.frame",
+      "legacy_roles": [
+        "hw_buckle"
+      ]
     }
   },
   "role_choices": [
@@ -870,6 +881,12 @@
       "label_ru": "Неизвестно",
       "group": "Прочее",
       "role": "unknown"
+    },
+    {
+      "choice_key": "hardware.buckle",
+      "label_ru": "Пряжка",
+      "group": "Фурнитура",
+      "role": "hw_buckle"
     }
   ],
   "annotation_phrase_rules": [
