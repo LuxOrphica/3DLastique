@@ -21,7 +21,7 @@ const ROLE_STYLES = {
   fill_dark_fabric:    { stroke: "#888888", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_contrast:       { stroke: "#B54422", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   fill_tape:           { stroke: "#777777", "stroke-width": "0.5",  "stroke-dasharray": "none" },
-  fill_elastic:        { stroke: "#666666", "stroke-width": "0.5",  "stroke-dasharray": "none" },
+  fill_elastic:        { stroke: "#1A1A1A", "stroke-width": "1.0",  "stroke-dasharray": "none", fill: "#8F9092" },
   material_sweat_band: { stroke: "#666666", "stroke-width": "0.5",  "stroke-dasharray": "none" },
   component_half_belt: { stroke: "#1A1A1A", "stroke-width": "0.75", "stroke-dasharray": "none" },
   component_visor:     { stroke: "#1A1A1A", "stroke-width": "1.5",  "stroke-dasharray": "none" },
@@ -40,6 +40,7 @@ const ROLE_STYLES = {
   hw_zipper_tape:      { stroke: "#1D1C1A", "stroke-width": "1.0",  "stroke-dasharray": "none" },
   hw_ring:             { stroke: "#1A1A1A", "stroke-width": "6.5",  "stroke-dasharray": "none" },
   hw_loop:             { stroke: "#1A1A1A", "stroke-width": "4.5",  "stroke-dasharray": "none" },
+  hw_buckle:           { stroke: "#1A1A1A", "stroke-width": "1.5",  "stroke-dasharray": "none", fill: "#3A3A3A" },
   // Аннотации
   callout_line:        { stroke: "#333333", "stroke-width": "0.6",  "stroke-dasharray": "none" },
   callout_zoom:        { stroke: "#1B4FA8", "stroke-width": "0.75", "stroke-dasharray": "none" },
@@ -60,7 +61,7 @@ const ROLE_GROUPS = [
   { label: "Строчки / швы", roles: ["seam_line", "stitch_edge", "stitch_thru", "stitch_Bt", "stitch_symbol"] },
   { label: "Материалы и слои", roles: ["boundary_fragment", "boundary_interlining", "fill_interlining", "fill_fabric", "fill_fabric_gray", "fill_dark_fabric", "fill_contrast", "fill_shape", "component_half_belt", "fill_white_detail", "fill_material_mask"] },
   { label: "Ленты, резинки, шнуры", roles: ["fill_tape", "fill_elastic", "material_sweat_band", "line_elastic", "fill_cord", "fill_pu_tape", "fill_piping", "fill_glue", "line_fur", "line_gathered_edge"] },
-  { label: "Фурнитура", roles: ["hw_zipper", "hw_zipper_tape", "hw_ring", "hw_loop", "fill_velcro", "fill_velcro_hook", "fill_velcro_loop"] },
+  { label: "Фурнитура", roles: ["hw_zipper", "hw_zipper_tape", "hw_ring", "hw_loop", "hw_buckle", "fill_velcro", "fill_velcro_hook", "fill_velcro_loop"] },
   { label: "Выноски и обозначения", roles: ["callout_line", "callout_zoom", "arrow", "label"] },
   { label: "Прочее", roles: ["unknown"] },
 ];
@@ -73,7 +74,7 @@ const ROLE_GROUPS_UI = [
   { label: "Строчки / швы", roles: ["seam_line", "stitch_edge", "stitch_thru", "stitch_Bt", "stitch_symbol"] },
   { label: "Материалы и слои", roles: ["boundary_fragment", "boundary_interlining", "fill_interlining", "fill_fabric", "fill_fabric_gray", "fill_dark_fabric", "fill_contrast", "fill_shape", "component_half_belt", "fill_white_detail", "fill_material_mask"] },
   { label: "Ленты, резинки, шнуры", roles: ["fill_tape", "fill_elastic", "material_sweat_band", "line_elastic", "fill_cord", "fill_pu_tape", "fill_piping", "fill_glue", "line_fur", "line_gathered_edge"] },
-  { label: "Фурнитура", roles: ["hw_zipper", "hw_zipper_tape", "hw_ring", "hw_loop", "fill_velcro", "fill_velcro_hook", "fill_velcro_loop"] },
+  { label: "Фурнитура", roles: ["hw_zipper", "hw_zipper_tape", "hw_ring", "hw_loop", "hw_buckle", "fill_velcro", "fill_velcro_hook", "fill_velcro_loop"] },
   { label: "Выноски и обозначения", roles: ["callout_line", "callout_zoom", "arrow", "label"] },
   { label: "Прочее", roles: ["unknown"] },
 ];
@@ -468,8 +469,12 @@ ${scoped(`[data-elem-key="${e}"]`)} {
   // faint layers). The element keeps its own thickness and dash.
   const mergeSelRule = (mergeSelectedKeys || []).map(k => {
     const e = cssAttrEscape(k);
+    // Match the element itself and — via substring — a merged element that carries this
+    // source key inside its comma-joined data-elem-keys, so hovering a merge entry lights
+    // up the fused line too.
+    const sel = [scoped(`[data-elem-key="${e}"]`), scoped(`[data-elem-keys*="${e}"]`)].join(",\n");
     return `
-${scoped(`[data-elem-key="${e}"]`)} {
+${sel} {
   stroke: #C8A84B !important;
   filter: drop-shadow(0 0 2px #C8A84B) drop-shadow(0 0 2px #C8A84B) !important;
 }`;
@@ -546,13 +551,64 @@ function isTraceIgnored(el) {
   return !!el?.closest?.('[data-trace-ignore="1"]');
 }
 
+// Distance in SCREEN pixels from (cx, cy) to the actual outline of an SVG geometry
+// element — sampled along the real path, not its bounding box. This is what makes
+// "nearest line" correct for diagonals and curves (a bbox says a diagonal is near
+// even where the click is in empty space inside its box).
+// Map a user-space point of `el` to screen pixels via the element's own user bbox ↔
+// screen bbox. getScreenCTM is unreliable here — it ignores the CSS transform (pan/zoom)
+// on the container — whereas getBoundingClientRect is true screen space. The transform
+// is translate+scale only (no rotation), so a per-axis linear map is exact.
+function userToScreenMapper(el) {
+  let ub;
+  try { ub = el.getBBox(); } catch { return null; }
+  const sb = el.getBoundingClientRect();
+  return {
+    x: ux => (ub.width ? sb.left + (ux - ub.x) * (sb.width / ub.width) : sb.left + sb.width / 2),
+    y: uy => (ub.height ? sb.top + (uy - ub.y) * (sb.height / ub.height) : sb.top + sb.height / 2),
+  };
+}
+
+function distToGeometryPx(el, cx, cy) {
+  if (typeof el.getTotalLength !== "function") return Infinity;
+  let total = 0;
+  try { total = el.getTotalLength(); } catch { return Infinity; }
+  if (!total) return Infinity;
+  const m = userToScreenMapper(el);
+  if (!m) return Infinity;
+  const n = Math.min(80, Math.max(8, Math.round(total / 4)));
+  let best = Infinity;
+  for (let i = 0; i <= n; i++) {
+    let p;
+    try { p = el.getPointAtLength((total * i) / n); } catch { continue; }
+    const d = Math.hypot(m.x(p.x) - cx, m.y(p.y) - cy);
+    if (d < best) best = d;
+  }
+  return best;
+}
+
+function nearestGeometry(container, cx, cy, maxDist = 22) {
+  if (!container) return null;
+  const els = [...container.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
+    .filter(el => !el.closest("defs") && !isTraceIgnored(el) && el.getAttribute("data-elem-key"));
+  let best = null, bestD = maxDist;
+  for (const el of els) {
+    const bb = el.getBoundingClientRect();
+    if (cx < bb.left - maxDist || cx > bb.right + maxDist || cy < bb.top - maxDist || cy > bb.bottom + maxDist) continue;
+    const d = distToGeometryPx(el, cx, cy);
+    if (d < bestD) { bestD = d; best = el; }
+  }
+  return best;
+}
+
 // Zoomable SVG panel — plain <img> for display, CSS overlay for highlight
-function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides, elemOverrides, selectedElemKey, selectedElemIndex, singleOverride, onElementClick, mergeSelectedKeys }) {
+function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides, elemOverrides, selectedElemKey, selectedElemIndex, singleOverride, onElementClick, mergeSelectedKeys, onSplit }) {
   const wrapRef  = useRef(null);
   const hlRef    = useRef(null); // ref to query SVG elements
   const [svgHtml, setSvgHtml] = useState(""); // SVG content managed by React
   const [ready, setReady]     = useState(false);
   const [loadError, setLoadError] = useState("");
+  const [ctxMenu, setCtxMenu] = useState(null); // right-click "cut here" menu
   // CSS-based live preview: inject <style> overrides that survive innerHTML resets
   const overrideStyleId = `vse-override-${svgPrefix}`;
   useEffect(() => {
@@ -631,6 +687,12 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
   // Set of path indices that should be highlighted (index into `els` query)
   const [matchedIndices, setMatchedIndices] = useState(null); // null = no hover
   const dragging = useRef(null);
+  const hoverRaf = useRef(0);
+  const hoverGlowEl = useRef(null);
+  const HOVER_GLOW = "drop-shadow(0 0 3px #C8A84B) drop-shadow(0 0 3px #C8A84B)";
+  const clearHoverGlow = () => {
+    if (hoverGlowEl.current) { hoverGlowEl.current.style.filter = ""; hoverGlowEl.current = null; }
+  };
 
   // Load SVG text into hidden div for DOM queries
   useEffect(() => {
@@ -761,8 +823,23 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
   }, []);
 
   const onMouseDown = e => { if (e.button !== 0) return; dragging.current = { sx: e.clientX - pan.x, sy: e.clientY - pan.y, moved: false }; };
-  const onMouseMove = e => { if (!dragging.current) return; dragging.current.moved = true; setPan({ x: e.clientX - dragging.current.sx, y: e.clientY - dragging.current.sy }); };
+  const onMouseMove = e => {
+    if (dragging.current) { dragging.current.moved = true; setPan({ x: e.clientX - dragging.current.sx, y: e.clientY - dragging.current.sy }); clearHoverGlow(); return; }
+    // Hover preview: glow the nearest actual line so you see what a click will select.
+    // Imperative (direct style) to avoid re-parsing the SVG on every mouse move.
+    if (!onElementClick || mode !== "std" || !hlRef.current) return;
+    const cx = e.clientX, cy = e.clientY;
+    if (hoverRaf.current) return;
+    hoverRaf.current = requestAnimationFrame(() => {
+      hoverRaf.current = 0;
+      const el = nearestGeometry(hlRef.current, cx, cy, 22);
+      if (el === hoverGlowEl.current) return;
+      clearHoverGlow();
+      if (el) { el.style.filter = HOVER_GLOW; hoverGlowEl.current = el; }
+    });
+  };
   const onMouseUp   = () => { dragging.current = null; };
+  const onMouseLeaveViewport = () => { dragging.current = null; clearHoverGlow(); };
   const reset       = () => { fitToView(); };
 
   const onViewportClick = e => {
@@ -774,20 +851,11 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
     // against. Selecting it still armed singleOverride, which repainted the preview while
     // saveCompareChanges — which only reads elementDrafts — silently dropped the change.
     if (path && isTraceIgnored(path)) path = null;
-    if ((!path || !hlRef.current?.contains(path)) && hlRef.current) {
-      // Missed thin stroke — find nearest path within 12px
-      const allEls = [...hlRef.current.querySelectorAll("path, line, polyline, polygon, rect, circle, ellipse")]
-        .filter(el => !el.closest("defs") && !isTraceIgnored(el));
-      let best = null, bestDist = 12;
-      for (const el of allEls) {
-        const bb = el.getBoundingClientRect();
-        const dx = Math.max(bb.left - e.clientX, 0, e.clientX - bb.right);
-        const dy = Math.max(bb.top - e.clientY, 0, e.clientY - bb.bottom);
-        const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < bestDist) { bestDist = d; best = el; }
-      }
-      path = best;
-    }
+    // Prefer the nearest actual line (by real geometry, not bbox) — this both rescues a
+    // near-miss on a thin stroke and avoids grabbing a fill that sits under the line you
+    // aimed at. Falls back to the direct hit only when no line is within reach.
+    const near = nearestGeometry(hlRef.current, e.clientX, e.clientY, 22);
+    if (near) path = near;
     if (!path || !hlRef.current?.contains(path)) return;
     const role = path.getAttribute("data-role") || path.closest("[data-role]")?.getAttribute("data-role");
     if (!role) return;
@@ -810,6 +878,39 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
     });
   };
 
+  const onContextMenu = e => {
+    if (!onSplit || mode !== "std" || !hlRef.current) return;
+    e.preventDefault();
+    const svgEl = hlRef.current.querySelector("svg");
+    if (!svgEl) return;
+    let path = e.target.closest("path, line, polyline, polygon, circle, ellipse, rect");
+    if (path && isTraceIgnored(path)) path = null;
+    const near = nearestGeometry(hlRef.current, e.clientX, e.clientY, 22);
+    if (near) path = near;
+    const elemKey = path && path.getAttribute("data-elem-key");
+    if (!elemKey) { setCtxMenu(null); return; }
+    // Screen -> user coords via the element's own bbox (getScreenCTM ignores the CSS zoom).
+    let ub;
+    try { ub = path.getBBox(); } catch { setCtxMenu(null); return; }
+    const sb = path.getBoundingClientRect();
+    const ux = ub.width ? ub.x + (e.clientX - sb.left) / sb.width * ub.width : ub.x;
+    const uy = ub.height ? ub.y + (e.clientY - sb.top) / sb.height * ub.height : ub.y;
+    setCtxMenu({ clientX: e.clientX, clientY: e.clientY, elemKey, x: ux, y: uy });
+  };
+
+  useEffect(() => {
+    if (!ctxMenu) return;
+    const close = () => setCtxMenu(null);
+    window.addEventListener("click", close);
+    window.addEventListener("scroll", close, true);
+    window.addEventListener("keydown", close);
+    return () => {
+      window.removeEventListener("click", close);
+      window.removeEventListener("scroll", close, true);
+      window.removeEventListener("keydown", close);
+    };
+  }, [ctxMenu]);
+
   const dimmed = matchedIndices !== null;
 
   return (
@@ -821,8 +922,8 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
       </div>
       <div ref={wrapRef} className="vse-zoom-viewport"
         onMouseDown={onMouseDown} onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
-        onClick={onViewportClick}
+        onMouseUp={onMouseUp} onMouseLeave={onMouseLeaveViewport}
+        onClick={onViewportClick} onContextMenu={onContextMenu}
       >
         {!ready && !loadError && <div className="vse-svg-state">Загрузка SVG...</div>}
         {loadError && <div className="vse-svg-state vse-svg-state-error">Ошибка SVG: {loadError}</div>}
@@ -907,6 +1008,16 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
           })()}
         </div>
       </div>
+      {ctxMenu && (
+        <div style={{position:"fixed",left:ctxMenu.clientX,top:ctxMenu.clientY,zIndex:3000,background:"#26231e",border:"1px solid #C8A84B",borderRadius:6,boxShadow:"0 6px 20px rgba(0,0,0,0.45)",padding:4}}
+          onClick={e => e.stopPropagation()} onContextMenu={e => e.preventDefault()}>
+          <button type="button"
+            onMouseDown={e => { e.preventDefault(); onSplit?.({ elemKey: ctxMenu.elemKey, x: ctxMenu.x, y: ctxMenu.y }); setCtxMenu(null); }}
+            style={{fontSize:12,fontWeight:600,padding:"5px 12px",borderRadius:4,border:"none",background:"transparent",color:"#e6dcc2",cursor:"pointer",whiteSpace:"nowrap"}}>
+            ✂ Разрезать здесь
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -1289,6 +1400,9 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
   const [mergeSelection, setMergeSelection] = useState([]);
   const [mergeRole, setMergeRole] = useState("stitch_thru");
   const [merging, setMerging] = useState(false);
+  // Keys of the merge group under the cursor in the list, so hovering "✕ снять"
+  // lights up which line it is (the entries are otherwise identical).
+  const [hoverMergeKeys, setHoverMergeKeys] = useState([]);
   const [saveStatus, setSaveStatus] = useState({ state: "idle", message: "" });
   const [saving, setSaving] = useState(false);
   const [contractOpen, setContractOpen] = useState(false);
@@ -1796,6 +1910,52 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     }
   };
 
+  const applySplit = async ({ elemKey, x, y }) => {
+    if (!activeId || !elemKey) return;
+    setMerging(true);
+    setSaveStatus({ state: "building", message: "Разрезаю…" });
+    try {
+      const splits = [...(nodeState?.splits || []), { elem_key: elemKey, x, y }];
+      const putRes = await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
+        method: "PUT", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ splits }),
+      });
+      if (!putRes.ok) throw new Error(`PUT failed: HTTP ${putRes.status}`);
+      const regenRes = await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
+      const regenData = await regenRes.json();
+      if (!regenRes.ok || regenData?.ok === false) throw new Error(regenData?.error || `Regenerate failed: HTTP ${regenRes.status}`);
+      clearNodeCache("");
+      onNodeUpdated?.();
+      await refreshNodeState();
+      setSaveStatus({ state: "ok", message: "Разрезано." });
+    } catch (err) {
+      setSaveStatus({ state: "error", message: String(err?.message || err) });
+    } finally {
+      setMerging(false);
+    }
+  };
+
+  const removeSplit = async (idx) => {
+    if (!activeId) return;
+    setMerging(true);
+    try {
+      const splits = (nodeState?.splits || []).filter((_, i) => i !== idx);
+      await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
+        method: "PUT", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ splits }),
+      });
+      await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
+      clearNodeCache("");
+      onNodeUpdated?.();
+      await refreshNodeState();
+      setSaveStatus({ state: "ok", message: "Разрез снят." });
+    } catch (err) {
+      setSaveStatus({ state: "error", message: String(err?.message || err) });
+    } finally {
+      setMerging(false);
+    }
+  };
+
   return (
     <div className="vse-compare">
       <div className="vse-node-picker">
@@ -1837,7 +1997,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
           <div className="vse-panels-sticky">
             <div className="vse-dual-panels">
               <ZoomableSvgPanel url={node.origSvg + "?t=" + buildTs} label="ОРИГИНАЛ" hdrClass="orig" hoveredEntry={hoveredEntry} mode="orig" svgPrefix={`${activeId}_orig`} />
-              <ZoomableSvgPanel url={node.stdSvg + "?t=" + buildTs} label="СТАНДАРТ" hdrClass="std" hoveredEntry={hoveredEntry} mode="std" svgPrefix={`${activeId}_std`} roleOverrides={groupDrafts} elemOverrides={elementDrafts} selectedElemKey={selectedEl?.elemKey || selectedState?.elem_key || ""} selectedElemIndex={selectedEl?.idx ?? null} singleOverride={singleOverride} mergeSelectedKeys={mergeSelection.map(m => m.elemKey)} onElementClick={el => {
+              <ZoomableSvgPanel url={node.stdSvg + "?t=" + buildTs} label="СТАНДАРТ" hdrClass="std" hoveredEntry={hoveredEntry} mode="std" svgPrefix={`${activeId}_std`} roleOverrides={groupDrafts} elemOverrides={elementDrafts} selectedElemKey={selectedEl?.elemKey || selectedState?.elem_key || ""} selectedElemIndex={selectedEl?.idx ?? null} singleOverride={singleOverride} mergeSelectedKeys={[...mergeSelection.map(m => m.elemKey), ...hoverMergeKeys]} onElementClick={el => {
                 if (el.addToSelection && el.elemKey) {
                   setMergeSelection(prev => {
                     // Seed from the current single selection so the natural flow
@@ -1855,14 +2015,14 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                   return;
                 }
                 setSelectedEl(el); setSingleOverride(null); setSelectedScope("element");
-              }} />
+              }} onSplit={applySplit} />
             </div>
           </div>
 
           <div className="vse-annotate-right-sticky">
             <div className="vse-annotate-right">
               {nodeStateError && <div className="vse-empty-roles"><strong>Ошибка загрузки node-state.</strong><span>{nodeStateError}</span></div>}
-              {(mergeSelection.length > 0 || (nodeState?.merge_groups || []).length > 0) && (
+              {(mergeSelection.length > 0 || (nodeState?.merge_groups || []).length > 0 || (nodeState?.splits || []).length > 0) && (
                 <div style={{display:"flex",flexDirection:"column",gap:6,padding:"8px 10px",margin:"0 0 8px",background:"rgba(200,168,75,0.14)",border:"1px solid #C8A84B",borderRadius:6}}>
                   {mergeSelection.length > 0 && (
                     <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
@@ -1883,13 +2043,30 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                   {(nodeState?.merge_groups || []).length > 0 && (
                     <div style={{display:"flex",flexDirection:"column",gap:3}}>
                       {(nodeState.merge_groups).map((g, i) => (
-                        <div key={i} style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180"}}>
+                        <div key={i}
+                          onMouseEnter={() => setHoverMergeKeys(g.elem_keys || [])}
+                          onMouseLeave={() => setHoverMergeKeys([])}
+                          style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180",cursor:"default",background:hoverMergeKeys===g.elem_keys?"rgba(200,168,75,0.12)":"transparent",borderRadius:3,padding:"1px 3px"}}>
                           <span>Объединено {g.elem_keys?.length || 0} → {roleLabel(roleCatalog, g.role)}</span>
                           <button type="button" title="Снять объединение" onClick={() => removeMergeGroup(i)} disabled={merging}
                             style={{fontSize:11,padding:"1px 6px",borderRadius:3,border:"1px solid #b06a5a",background:"transparent",color:"#b06a5a",cursor:"pointer"}}>✕ снять</button>
                         </div>
                       ))}
                     </div>
+                  )}
+                  {(nodeState?.splits || []).length > 0 && (
+                    <div style={{display:"flex",flexDirection:"column",gap:3}}>
+                      {(nodeState.splits).map((sp, i) => (
+                        <div key={i} style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180"}}>
+                          <span>✂ Разрез в ({Math.round(sp.x)}, {Math.round(sp.y)})</span>
+                          <button type="button" title="Снять разрез" onClick={() => removeSplit(i)} disabled={merging}
+                            style={{fontSize:11,padding:"1px 6px",borderRadius:3,border:"1px solid #b06a5a",background:"transparent",color:"#b06a5a",cursor:"pointer"}}>✕ снять</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {mergeSelection.length === 0 && (
+                    <span style={{fontSize:11,color:"#7a8794"}}>Правый клик по линии → «Разрезать здесь»</span>
                   )}
                 </div>
               )}
