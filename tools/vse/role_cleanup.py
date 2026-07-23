@@ -25,9 +25,7 @@ UNUSED_ROLES = frozenset({
     "stitch_cover",
     "stitch_double",
     "stitch_hidden",
-    "stitch_overlock",
     "stitch_topstitch",
-    "stitch_zigzag",
 })
 
 RARE_ROLES_TO_UNKNOWN = frozenset({

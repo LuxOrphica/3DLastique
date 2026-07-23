@@ -11,6 +11,13 @@ const ROLE_STYLES = {
   stitch_edge:         { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "none" },
   stitch_thru:         { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "3 1.5" },
   stitch_Bt:           { stroke: "#C8102E", "stroke-width": "3.0",  "stroke-dasharray": "none" },
+  stitch_lockstitch:   { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "none" },
+  stitch_chainstitch:  { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "5 1" },
+  stitch_zigzag:       { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "2 2" },
+  stitch_coverstitch:  { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "3 1.5" },
+  stitch_flatlock:     { stroke: "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "4 2 1 2" },
+  stitch_overlock:     { stroke: "#C8102E", "stroke-width": "0.9",  "stroke-dasharray": "1 1.5" },
+  stitch_backtack:     { stroke: "#C8102E", "stroke-width": "1.5",  "stroke-dasharray": "2 1" },
   // Границы
   boundary_fragment:   { stroke: "#27A6DE", "stroke-width": "1.5",  "stroke-dasharray": "none" },
   boundary_interlining:{ stroke: "#29B473", "stroke-width": "1.0",  "stroke-dasharray": "none" },
@@ -58,7 +65,7 @@ const ROLE_STYLES = {
 const ROLE_GROUPS = [
   { label: "— не назначено —", roles: ["?"] },
   { label: "Контуры и конструкция", roles: ["contour_outer", "construction_line", "contour_hidden", "break_line"] },
-  { label: "Строчки / швы", roles: ["seam_line", "stitch_edge", "stitch_thru", "stitch_Bt", "stitch_symbol"] },
+  { label: "Строчки / швы", roles: ["seam_line", "stitch_edge", "stitch_thru", "stitch_lockstitch", "stitch_chainstitch", "stitch_zigzag", "stitch_coverstitch", "stitch_flatlock", "stitch_overlock", "stitch_Bt", "stitch_backtack", "stitch_symbol"] },
   { label: "Материалы и слои", roles: ["boundary_fragment", "boundary_interlining", "fill_interlining", "fill_fabric", "fill_fabric_gray", "fill_dark_fabric", "fill_contrast", "fill_shape", "component_half_belt", "fill_white_detail", "fill_material_mask"] },
   { label: "Ленты, резинки, шнуры", roles: ["fill_tape", "fill_elastic", "material_sweat_band", "line_elastic", "fill_cord", "fill_pu_tape", "fill_piping", "fill_glue", "line_fur", "line_gathered_edge"] },
   { label: "Фурнитура", roles: ["hw_zipper", "hw_zipper_tape", "hw_ring", "hw_loop", "hw_buckle", "fill_velcro", "fill_velcro_hook", "fill_velcro_loop"] },
@@ -71,7 +78,7 @@ const ROLES = ROLE_GROUPS.flatMap(g => g.roles);
 const ROLE_GROUPS_UI = [
   { label: "— не назначено —", roles: ["?"] },
   { label: "Контуры и конструкция", roles: ["contour_outer", "construction_line", "contour_hidden", "break_line"] },
-  { label: "Строчки / швы", roles: ["seam_line", "stitch_edge", "stitch_thru", "stitch_Bt", "stitch_symbol"] },
+  { label: "Строчки / швы", roles: ["seam_line", "stitch_edge", "stitch_thru", "stitch_lockstitch", "stitch_chainstitch", "stitch_zigzag", "stitch_coverstitch", "stitch_flatlock", "stitch_overlock", "stitch_Bt", "stitch_backtack", "stitch_symbol"] },
   { label: "Материалы и слои", roles: ["boundary_fragment", "boundary_interlining", "fill_interlining", "fill_fabric", "fill_fabric_gray", "fill_dark_fabric", "fill_contrast", "fill_shape", "component_half_belt", "fill_white_detail", "fill_material_mask"] },
   { label: "Ленты, резинки, шнуры", roles: ["fill_tape", "fill_elastic", "material_sweat_band", "line_elastic", "fill_cord", "fill_pu_tape", "fill_piping", "fill_glue", "line_fur", "line_gathered_edge"] },
   { label: "Фурнитура", roles: ["hw_zipper", "hw_zipper_tape", "hw_ring", "hw_loop", "hw_buckle", "fill_velcro", "fill_velcro_hook", "fill_velcro_loop"] },

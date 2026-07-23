@@ -102,6 +102,48 @@
       "parts": [
         "component.visor.body"
       ]
+    },
+    "stitch.lockstitch": {
+      "label_ru": "Строчка челночного стежка",
+      "parts": [
+        "stitch.lockstitch.body"
+      ]
+    },
+    "stitch.chainstitch": {
+      "label_ru": "Цепной стежок",
+      "parts": [
+        "stitch.chainstitch.body"
+      ]
+    },
+    "stitch.zigzag": {
+      "label_ru": "Зигзаг",
+      "parts": [
+        "stitch.zigzag.body"
+      ]
+    },
+    "stitch.coverstitch": {
+      "label_ru": "Плоскошовная (cover)",
+      "parts": [
+        "stitch.coverstitch.body"
+      ]
+    },
+    "stitch.flatlock": {
+      "label_ru": "Флок (flatlock)",
+      "parts": [
+        "stitch.flatlock.body"
+      ]
+    },
+    "stitch.overlock": {
+      "label_ru": "Оверлок",
+      "parts": [
+        "stitch.overlock.body"
+      ]
+    },
+    "stitch.back_tack": {
+      "label_ru": "Закрепка (Bc)",
+      "parts": [
+        "stitch.back_tack.body"
+      ]
     }
   },
   "roles": {
@@ -597,6 +639,90 @@
       "legacy_roles": [
         "hw_buckle"
       ]
+    },
+    "stitch_lockstitch": {
+      "role_id": "stitch.lockstitch.body",
+      "label_ru": "Строчка челночного стежка",
+      "family": "stitch",
+      "entity_type": "line",
+      "object_role": "stitch.lockstitch",
+      "part_role": "stitch.lockstitch.body",
+      "legacy_roles": [
+        "stitch_lockstitch"
+      ],
+      "notes": "Тип стежка: lockstitch (по SPORTMASTER Workmanship, разд.5)."
+    },
+    "stitch_chainstitch": {
+      "role_id": "stitch.chainstitch.body",
+      "label_ru": "Цепной стежок",
+      "family": "stitch",
+      "entity_type": "line",
+      "object_role": "stitch.chainstitch",
+      "part_role": "stitch.chainstitch.body",
+      "legacy_roles": [
+        "stitch_chainstitch"
+      ],
+      "notes": "Тип стежка: chainstitch (по SPORTMASTER Workmanship, разд.5)."
+    },
+    "stitch_zigzag": {
+      "role_id": "stitch.zigzag.body",
+      "label_ru": "Зигзаг",
+      "family": "stitch",
+      "entity_type": "line",
+      "object_role": "stitch.zigzag",
+      "part_role": "stitch.zigzag.body",
+      "legacy_roles": [
+        "stitch_zigzag"
+      ],
+      "notes": "Тип стежка: zigzag (по SPORTMASTER Workmanship, разд.5)."
+    },
+    "stitch_coverstitch": {
+      "role_id": "stitch.coverstitch.body",
+      "label_ru": "Плоскошовная (cover)",
+      "family": "stitch",
+      "entity_type": "line",
+      "object_role": "stitch.coverstitch",
+      "part_role": "stitch.coverstitch.body",
+      "legacy_roles": [
+        "stitch_coverstitch"
+      ],
+      "notes": "Тип стежка: coverstitch (по SPORTMASTER Workmanship, разд.5)."
+    },
+    "stitch_flatlock": {
+      "role_id": "stitch.flatlock.body",
+      "label_ru": "Флок (flatlock)",
+      "family": "stitch",
+      "entity_type": "line",
+      "object_role": "stitch.flatlock",
+      "part_role": "stitch.flatlock.body",
+      "legacy_roles": [
+        "stitch_flatlock"
+      ],
+      "notes": "Тип стежка: flatlock (по SPORTMASTER Workmanship, разд.5)."
+    },
+    "stitch_overlock": {
+      "role_id": "stitch.overlock.body",
+      "label_ru": "Оверлок",
+      "family": "stitch",
+      "entity_type": "line",
+      "object_role": "stitch.overlock",
+      "part_role": "stitch.overlock.body",
+      "legacy_roles": [
+        "stitch_overlock"
+      ],
+      "notes": "Тип стежка: overlock (по SPORTMASTER Workmanship, разд.5)."
+    },
+    "stitch_backtack": {
+      "role_id": "stitch.back_tack.body",
+      "label_ru": "Закрепка (Bc)",
+      "family": "stitch",
+      "entity_type": "line",
+      "object_role": "stitch.back_tack",
+      "part_role": "stitch.back_tack.body",
+      "legacy_roles": [
+        "stitch_backtack"
+      ],
+      "notes": "Тип стежка: back_tack (по SPORTMASTER Workmanship, разд.5)."
     }
   },
   "role_choices": [
@@ -887,6 +1013,48 @@
       "label_ru": "Пряжка",
       "group": "Фурнитура",
       "role": "hw_buckle"
+    },
+    {
+      "choice_key": "stitch.lockstitch",
+      "label_ru": "Строчка челночного стежка",
+      "group": "Строчки / швы",
+      "role": "stitch_lockstitch"
+    },
+    {
+      "choice_key": "stitch.chainstitch",
+      "label_ru": "Цепной стежок",
+      "group": "Строчки / швы",
+      "role": "stitch_chainstitch"
+    },
+    {
+      "choice_key": "stitch.zigzag",
+      "label_ru": "Зигзаг",
+      "group": "Строчки / швы",
+      "role": "stitch_zigzag"
+    },
+    {
+      "choice_key": "stitch.coverstitch",
+      "label_ru": "Плоскошовная (cover)",
+      "group": "Строчки / швы",
+      "role": "stitch_coverstitch"
+    },
+    {
+      "choice_key": "stitch.flatlock",
+      "label_ru": "Флок (flatlock)",
+      "group": "Строчки / швы",
+      "role": "stitch_flatlock"
+    },
+    {
+      "choice_key": "stitch.overlock",
+      "label_ru": "Оверлок",
+      "group": "Строчки / швы",
+      "role": "stitch_overlock"
+    },
+    {
+      "choice_key": "stitch.back_tack",
+      "label_ru": "Закрепка (Bc)",
+      "group": "Строчки / швы",
+      "role": "stitch_backtack"
     }
   ],
   "annotation_phrase_rules": [

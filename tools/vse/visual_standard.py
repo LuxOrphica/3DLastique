@@ -81,6 +81,44 @@ ROLE_STYLES = {
         "opacity":          "1",
         "_label": "Закрепка / bar tack (Bc/Bt)",
     },
+    # Stitch types by family (SPORTMASTER Workmanship, section 5). Same stitch red;
+    # families are told apart by dash/width. Visual is approximate — the code (L1/C2/…)
+    # still carries the needle count and ISO.
+    "stitch_lockstitch": {
+        "stroke": "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "none",
+        "fill": "none", "stroke-linecap": "butt", "opacity": "1",
+        "_label": "Строчка челночного стежка / lockstitch",
+    },
+    "stitch_chainstitch": {
+        "stroke": "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "5 1",
+        "fill": "none", "stroke-linecap": "butt", "opacity": "1",
+        "_label": "Цепной стежок / chainstitch",
+    },
+    "stitch_zigzag": {
+        "stroke": "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "2 2",
+        "fill": "none", "stroke-linecap": "butt", "opacity": "1",
+        "_label": "Зигзаг / zigzag",
+    },
+    "stitch_coverstitch": {
+        "stroke": "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "3 1.5",
+        "fill": "none", "stroke-linecap": "butt", "opacity": "1",
+        "_label": "Плоскошовная / coverstitch",
+    },
+    "stitch_flatlock": {
+        "stroke": "#C8102E", "stroke-width": "0.75", "stroke-dasharray": "4 2 1 2",
+        "fill": "none", "stroke-linecap": "butt", "opacity": "1",
+        "_label": "Флок / flatlock",
+    },
+    "stitch_overlock": {
+        "stroke": "#C8102E", "stroke-width": "0.9", "stroke-dasharray": "1 1.5",
+        "fill": "none", "stroke-linecap": "butt", "opacity": "1",
+        "_label": "Оверлок / overlock",
+    },
+    "stitch_backtack": {
+        "stroke": "#C8102E", "stroke-width": "1.5", "stroke-dasharray": "2 1",
+        "fill": "none", "stroke-linecap": "butt", "opacity": "1",
+        "_label": "Закрепка прямой-обратной / back tack (Bc)",
+    },
     "stitch_symbol": {
         "stroke":           "#1A1A1A",
         "stroke-width":     "0.5",

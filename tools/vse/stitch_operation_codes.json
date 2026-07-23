@@ -13,7 +13,7 @@
       "label_ru": "1-игольная строчка челночного стежка",
       "iso": "ISO 301",
       "pdf_page": 12,
-      "default_role": "stitch_edge",
+      "default_role": "stitch_lockstitch",
       "visual_description": "Одна прямая линия строчки."
     },
     "L2": {
@@ -22,7 +22,7 @@
       "label_ru": "2-игольная строчка челночного стежка",
       "iso": "ISO 301",
       "pdf_page": 12,
-      "default_role": "stitch_edge",
+      "default_role": "stitch_lockstitch",
       "visual_description": "Две параллельные прямые линии строчки."
     },
     "L3": {
@@ -31,7 +31,7 @@
       "label_ru": "3-игольная строчка челночного стежка",
       "iso": "ISO 301",
       "pdf_page": 12,
-      "default_role": "stitch_edge",
+      "default_role": "stitch_lockstitch",
       "visual_description": "Три параллельные прямые линии строчки."
     },
     "Z1": {
@@ -40,7 +40,7 @@
       "label_ru": "зигзагообразная строчка с 1 проколом",
       "iso": "ISO 304",
       "pdf_page": 12,
-      "default_role": "stitch_symbol",
+      "default_role": "stitch_zigzag",
       "visual_description": "Зигзагообразная линия строчки."
     },
     "Z2": {
@@ -49,7 +49,7 @@
       "label_ru": "зигзагообразная строчка с 2 проколами",
       "iso": "ISO 308",
       "pdf_page": 12,
-      "default_role": "stitch_symbol",
+      "default_role": "stitch_zigzag",
       "visual_description": "Зигзагообразная линия с более сложным двухпрокольным рисунком."
     },
     "Z3": {
@@ -58,7 +58,7 @@
       "label_ru": "зигзагообразная строчка с 3 проколами",
       "iso": "ISO 315",
       "pdf_page": 12,
-      "default_role": "stitch_symbol",
+      "default_role": "stitch_zigzag",
       "visual_description": "Зигзагообразная линия с трехпрокольным рисунком."
     },
     "C1": {
@@ -67,7 +67,7 @@
       "label_ru": "1-игольная строчка цепного стежка",
       "iso": "ISO 101",
       "pdf_page": 13,
-      "default_role": "stitch_edge",
+      "default_role": "stitch_chainstitch",
       "visual_description": "Одна линия цепной строчки."
     },
     "C2": {
@@ -76,7 +76,7 @@
       "label_ru": "2-игольная строчка цепного стежка",
       "iso": "ISO 101",
       "pdf_page": 13,
-      "default_role": "stitch_edge",
+      "default_role": "stitch_chainstitch",
       "visual_description": "Две параллельные линии цепной строчки."
     },
     "C3": {
@@ -85,7 +85,7 @@
       "label_ru": "3-игольная строчка цепного стежка",
       "iso": "ISO 101",
       "pdf_page": 13,
-      "default_role": "stitch_edge",
+      "default_role": "stitch_chainstitch",
       "visual_description": "Три параллельные линии цепной строчки."
     },
     "Co2": {
@@ -94,7 +94,7 @@
       "label_ru": "2-игольная плоскошовная строчка",
       "iso": "ISO 406",
       "pdf_page": 14,
-      "default_role": "stitch_symbol",
+      "default_role": "stitch_coverstitch",
       "visual_description": "Плоскошовная строчка с двумя игольными линиями."
     },
     "Co3": {
@@ -103,7 +103,7 @@
       "label_ru": "3-игольная плоскошовная строчка",
       "iso": "ISO 407",
       "pdf_page": 14,
-      "default_role": "stitch_symbol",
+      "default_role": "stitch_coverstitch",
       "visual_description": "Плоскошовная строчка с тремя игольными линиями."
     },
     "Co4": {
@@ -112,7 +112,7 @@
       "label_ru": "4-игольная плоскошовная строчка",
       "iso": "ISO 410",
       "pdf_page": 14,
-      "default_role": "stitch_symbol",
+      "default_role": "stitch_coverstitch",
       "visual_description": "Плоскошовная строчка с четырьмя игольными линиями."
     },
     "F2": {
@@ -121,7 +121,7 @@
       "label_ru": "2-игольный флок",
       "iso": "ISO 602",
       "pdf_page": 15,
-      "default_role": "stitch_symbol",
+      "default_role": "stitch_flatlock",
       "visual_description": "Флок/flatlock: повторяющаяся диагональная петлевая штриховка вдоль линии, 2 иглы / 4 нити."
     },
     "F3": {
@@ -130,7 +130,7 @@
       "label_ru": "3-игольный флок",
       "iso": "ISO 605",
       "pdf_page": 15,
-      "default_role": "stitch_symbol",
+      "default_role": "stitch_flatlock",
       "visual_description": "Флок/flatlock: повторяющаяся диагональная петлевая штриховка вдоль линии, 3 иглы / 5 нитей."
     },
     "F4": {
@@ -139,7 +139,7 @@
       "label_ru": "4-игольный флок",
       "iso": "ISO 607",
       "pdf_page": 15,
-      "default_role": "stitch_symbol",
+      "default_role": "stitch_flatlock",
       "visual_description": "Флок/flatlock: широкая повторяющаяся диагональная петлевая штриховка вдоль линии, 4 иглы / 6 нитей.",
       "notes": "В эскизах F4 часто является текстовой выноской к соседней строчке. Если нарисован сам узор, это stitch_symbol; если виден только текст F4, это operation_code для ближайшей строчки."
     },
@@ -149,7 +149,7 @@
       "label_ru": "1-игольный 3-ниточный оверлок",
       "iso": "ISO 504",
       "pdf_page": 15,
-      "default_role": "stitch_edge",
+      "default_role": "stitch_overlock",
       "visual_description": "Оверлочная строчка по краю, ширина около 5 мм."
     },
     "O2": {
@@ -158,7 +158,7 @@
       "label_ru": "1-игольный 3-ниточный оверлок, узкий шов",
       "iso": "ISO 504",
       "pdf_page": 15,
-      "default_role": "stitch_edge",
+      "default_role": "stitch_overlock",
       "visual_description": "Узкая оверлочная строчка по краю, ширина около 3 мм."
     },
     "O3": {
@@ -167,7 +167,7 @@
       "label_ru": "2-игольный 4-ниточный оверлок",
       "iso": "ISO 514",
       "pdf_page": 15,
-      "default_role": "stitch_edge",
+      "default_role": "stitch_overlock",
       "visual_description": "Оверлочная строчка по краю, 2 иглы / 4 нити, ширина около 6 мм."
     },
     "O4": {
@@ -176,14 +176,21 @@
       "label_ru": "2-игольный 5-ниточный оверлок",
       "iso": "ISO 516",
       "pdf_page": 15,
-      "default_role": "stitch_edge",
+      "default_role": "stitch_overlock",
       "visual_description": "Оверлочная строчка по краю, 2 иглы / 5 нитей, ширина около 8 мм."
     },
     "Bt": {
       "family": "bar_tack",
       "label_en": "bar tack",
       "label_ru": "закрепка на спецмашине",
-      "pdf_pages": [16, 24, 38, 93, 94, 101],
+      "pdf_pages": [
+        16,
+        24,
+        38,
+        93,
+        94,
+        101
+      ],
       "default_role": "stitch_Bt",
       "visual_description": "Короткая плотная закрепка, часто показана зеленой поперечной или конечной гребенкой на схеме. В примерах ширина обычно 7-10 мм.",
       "notes": "Используется для закрепления концов цепных, плоскошовных, флоковых и оверлочных строчек, а также для карманов, молний, гульфика, разрезов."
@@ -192,8 +199,12 @@
       "family": "back_tack",
       "label_en": "back tack by lockstitch",
       "label_ru": "закрепка прямой-обратной строчкой",
-      "pdf_pages": [16, 38, 94],
-      "default_role": "stitch_Bt",
+      "pdf_pages": [
+        16,
+        38,
+        94
+      ],
+      "default_role": "stitch_backtack",
       "base_stitch_hint": "L1",
       "visual_description": "Короткий участок прямой-обратной строчки с повышенной частотой, обычно 8-9 стежков на 1 см.",
       "notes": "В стандарте встречается как Bc или Bc (L1). Это закрепка, выполненная челночной строчкой, а не отдельный материал или объект."
