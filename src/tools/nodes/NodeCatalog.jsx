@@ -1,14 +1,34 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import nodeLibrary from "../pom/node-library.json";
+import "../pom/PomBuilder.css"; // shared pom-*/ref-* header, tabs, search classes
 import "./NodeCatalog.css";
 
-const IMG_URL = (jpgId, code) =>
-  jpgId ? `https://drive.google.com/thumbnail?id=${jpgId}&sz=w300`
-        : `/nodes/${code}.jpg`;
+// Prefer the locally hosted image (fast); fall back to the Google Drive
+// thumbnail for the ~1100 nodes we don't have on disk, then to a text tile.
+const LOCAL_URL = (code) => `/nodes/${code}.jpg`;
+const DRIVE_URL = (jpgId, w) =>
+  jpgId ? `https://drive.google.com/thumbnail?id=${jpgId}&sz=w${w}` : null;
 
-const IMG_LARGE = (jpgId, code) =>
-  jpgId ? `https://drive.google.com/thumbnail?id=${jpgId}&sz=w1200`
-        : `/nodes/${code}.jpg`;
+// Staged <img>: local → Drive → code text. `driveW` is the Drive thumb width.
+function NodeImg({ code, jpgId, driveW = 300, className, fallbackLarge = false }) {
+  const drive = DRIVE_URL(jpgId, driveW);
+  const [stage, setStage] = useState(0); // 0 local, 1 drive, 2 give up
+  useEffect(() => { setStage(0); }, [code]);
+  if (stage >= 2) {
+    return <div className={`nc-card-img-fallback${fallbackLarge ? " large" : ""}`}>{code}</div>;
+  }
+  const src = stage === 0 ? LOCAL_URL(code) : drive;
+  return (
+    <img
+      src={src}
+      alt={code}
+      className={className}
+      loading="lazy"
+      decoding="async"
+      onError={() => setStage((s) => (s === 0 && drive ? 1 : 2))}
+    />
+  );
+}
 
 function buildCategories() {
   const map = new Map();
@@ -36,7 +56,6 @@ function buildSubcategories(categoryRU) {
 }
 
 function NodeCard({ node, onClick, selected, viewMode }) {
-  const [imgError, setImgError] = useState(false);
   if (viewMode === "list") {
     return (
       <div
@@ -44,10 +63,7 @@ function NodeCard({ node, onClick, selected, viewMode }) {
         onClick={() => onClick(node)}
       >
         <div className="nc-list-thumb-wrap">
-          {!imgError
-            ? <img src={IMG_URL(node.jpgId, node.code)} alt={node.code} className="nc-list-thumb" onError={() => setImgError(true)} />
-            : <div className="nc-card-img-fallback">{node.code}</div>
-          }
+          <NodeImg code={node.code} jpgId={node.jpgId} className="nc-list-thumb" />
         </div>
         <span className="nc-list-code">{node.code}</span>
         <span className="nc-list-sub">{node.subcategoryRU}</span>
@@ -61,15 +77,7 @@ function NodeCard({ node, onClick, selected, viewMode }) {
       title={node.subcategoryRU}
     >
       <div className="nc-card-img-wrap">
-        {!imgError
-          ? <img
-              src={IMG_URL(node.jpgId, node.code)}
-              alt={node.code}
-              className="nc-card-img"
-              onError={() => setImgError(true)}
-            />
-          : <div className="nc-card-img-fallback">{node.code}</div>
-        }
+        <NodeImg code={node.code} jpgId={node.jpgId} className="nc-card-img" />
       </div>
       <div className="nc-card-code">{node.code}</div>
       <div className="nc-card-name">{node.subcategoryRU}</div>
@@ -77,7 +85,7 @@ function NodeCard({ node, onClick, selected, viewMode }) {
   );
 }
 
-function ZoomableImage({ src }) {
+function ZoomableImage({ src, onError }) {
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const dragging = useRef(false);
@@ -140,6 +148,7 @@ function ZoomableImage({ src }) {
         className="nc-zoom-img"
         style={{ transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})` }}
         draggable={false}
+        onError={onError}
       />
       {scale > 1 && <button className="nc-zoom-reset" onClick={reset}>↺</button>}
     </div>
@@ -147,14 +156,17 @@ function ZoomableImage({ src }) {
 }
 
 function NodeDetail({ node, onClose }) {
-  const [imgError, setImgError] = useState(false);
+  const [stage, setStage] = useState(0); // 0 local, 1 drive, 2 give up
+  const drive = DRIVE_URL(node?.jpgId, 1200);
+  useEffect(() => { setStage(0); }, [node?.code]);
   if (!node) return null;
+  const largeSrc = stage === 0 ? LOCAL_URL(node.code) : drive;
   return (
     <div className="nc-detail">
       <button className="nc-detail-close" onClick={onClose}>✕</button>
       <div className="nc-detail-img-wrap">
-        {!imgError
-          ? <ZoomableImage src={IMG_LARGE(node.jpgId, node.code)} onError={() => setImgError(true)} />
+        {stage < 2
+          ? <ZoomableImage src={largeSrc} onError={() => setStage(s => (s === 0 && drive ? 1 : 2))} />
           : <div className="nc-card-img-fallback large">{node.code}</div>
         }
       </div>
