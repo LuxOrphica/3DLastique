@@ -5,19 +5,24 @@ import "./NodeCatalog.css";
 
 // Prefer the locally hosted image (fast); fall back to the Google Drive
 // thumbnail for the ~1100 nodes we don't have on disk, then to a text tile.
+// The grid uses 300px thumbnails from public/nodes/thumbs (see tools/nodes/make_thumbs.py):
+// the originals average 128 KB, so a large category pulled tens of megabytes to paint
+// 110px tiles. The detail view still loads the full-resolution original.
 const LOCAL_URL = (code) => `/nodes/${code}.jpg`;
+const LOCAL_THUMB_URL = (code) => `/nodes/thumbs/${code}.jpg`;
 const DRIVE_URL = (jpgId, w) =>
   jpgId ? `https://drive.google.com/thumbnail?id=${jpgId}&sz=w${w}` : null;
 
-// Staged <img>: local → Drive → code text. `driveW` is the Drive thumb width.
+// Staged <img>: local thumb → local original → Drive → code text.
+// `driveW` is the Drive thumb width.
 function NodeImg({ code, jpgId, driveW = 300, className, fallbackLarge = false }) {
   const drive = DRIVE_URL(jpgId, driveW);
-  const [stage, setStage] = useState(0); // 0 local, 1 drive, 2 give up
+  const [stage, setStage] = useState(0); // 0 thumb, 1 original, 2 drive, 3 give up
   useEffect(() => { setStage(0); }, [code]);
-  if (stage >= 2) {
+  if (stage >= 3 || (stage === 2 && !drive)) {
     return <div className={`nc-card-img-fallback${fallbackLarge ? " large" : ""}`}>{code}</div>;
   }
-  const src = stage === 0 ? LOCAL_URL(code) : drive;
+  const src = stage === 0 ? LOCAL_THUMB_URL(code) : stage === 1 ? LOCAL_URL(code) : drive;
   return (
     <img
       src={src}
@@ -25,7 +30,7 @@ function NodeImg({ code, jpgId, driveW = 300, className, fallbackLarge = false }
       className={className}
       loading="lazy"
       decoding="async"
-      onError={() => setStage((s) => (s === 0 && drive ? 1 : 2))}
+      onError={() => setStage((s) => (s < 2 ? s + 1 : 3))}
     />
   );
 }
