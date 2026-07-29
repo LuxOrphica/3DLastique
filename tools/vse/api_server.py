@@ -653,6 +653,8 @@ def _build_node_state(node_id):
         "elements": elements,
         "merge_groups": node_ann.get("merge_groups", []) if isinstance(node_ann, dict) else [],
         "splits": node_ann.get("splits", []) if isinstance(node_ann, dict) else [],
+        "geometry_edits": node_ann.get("geometry_edits", []) if isinstance(node_ann, dict) else [],
+        "deleted_elements": node_ann.get("deleted_elements", []) if isinstance(node_ann, dict) else [],
         "operation_codes": operation_codes,
         "warnings": top_warnings,
     }
@@ -1139,6 +1141,8 @@ def put_node_annotations(node_id):
     review_status = body.get("review_status")
     merge_groups = body.get("merge_groups")
     splits = body.get("splits")
+    geometry_edits = body.get("geometry_edits")
+    deleted_elements = body.get("deleted_elements")
     if group_overrides is not None and not isinstance(group_overrides, dict):
         return jsonify({"ok": False, "error": "group_overrides must be an object"}), 400
     if element_overrides is not None and not isinstance(element_overrides, dict):
@@ -1147,6 +1151,10 @@ def put_node_annotations(node_id):
         return jsonify({"ok": False, "error": "merge_groups must be an array"}), 400
     if splits is not None and not isinstance(splits, list):
         return jsonify({"ok": False, "error": "splits must be an array"}), 400
+    if geometry_edits is not None and not isinstance(geometry_edits, list):
+        return jsonify({"ok": False, "error": "geometry_edits must be an array"}), 400
+    if deleted_elements is not None and not isinstance(deleted_elements, list):
+        return jsonify({"ok": False, "error": "deleted_elements must be an array"}), 400
     if review_status is not None and review_status not in ("approved", "complex", "pending"):
         return jsonify({"ok": False, "error": "review_status must be approved, complex, or pending"}), 400
     current_state = _build_node_state(node_id)
@@ -1196,10 +1204,12 @@ def put_node_annotations(node_id):
             role = g.get("role")
             if len(keys) < 2 or role in (None, ""):
                 continue
+            join_id = str(g.get("join_id") or "").strip()
             normalized_merges.append({
                 "elem_keys": keys,
                 "role": role,
                 "updated_at": g.get("updated_at") or timestamp,
+                **({"join_id": join_id} if join_id else {}),
             })
         node["merge_groups"] = normalized_merges
     if splits is not None:
@@ -1222,6 +1232,37 @@ def put_node_annotations(node_id):
                 "updated_at": sp.get("updated_at") or timestamp,
             })
         node["splits"] = normalized_splits
+    if geometry_edits is not None:
+        normalized_edits = []
+        for ed in geometry_edits:
+            if not isinstance(ed, dict):
+                continue
+            elem_key = str(ed.get("elem_key") or "").strip()
+            frm = ed.get("from")
+            to = ed.get("to")
+            if not elem_key or not isinstance(frm, (list, tuple)) or not isinstance(to, (list, tuple)):
+                continue
+            try:
+                fx, fy = float(frm[0]), float(frm[1])
+                tx, ty = float(to[0]), float(to[1])
+            except (TypeError, ValueError, IndexError):
+                continue
+            join_id = str(ed.get("join_id") or "").strip()
+            normalized_edits.append({
+                "elem_key": elem_key,
+                "from": [fx, fy],
+                "to": [tx, ty],
+                "updated_at": ed.get("updated_at") or timestamp,
+                **({"join_id": join_id} if join_id else {}),
+            })
+        node["geometry_edits"] = normalized_edits
+    if deleted_elements is not None:
+        seen = []
+        for k in deleted_elements:
+            k = str(k or "").strip()
+            if k and k not in seen:
+                seen.append(k)
+        node["deleted_elements"] = seen
     if review_status is not None:
         node["review_status"] = review_status
     node["updated_at"] = timestamp

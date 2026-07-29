@@ -234,7 +234,8 @@
       "part_role": null,
       "legacy_roles": [
         "stitch_Bt"
-      ]
+      ],
+      "code": "Bt"
     },
     "stitch_symbol": {
       "role_id": "stitch.symbol",
@@ -650,7 +651,8 @@
       "legacy_roles": [
         "stitch_lockstitch"
       ],
-      "notes": "Тип стежка: lockstitch (по SPORTMASTER Workmanship, разд.5)."
+      "notes": "Тип стежка: lockstitch (по SPORTMASTER Workmanship, разд.5).",
+      "code": "L"
     },
     "stitch_chainstitch": {
       "role_id": "stitch.chainstitch.body",
@@ -662,7 +664,8 @@
       "legacy_roles": [
         "stitch_chainstitch"
       ],
-      "notes": "Тип стежка: chainstitch (по SPORTMASTER Workmanship, разд.5)."
+      "notes": "Тип стежка: chainstitch (по SPORTMASTER Workmanship, разд.5).",
+      "code": "C"
     },
     "stitch_zigzag": {
       "role_id": "stitch.zigzag.body",
@@ -674,7 +677,8 @@
       "legacy_roles": [
         "stitch_zigzag"
       ],
-      "notes": "Тип стежка: zigzag (по SPORTMASTER Workmanship, разд.5)."
+      "notes": "Тип стежка: zigzag (по SPORTMASTER Workmanship, разд.5).",
+      "code": "Z"
     },
     "stitch_coverstitch": {
       "role_id": "stitch.coverstitch.body",
@@ -686,7 +690,8 @@
       "legacy_roles": [
         "stitch_coverstitch"
       ],
-      "notes": "Тип стежка: coverstitch (по SPORTMASTER Workmanship, разд.5)."
+      "notes": "Тип стежка: coverstitch (по SPORTMASTER Workmanship, разд.5).",
+      "code": "Co"
     },
     "stitch_flatlock": {
       "role_id": "stitch.flatlock.body",
@@ -698,7 +703,8 @@
       "legacy_roles": [
         "stitch_flatlock"
       ],
-      "notes": "Тип стежка: flatlock (по SPORTMASTER Workmanship, разд.5)."
+      "notes": "Тип стежка: flatlock (по SPORTMASTER Workmanship, разд.5).",
+      "code": "F"
     },
     "stitch_overlock": {
       "role_id": "stitch.overlock.body",
@@ -710,7 +716,8 @@
       "legacy_roles": [
         "stitch_overlock"
       ],
-      "notes": "Тип стежка: overlock (по SPORTMASTER Workmanship, разд.5)."
+      "notes": "Тип стежка: overlock (по SPORTMASTER Workmanship, разд.5).",
+      "code": "O"
     },
     "stitch_backtack": {
       "role_id": "stitch.back_tack.body",
@@ -722,7 +729,8 @@
       "legacy_roles": [
         "stitch_backtack"
       ],
-      "notes": "Тип стежка: back_tack (по SPORTMASTER Workmanship, разд.5)."
+      "notes": "Тип стежка: back_tack (по SPORTMASTER Workmanship, разд.5).",
+      "code": "Bc"
     }
   },
   "role_choices": [

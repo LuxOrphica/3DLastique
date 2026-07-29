@@ -1307,6 +1307,84 @@ def _split_items_multi(items, points):
     return parts
 
 
+def _node_geometry_edits(node_id, node_annotations):
+    if not node_id:
+        return []
+    nodes = node_annotations.get("nodes", {}) if isinstance(node_annotations, dict) else {}
+    node = nodes.get(node_id, {}) if isinstance(nodes, dict) else {}
+    edits = node.get("geometry_edits", []) if isinstance(node, dict) else []
+    return edits if isinstance(edits, list) else []
+
+
+# User-dragged vertices are matched to item endpoints within this radius (user units).
+# The client sends the exact anchor it grabbed; the tolerance only absorbs the rounding
+# that happens when geometry is emitted to the SVG `d` string and parsed back.
+_VERTEX_EPS = 1.2
+
+
+def _snap_point(pt, frm, to, eps):
+    """If pt is within eps of frm, return (moved point, True); else (pt, False)."""
+    if abs(pt.x - frm[0]) <= eps and abs(pt.y - frm[1]) <= eps:
+        return fitz.Point(to[0], to[1]), True
+    return pt, False
+
+
+def apply_vertex_moves(classified, node_id, node_annotations):
+    """User-dragged vertices. Stored per node as geometry_edits
+    [{elem_key, from:[x,y], to:[x,y]}]. Every item endpoint within _VERTEX_EPS of `from`
+    snaps to `to`, so a vertex shared by two segments drags both and the line stays
+    continuous. Adjacent cubic control points ride along by the same delta to preserve
+    the curve's tangent. Applied before splits so a later cut lands on moved geometry.
+    """
+    edits = _node_geometry_edits(node_id, node_annotations)
+    if not edits:
+        return classified
+    by_elem = {}
+    for ed in edits:
+        if not isinstance(ed, dict):
+            continue
+        k = str(ed.get("elem_key") or "")
+        frm = ed.get("from")
+        to = ed.get("to")
+        if not k or not isinstance(frm, (list, tuple)) or not isinstance(to, (list, tuple)):
+            continue
+        try:
+            frm = (float(frm[0]), float(frm[1]))
+            to = (float(to[0]), float(to[1]))
+        except (TypeError, ValueError, IndexError):
+            continue
+        by_elem.setdefault(k, []).append((frm, to))
+    if not by_elem:
+        return classified
+
+    for _role, p in classified:
+        ek = str(p.get("_vse_elem_key") or "")
+        edits_for = by_elem.get(ek)
+        if not edits_for or not p.get("items"):
+            continue
+        items = p["items"]
+        for (frm, to) in edits_for:
+            dx, dy = to[0] - frm[0], to[1] - frm[1]
+            new_items = []
+            for it in items:
+                if it[0] == "l" and len(it) >= 3:
+                    a, _ = _snap_point(it[1], frm, to, _VERTEX_EPS)
+                    b, _ = _snap_point(it[2], frm, to, _VERTEX_EPS)
+                    new_items.append(("l", a, b))
+                elif it[0] == "c" and len(it) >= 5:
+                    a, ma = _snap_point(it[1], frm, to, _VERTEX_EPS)
+                    d, md = _snap_point(it[4], frm, to, _VERTEX_EPS)
+                    c1 = fitz.Point(it[2].x + dx, it[2].y + dy) if ma else it[2]
+                    c2 = fitz.Point(it[3].x + dx, it[3].y + dy) if md else it[3]
+                    new_items.append(("c", a, c1, c2, d))
+                else:
+                    new_items.append(it)
+            items = new_items
+        p["items"] = items
+        p["rect"] = _items_bbox2(items) or p.get("rect")
+    return classified
+
+
 def apply_explicit_splits(classified, node_id, node_annotations):
     """User-declared splits: cut an element into separate parts at clicked points, so
     each part can then carry its own role. Stored per node as splits [{elem_key, x, y}].
@@ -1350,6 +1428,26 @@ def apply_explicit_splits(classified, node_id, node_annotations):
             np["_vse_path_d_prefix"] = part_prefix
             result.append((role, np))
     return result
+
+
+def _node_deleted_elements(node_id, node_annotations):
+    if not node_id:
+        return set()
+    nodes = node_annotations.get("nodes", {}) if isinstance(node_annotations, dict) else {}
+    node = nodes.get(node_id, {}) if isinstance(nodes, dict) else {}
+    deleted = node.get("deleted_elements", []) if isinstance(node, dict) else []
+    return {str(k) for k in deleted if isinstance(deleted, list) and k}
+
+
+def apply_deleted_elements(classified, node_id, node_annotations):
+    """User-deleted fragments. Stored per node as deleted_elements [elem_key, ...].
+    Runs after splits/merges so the key can refer to a split part or a merged line —
+    whatever the user actually clicked and deleted in the UI.
+    """
+    deleted = _node_deleted_elements(node_id, node_annotations)
+    if not deleted:
+        return classified
+    return [(role, p) for (role, p) in classified if str(p.get("_vse_elem_key") or "") not in deleted]
 
 
 def _chain_fragments(fragments):
@@ -2109,8 +2207,10 @@ def standardize(ai_path, svg_out, elem_overrides=None):
         p["_vse_final_role"] = role
         classified.append((role, p))
     classified = normalize_fragmented_stitches(classified)
+    classified = apply_vertex_moves(classified, node_id, node_annotations)
     classified = apply_explicit_splits(classified, node_id, node_annotations)
     classified = apply_explicit_merges(classified, node_id, node_annotations)
+    classified = apply_deleted_elements(classified, node_id, node_annotations)
 
     render_classified = []
     zipper_paths = []
