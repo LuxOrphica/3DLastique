@@ -138,11 +138,18 @@ def classify_path(p, text_words):
         return "contour_hidden"
 
     # Stitches: red lines — dashed = through layers, solid = edge/visible.
-    # Thick red bars called out as Bc/Bt are bar tacks / закрепки, not edge stitch.
+    #
+    # A short thick red bar is a back tack (Bc): a stretch of forward-and-back stitching
+    # at a seam end, which the standard draws exactly that way. It is NOT Bt — a bar tack
+    # from a special machine is drawn as a zigzag comb, handled where the "vvvv" glyphs
+    # are rendered. Length matters: thick red lines also run the length of a whole seam,
+    # and those are ordinary stitching, not a закрепка.
     if color == "RED" and is_dashed:
         return "stitch_thru"
     if color == "RED" and w >= 2.5:
-        return "stitch_Bt"
+        if max(rw, rh) <= 25:
+            return "stitch_backtack"
+        return "stitch_edge"
     if color == "RED":
         return "stitch_edge"
 

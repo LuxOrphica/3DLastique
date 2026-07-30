@@ -1303,7 +1303,12 @@ def parse_svg_path_d(d):
 # Roles assigned purely from how a line looks (red / dashed / thick). They say nothing
 # about the actual stitch type, so an operation code found next to the line may refine
 # them — but a role the user set by hand must never be touched.
-_GENERIC_STITCH_ROLES = {"stitch_edge", "stitch_thru", "stitch_Bt", "stitch_symbol"}
+_GENERIC_STITCH_ROLES = {
+    "stitch_edge", "stitch_thru", "stitch_symbol",
+    # Bt/Bc are inferred from shape (comb vs short thick bar); a code written in the
+    # drawing is more authoritative, so it may still correct them.
+    "stitch_Bt", "stitch_backtack",
+}
 
 # How far a code label may sit from the line it annotates, in PDF units. Measured from
 # real drawings: labels sit right beside the seam, but a leader line can push them out to
