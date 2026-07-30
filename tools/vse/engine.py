@@ -1303,12 +1303,14 @@ def parse_svg_path_d(d):
 # Roles assigned purely from how a line looks (red / dashed / thick). They say nothing
 # about the actual stitch type, so an operation code found next to the line may refine
 # them — but a role the user set by hand must never be touched.
-_GENERIC_STITCH_ROLES = {
-    "stitch_edge", "stitch_thru", "stitch_symbol",
-    # Bt/Bc are inferred from shape (comb vs short thick bar); a code written in the
-    # drawing is more authoritative, so it may still correct them.
-    "stitch_Bt", "stitch_backtack",
-}
+_GENERIC_STITCH_ROLES = {"stitch_edge", "stitch_thru", "stitch_symbol", "stitch_Bt", "stitch_backtack"}
+
+# Roles for the two закрепки. Their codes are attached to the mark by a leader line, so
+# the label often sits nearer some unrelated seam than the tack it points at — proximity
+# alone once turned a 94-unit seam into a "закрепка". Shape identifies them reliably
+# (comb = Bt, short thick bar = Bc), so a Bt/Bc code may only swap one for the other,
+# never promote an ordinary stitch line.
+_BAR_TACK_ROLES = {"stitch_Bt", "stitch_backtack"}
 
 # How far a code label may sit from the line it annotates, in PDF units. Measured from
 # real drawings: labels sit right beside the seam, but a leader line can push them out to
@@ -1359,9 +1361,15 @@ def apply_operation_code_roles(classified, text_words):
     taken = set()
     limit2 = _CODE_LABEL_RADIUS ** 2
     for _code, new_role, cx, cy in labels:
+        bar_tack_code = new_role in _BAR_TACK_ROLES
         best_i, best_d2 = None, limit2
         for i in candidates:
             if i in taken:
+                continue
+            # A закрепка code may only correct something already recognised as one.
+            if bar_tack_code and classified[i][0] not in _BAR_TACK_ROLES:
+                continue
+            if not bar_tack_code and classified[i][0] in _BAR_TACK_ROLES:
                 continue
             _ii, _t, d2 = _nearest_on_items(classified[i][1].get("items") or [], cx, cy)
             if d2 is not None and d2 < best_d2:
@@ -2645,24 +2653,11 @@ def standardize(ai_path, svg_out, elem_overrides=None):
     # labels them so — not a nameless "stitch symbol", and they used a hardcoded dark
     # stroke, so neither the visual standard nor the style editor could reach them.
     if stitch_symbols:
-        _bar_tack_labels = []
-        for w in (text_words or []):
-            if len(w) < 5:
-                continue
-            for code in find_stitch_operation_codes(str(w[4])):
-                if code in ("Bt", "Bc"):
-                    _bar_tack_labels.append((code, (w[0] + w[2]) / 2.0, (w[1] + w[3]) / 2.0))
-
-        def _bar_tack_role(cx, cy):
-            best, best_d2 = "stitch_Bt", _CODE_LABEL_RADIUS ** 2
-            for code, lx, ly in _bar_tack_labels:
-                d2 = (lx - cx) ** 2 + (ly - cy) ** 2
-                if d2 < best_d2:
-                    best_d2 = d2
-                    best = "stitch_backtack" if code == "Bc" else "stitch_Bt"
-            return best
-
-        _symbol_paths = []   # (role, d)
+        # The comb IS Bt — a bar tack from a special machine. Bc, the forward-and-back
+        # tack, is drawn as a short thick bar instead and is picked up in roles.py.
+        # Choosing between them by nearest label was wrong: the label hangs off a leader
+        # line and lands closer to whatever else is nearby.
+        _symbol_paths = []   # (role, d, amplitude)
         for (x0, y0, x1, y1, txt, size, color) in stitch_symbols:
             count = max(1, len(txt.strip()))
             width = max(x1 - x0, size * count * 0.55)
@@ -2686,7 +2681,7 @@ def standardize(ai_path, svg_out, elem_overrides=None):
             # a bar tack's role width (3.0) is meant for a short thick bar and would fill
             # a comb this small into an unreadable blob.
             _amp = max(y_bottom - y_top, 0.1)
-            _symbol_paths.append((_bar_tack_role((x0 + x1) / 2.0, (y0 + y1) / 2.0), d, _amp))
+            _symbol_paths.append(("stitch_Bt", d, _amp))
 
         for _role in sorted({r for r, _d, _a in _symbol_paths}):
             _base = dict(get_style(_role))

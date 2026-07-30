@@ -82,7 +82,7 @@ ROLE_STYLES = {
         "fill":             "none",
         "stroke-linecap":   "butt",
         "opacity":          "1",
-        "_label": "Закрепка / bar tack (Bc/Bt)",
+        "_label": "Закрепка на спецмашине, Bt / bar tack (гребёнка)",
     },
     # Stitch types by family (SPORTMASTER Workmanship, section 5). Same stitch red;
     # families are told apart by dash/width. Visual is approximate — the code (L1/C2/…)
@@ -118,9 +118,12 @@ ROLE_STYLES = {
         "_label": "Оверлок / overlock",
     },
     "stitch_backtack": {
-        "stroke": "#C8102E", "stroke-width": "1.5", "stroke-dasharray": "2 1",
+        # Drawn as a short thick solid bar, which is also how the source draws it. It
+        # must not be thin and dashed: that reads as a through stitch, which is exactly
+        # what a back tack is not.
+        "stroke": "#C8102E", "stroke-width": "2.5", "stroke-dasharray": "none",
         "fill": "none", "stroke-linecap": "butt", "opacity": "1",
-        "_label": "Закрепка прямой-обратной / back tack (Bc)",
+        "_label": "Закрепка прямой-обратной, Bc / back tack",
     },
     "stitch_symbol": {
         "stroke":           "#1A1A1A",
