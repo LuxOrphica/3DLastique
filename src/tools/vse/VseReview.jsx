@@ -2,6 +2,10 @@ import { useState, useEffect, useLayoutEffect, useMemo, useRef, useCallback } fr
 import LineEditor, { TOOLS } from "./LineEditor";
 import "./VseReview.css";
 
+// Mirror of visual_standard.py, used for previews and highlights. It is a fallback:
+// applyServerRoleStyles() overwrites it from /api/role-styles once loaded, so anything
+// edited in the style editor shows up here too. Kept as one mutable object because the
+// styles are read from a dozen places that would otherwise all have to be rewired.
 const ROLE_STYLES = {
   // Контуры
   contour_outer:       { stroke: "#1A1A1A", "stroke-width": "1.5",  "stroke-dasharray": "none" },
@@ -62,6 +66,28 @@ const ROLE_STYLES = {
   // Прочее
   unknown:             { stroke: "#999999", "stroke-width": "0.5",  "stroke-dasharray": "none" },
 };
+
+/** Replace the built-in mirror with the server's effective styles (defaults + user edits). */
+function applyServerRoleStyles(styles) {
+  if (!styles || typeof styles !== "object") return false;
+  let changed = false;
+  for (const [role, attrs] of Object.entries(styles)) {
+    if (!attrs || typeof attrs !== "object") continue;
+    const next = {
+      stroke: attrs.stroke ?? "none",
+      fill: attrs.fill ?? "none",
+      "stroke-width": String(attrs["stroke-width"] ?? "1"),
+      "stroke-dasharray": attrs["stroke-dasharray"] ?? "none",
+      ...(attrs.opacity !== undefined ? { opacity: String(attrs.opacity) } : {}),
+    };
+    const cur = ROLE_STYLES[role];
+    if (!cur || Object.entries(next).some(([k, v]) => String(cur[k] ?? "") !== String(v))) {
+      ROLE_STYLES[role] = next;
+      changed = true;
+    }
+  }
+  return changed;
+}
 
 const ROLE_GROUPS = [
   { label: "— не назначено —", roles: ["?"] },
@@ -2527,7 +2553,7 @@ function StylePreview({ style }) {
   );
 }
 
-function TabRoleStyles({ roleCatalog }) {
+function TabRoleStyles({ roleCatalog, onStylesChanged }) {
   const [roles, setRoles] = useState(null);
   const [drafts, setDrafts] = useState({});      // role -> {attr: value}
   const [error, setError] = useState("");
@@ -2590,7 +2616,13 @@ function TabRoleStyles({ roleCatalog }) {
       if (!r.ok || data?.ok === false) throw new Error(data?.error || `HTTP ${r.status}`);
       setRoles(data.roles || {});
       setDrafts({});
-      setStatus("Сохранено. Изменения появятся на схеме после пересборки узла.");
+      // Refresh the preview mirror at once; the SVGs on disk still hold the old styles
+      // until they are rebuilt, which is what the button below is for.
+      const eff = {};
+      for (const [role, info] of Object.entries(data.roles || {})) eff[role] = info.style;
+      applyServerRoleStyles(eff);
+      onStylesChanged?.();
+      setStatus("Сохранено. Подсветка в интерфейсе обновилась; чтобы стили попали в сами схемы, нажми «Применить ко всем узлам».");
     } catch (err) {
       setStatus(`Ошибка: ${err?.message || err}`);
     } finally {
@@ -2601,6 +2633,34 @@ function TabRoleStyles({ roleCatalog }) {
   const resetRole = (role) => {
     const def = roles?.[role]?.default || {};
     setDrafts(prev => ({ ...prev, [role]: { ...def } }));
+  };
+
+  // Role styles are baked into each SVG when it is generated, so editing them leaves
+  // every drawing on disk stale until they are rebuilt.
+  const [rebuilding, setRebuilding] = useState(false);
+  const rebuildAll = async () => {
+    setRebuilding(true);
+    setStatus("Пересобираю все узлы, это займёт несколько минут…");
+    try {
+      const r = await fetch(`${API}/api/rebuild-all`, { method: "POST" });
+      const data = await r.json();
+      if (!r.ok || data?.ok === false) throw new Error(data?.error || `HTTP ${r.status}`);
+      // Poll until the background export reports it is done.
+      for (;;) {
+        await new Promise(res => setTimeout(res, 2000));
+        const s = await fetch(`${API}/api/status?t=${Date.now()}`).then(x => x.json()).catch(() => null);
+        const st = s?.status || s;
+        if (!st || st.state === "building") continue;
+        if (st.state === "error") throw new Error(st.message || "ошибка пересборки");
+        break;
+      }
+      clearNodeCache("");
+      setStatus("Готово: стили применены ко всем схемам. Обнови страницу, чтобы увидеть.");
+    } catch (err) {
+      setStatus(`Ошибка: ${err?.message || err}`);
+    } finally {
+      setRebuilding(false);
+    }
   };
 
   // Grouped by the same categories the markup tab uses, so a role sits where the user
@@ -2700,6 +2760,11 @@ function TabRoleStyles({ roleCatalog }) {
           <button type="button" onClick={() => setDrafts({})} disabled={saving}
             style={{ fontSize: 12, padding: "5px 10px", borderRadius: 4, border: "1px solid #8a7a45", background: "transparent", color: "#C8A84B", cursor: "pointer" }}>Отменить</button>
         )}
+        <button type="button" onClick={rebuildAll} disabled={saving || rebuilding}
+          title="Стили вшиты в схемы при сборке, поэтому их надо пересобрать. Операция долгая."
+          style={{ fontSize: 12, fontWeight: 600, padding: "5px 12px", borderRadius: 4, border: "1px solid #5c7180", background: rebuilding ? "#5c7180" : "transparent", color: rebuilding ? "#fff" : "#5c7180", cursor: saving || rebuilding ? "default" : "pointer" }}>
+          {rebuilding ? "Пересобираю все узлы…" : "Применить ко всем узлам"}
+        </button>
       </div>
       {status && <div style={{ fontSize: 12, color: status.startsWith("Ошибка") ? "#b06a5a" : "#4c7a52", padding: "0 12px 8px", flex: "none" }}>{status}</div>}
 
@@ -2865,6 +2930,8 @@ export default function VseReview() {
   // existed here; the crash stayed hidden because `tab === … && <Tab …>` short-circuits,
   // so the prop was only ever evaluated once one of those tabs was opened.
   const [roleCatalog, setRoleCatalog] = useState(null);
+  // Bumped when ROLE_STYLES is refreshed from the server, to force a repaint.
+  const [styleRev, setStyleRev] = useState(0);
 
   const API = `http://${window.location.hostname}:7070`;
 
@@ -2877,6 +2944,12 @@ export default function VseReview() {
       .then(r => r.json())
       .then(d => setRoleCatalog(d?.catalog || d || null))
       .catch(() => setRoleCatalog(null));
+    // Effective role styles, so previews and the line editor show edited styles
+    // instead of the built-in defaults.
+    fetch(`${API}/api/role-styles` + t)
+      .then(r => r.json())
+      .then(d => { if (applyServerRoleStyles(d?.styles)) setStyleRev(v => v + 1); })
+      .catch(() => {});
   }, []);
 
   // Poll build status while building
@@ -2986,7 +3059,7 @@ export default function VseReview() {
         )}
         {tab === "callouts" && <TabCallouts calloutGraph={calloutGraph} meanings={meanings} setMeanings={setMeanings} />}
         {tab === "registry" && <TabRegistry registry={registry} setRegistry={setRegistry} manifest={manifest} roleCatalog={roleCatalog} />}
-        {tab === "rolestyles" && <TabRoleStyles roleCatalog={roleCatalog} />}
+        {tab === "rolestyles" && <TabRoleStyles roleCatalog={roleCatalog} onStylesChanged={() => setStyleRev(v => v + 1)} />}
       </div>
     </div>
   );

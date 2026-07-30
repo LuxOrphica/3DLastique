@@ -1128,6 +1128,18 @@ def get_role_styles():
     })
 
 
+@app.route("/api/rebuild-all", methods=["POST"])
+def rebuild_all():
+    """Rebuild every standardized SVG. Role styles are baked in at generation time, so
+    after editing them the drawings on disk stay stale until this runs. Long job — it
+    reports through /api/status like the other exports."""
+    global last_status
+    if last_status.get("state") == "building":
+        return jsonify({"ok": False, "error": "Пересборка уже идёт"}), 409
+    threading.Thread(target=_export_static_background, daemon=True).start()
+    return jsonify({"ok": True, "state": "building"})
+
+
 @app.route("/api/role-style-editor", methods=["GET"])
 def get_role_style_editor():
     return jsonify({"ok": True, "roles": _role_style_detail()})
