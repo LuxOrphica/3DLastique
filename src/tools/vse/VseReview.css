@@ -920,3 +920,60 @@
   color: #999;
   text-align: center;
 }
+
+/* ── Role style editor ─────────────────────────────────────────────────────── */
+/* Fills the viewport below the tab bar: the toolbar and category tabs stay put and
+   only the table scrolls, so long categories don't push the controls off-screen. */
+.vse-role-styles {
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;   /* height itself is measured in JS — the header above can wrap */
+}
+.vse-role-cat-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex: none;
+  margin: 0 0 8px;
+}
+.vse-role-cat-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-family: inherit;
+  border: 1px solid #ddd6c4;
+  border-radius: 5px;
+  background: #f6f3ea;
+  color: #5c5646;
+  cursor: pointer;
+}
+.vse-role-cat-btn:hover { background: #efe9da; }
+.vse-role-cat-btn.active {
+  background: #C8A84B;
+  border-color: #C8A84B;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+.vse-role-cat-btn span {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.12);
+}
+.vse-role-cat-btn.active span { background: rgba(0, 0, 0, 0.18); }
+.vse-role-styles-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  border: 1px solid #e0ddd8;
+  border-radius: 6px;
+  background: #fff;
+}
+/* Header stays visible while scrolling a long category. */
+.vse-role-styles-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}

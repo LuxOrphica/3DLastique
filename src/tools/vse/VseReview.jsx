@@ -2603,19 +2603,60 @@ function TabRoleStyles({ roleCatalog }) {
     setDrafts(prev => ({ ...prev, [role]: { ...def } }));
   };
 
-  const visible = useMemo(() => {
+  // Grouped by the same categories the markup tab uses, so a role sits where the user
+  // already expects it. Anything the groups don't list falls into "Прочее".
+  const groups = useMemo(() => {
     if (!roles) return [];
     const q = query.trim().toLowerCase();
-    return Object.entries(roles)
-      .filter(([role, info]) => {
-        if (onlyChanged && !info.overridden && !isDirty(role)) return false;
-        if (!q) return true;
-        return role.toLowerCase().includes(q)
-          || String(info.label || "").toLowerCase().includes(q)
-          || String(roleLabel(roleCatalog, role)).toLowerCase().includes(q);
-      })
+    const matches = ([role, info]) => {
+      if (onlyChanged && !info.overridden && !isDirty(role)) return false;
+      if (!q) return true;
+      return role.toLowerCase().includes(q)
+        || String(info.label || "").toLowerCase().includes(q)
+        || String(roleLabel(roleCatalog, role)).toLowerCase().includes(q);
+    };
+    const seen = new Set();
+    const out = [];
+    for (const g of ROLE_GROUPS_UI) {
+      const rows = g.roles
+        .filter(r => r !== "?" && roles[r])
+        .map(r => { seen.add(r); return [r, roles[r]]; })
+        .filter(matches);
+      if (rows.length) out.push({ label: g.label, rows });
+    }
+    const rest = Object.entries(roles).filter(([r]) => !seen.has(r)).filter(matches)
       .sort((a, b) => a[0].localeCompare(b[0]));
+    if (rest.length) {
+      // ROLE_GROUPS_UI already ends with a "Прочее" group; fold leftovers into it
+      // rather than adding a second group under the same name.
+      const misc = out.find(g => g.label === "Прочее");
+      if (misc) misc.rows = [...misc.rows, ...rest];
+      else out.push({ label: "Прочее", rows: rest });
+    }
+    return out;
   }, [roles, query, onlyChanged, drafts, roleCatalog]);
+
+  const shownCount = groups.reduce((n, g) => n + g.rows.length, 0);
+
+  // Category sub-tabs. The chosen one is kept by name so it survives edits; it falls
+  // back to the first group when a search filters it away.
+  const [cat, setCat] = useState(null);
+  const activeGroup = groups.find(g => g.label === cat) || groups[0] || null;
+
+  // Fill the window down to the bottom edge. Measured rather than a CSS constant,
+  // because the height of the header and tab bar above depends on how they wrap.
+  const wrapRef = useRef(null);
+  const [boxH, setBoxH] = useState(null);
+  useEffect(() => {
+    const measure = () => {
+      const el = wrapRef.current;
+      if (!el) return;
+      setBoxH(Math.max(320, Math.round(window.innerHeight - el.getBoundingClientRect().top - 16)));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [roles]);
 
   if (error) return <div className="vse-empty-roles"><strong>Не загрузились стили.</strong><span>{error}</span></div>;
   if (!roles) return <div className="vse-empty-roles"><span>Загрузка стилей…</span></div>;
@@ -2639,14 +2680,15 @@ function TabRoleStyles({ roleCatalog }) {
   };
 
   return (
-    <div className="vse-node-styles" style={{ padding: "0 0 40px" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", padding: "10px 12px", margin: "0 0 10px", background: "rgba(200,168,75,0.10)", border: "1px solid #C8A84B", borderRadius: 6 }}>
+    <div className="vse-role-styles" ref={wrapRef} style={boxH ? { height: boxH } : undefined}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", padding: "10px 12px", margin: "0 0 10px", background: "rgba(200,168,75,0.10)", border: "1px solid #C8A84B", borderRadius: 6, flex: "none" }}>
         <input className="ref-search" style={{ flex: "1 1 220px", minWidth: 180 }} placeholder="Поиск роли…"
           value={query} onChange={e => setQuery(e.target.value)} />
         <label style={{ fontSize: 12, color: "#5c7180", display: "flex", alignItems: "center", gap: 5, cursor: "pointer" }}>
           <input type="checkbox" checked={onlyChanged} onChange={e => setOnlyChanged(e.target.checked)} />
           только изменённые
         </label>
+        <span style={{ fontSize: 12, color: "#7a8794" }}>показано {shownCount} из {Object.keys(roles).length}</span>
         <span style={{ fontSize: 12, color: dirtyCount ? "#C8A84B" : "#7a8794", fontWeight: dirtyCount ? 600 : 400 }}>
           {dirtyCount ? `● ${dirtyCount} ${pluralPravki(dirtyCount)} — не сохранено` : "все правки сохранены"}
         </span>
@@ -2659,8 +2701,20 @@ function TabRoleStyles({ roleCatalog }) {
             style={{ fontSize: 12, padding: "5px 10px", borderRadius: 4, border: "1px solid #8a7a45", background: "transparent", color: "#C8A84B", cursor: "pointer" }}>Отменить</button>
         )}
       </div>
-      {status && <div style={{ fontSize: 12, color: status.startsWith("Ошибка") ? "#b06a5a" : "#4c7a52", padding: "0 12px 8px" }}>{status}</div>}
+      {status && <div style={{ fontSize: 12, color: status.startsWith("Ошибка") ? "#b06a5a" : "#4c7a52", padding: "0 12px 8px", flex: "none" }}>{status}</div>}
 
+      <div className="vse-role-cat-tabs">
+        {groups.map(g => (
+          <button key={g.label} type="button"
+            className={`vse-role-cat-btn${activeGroup?.label === g.label ? " active" : ""}`}
+            onClick={() => setCat(g.label)}>
+            {g.label}
+            <span>{g.rows.length}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="vse-role-styles-scroll">
       <table className="vse-table">
         <thead>
           <tr>
@@ -2675,7 +2729,7 @@ function TabRoleStyles({ roleCatalog }) {
           </tr>
         </thead>
         <tbody>
-          {visible.map(([role, info]) => {
+          {(activeGroup?.rows || []).map(([role, info]) => {
             const st = effective(role);
             const dirty = isDirty(role);
             const dash = st["stroke-dasharray"] || "none";
@@ -2727,7 +2781,8 @@ function TabRoleStyles({ roleCatalog }) {
           })}
         </tbody>
       </table>
-      {!visible.length && <div className="vse-empty-roles"><span>Ничего не найдено.</span></div>}
+      {!shownCount && <div className="vse-empty-roles"><span>Ничего не найдено.</span></div>}
+      </div>
     </div>
   );
 }
