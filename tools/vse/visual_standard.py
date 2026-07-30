@@ -12,6 +12,9 @@ Role taxonomy (updated):
   Other:       unknown
 """
 
+import json
+import os
+
 ROLE_STYLES = {
     # ── Контуры ──────────────────────────────────────────────────────────────
     "contour_outer": {
@@ -442,10 +445,74 @@ ROLE_STYLES = {
 }
 
 
+# ── User overrides ───────────────────────────────────────────────────────────
+# ROLE_STYLES above stays the shipped default. Anything the user changes in the UI is
+# written to role_style_overrides.json and layered on top, so a role can always be put
+# back to the standard by dropping its entry.
+_OVERRIDES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "role_style_overrides.json")
+_EDITABLE_KEYS = ("stroke", "fill", "stroke-width", "stroke-dasharray", "opacity")
+_overrides_cache = None
+_overrides_mtime = None
+
+
+def load_style_overrides():
+    """Read the override file, re-reading it whenever it changes on disk."""
+    global _overrides_cache, _overrides_mtime
+    try:
+        mtime = os.path.getmtime(_OVERRIDES_PATH)
+    except OSError:
+        _overrides_cache, _overrides_mtime = {}, None
+        return {}
+    if _overrides_cache is not None and mtime == _overrides_mtime:
+        return _overrides_cache
+    try:
+        with open(_OVERRIDES_PATH, encoding="utf-8") as fh:
+            data = json.load(fh)
+    except (OSError, json.JSONDecodeError):
+        data = {}
+    if not isinstance(data, dict):
+        data = {}
+    clean = {}
+    for role, attrs in data.items():
+        if role in ROLE_STYLES and isinstance(attrs, dict):
+            picked = {k: str(v) for k, v in attrs.items() if k in _EDITABLE_KEYS and v not in (None, "")}
+            if picked:
+                clean[role] = picked
+    _overrides_cache, _overrides_mtime = clean, mtime
+    return clean
+
+
+def save_style_overrides(data):
+    """Persist role style overrides; returns the cleaned dict that was written."""
+    global _overrides_cache, _overrides_mtime
+    clean = {}
+    for role, attrs in (data or {}).items():
+        if role in ROLE_STYLES and isinstance(attrs, dict):
+            picked = {k: str(v) for k, v in attrs.items() if k in _EDITABLE_KEYS and v not in (None, "")}
+            if picked:
+                clean[role] = picked
+    with open(_OVERRIDES_PATH, "w", encoding="utf-8") as fh:
+        json.dump(clean, fh, ensure_ascii=False, indent=2)
+    _overrides_cache = clean
+    try:
+        _overrides_mtime = os.path.getmtime(_OVERRIDES_PATH)
+    except OSError:
+        _overrides_mtime = None
+    return clean
+
+
+def default_style(role):
+    """The shipped style for a role, ignoring user overrides."""
+    raw = ROLE_STYLES.get(role, ROLE_STYLES["unknown"])
+    return {k: v for k, v in raw.items() if not k.startswith("_")}
+
+
 def get_style(role):
     """Return presentation attrs dict for a role (without private _label key)."""
     raw = ROLE_STYLES.get(role, ROLE_STYLES["unknown"])
-    return {k: v for k, v in raw.items() if not k.startswith("_")}
+    style = {k: v for k, v in raw.items() if not k.startswith("_")}
+    style.update(load_style_overrides().get(role, {}))
+    return style
 
 
 def style_attr(role):

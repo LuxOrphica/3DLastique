@@ -2501,6 +2501,237 @@ function TabCallouts({ calloutGraph, meanings, setMeanings }) {
 }
 
 // Tab 3: Style registry
+// Role style editor. ROLE_STYLES in visual_standard.py stays the shipped default;
+// what is edited here is saved as an override layer, so any role can be put back.
+// Changes reach a drawing when it is rebuilt — the preview here is immediate.
+const DASH_PRESETS = [
+  { value: "none", label: "сплошная" },
+  { value: "4 2", label: "пунктир" },
+  { value: "2 2", label: "мелкий пунктир" },
+  { value: "8 3", label: "длинный пунктир" },
+  { value: "6 2 1 2", label: "штрихпунктир" },
+  { value: "1 2", label: "точки" },
+];
+
+function StylePreview({ style }) {
+  const stroke = style?.stroke && style.stroke !== "none" ? style.stroke : null;
+  const fill = style?.fill && style.fill !== "none" ? style.fill : null;
+  const width = parseFloat(style?.["stroke-width"]) || 0;
+  const dash = style?.["stroke-dasharray"] && style["stroke-dasharray"] !== "none" ? style["stroke-dasharray"] : undefined;
+  return (
+    <svg width="118" height="26" style={{ background: "#fdfcf8", borderRadius: 3, border: "1px solid #e3ddcc" }}>
+      {fill && <rect x="6" y="5" width="30" height="16" fill={fill} stroke={stroke || "none"} strokeWidth={Math.min(width, 3)} />}
+      {stroke && <line x1={fill ? 44 : 8} y1="13" x2="110" y2="13" stroke={stroke} strokeWidth={Math.max(width, 0.5)} strokeDasharray={dash} />}
+      {!stroke && !fill && <text x="8" y="17" fontSize="10" fill="#9a9a9a">пусто</text>}
+    </svg>
+  );
+}
+
+function TabRoleStyles({ roleCatalog }) {
+  const [roles, setRoles] = useState(null);
+  const [drafts, setDrafts] = useState({});      // role -> {attr: value}
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [status, setStatus] = useState("");
+  const [query, setQuery] = useState("");
+  const [onlyChanged, setOnlyChanged] = useState(false);
+
+  const load = useCallback(async () => {
+    try {
+      const r = await fetch(`${API}/api/role-style-editor?t=${Date.now()}`);
+      const data = await r.json();
+      if (!r.ok || data?.ok === false) throw new Error(data?.error || `HTTP ${r.status}`);
+      setRoles(data.roles || {});
+      setError("");
+    } catch (err) {
+      setError(String(err?.message || err));
+    }
+  }, []);
+  useEffect(() => { load(); }, [load]);
+
+  // Effective style = saved style with the unsaved draft on top.
+  const effective = useCallback((role) => ({ ...(roles?.[role]?.style || {}), ...(drafts[role] || {}) }), [roles, drafts]);
+  const isDirty = (role) => Boolean(drafts[role] && Object.keys(drafts[role]).length);
+  const dirtyCount = Object.keys(drafts).filter(isDirty).length;
+
+  const setAttr = (role, attr, value) => {
+    setDrafts(prev => {
+      const cur = { ...(prev[role] || {}) };
+      const base = roles?.[role]?.style || {};
+      if (String(base[attr] ?? "") === String(value)) delete cur[attr];
+      else cur[attr] = value;
+      const next = { ...prev };
+      if (Object.keys(cur).length) next[role] = cur; else delete next[role];
+      return next;
+    });
+  };
+
+  const save = async () => {
+    if (!roles) return;
+    setSaving(true);
+    setStatus("Сохраняю…");
+    try {
+      // Send the full override set: current overrides plus drafts, minus anything that
+      // now equals the shipped default (that is how a role returns to standard).
+      const overrides = {};
+      for (const [role, info] of Object.entries(roles)) {
+        const merged = { ...info.style, ...(drafts[role] || {}) };
+        const diff = {};
+        for (const [k, v] of Object.entries(merged)) {
+          if (String(info.default?.[k] ?? "") !== String(v)) diff[k] = v;
+        }
+        if (Object.keys(diff).length) overrides[role] = diff;
+      }
+      const r = await fetch(`${API}/api/role-styles`, {
+        method: "PUT", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ overrides }),
+      });
+      const data = await r.json();
+      if (!r.ok || data?.ok === false) throw new Error(data?.error || `HTTP ${r.status}`);
+      setRoles(data.roles || {});
+      setDrafts({});
+      setStatus("Сохранено. Изменения появятся на схеме после пересборки узла.");
+    } catch (err) {
+      setStatus(`Ошибка: ${err?.message || err}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const resetRole = (role) => {
+    const def = roles?.[role]?.default || {};
+    setDrafts(prev => ({ ...prev, [role]: { ...def } }));
+  };
+
+  const visible = useMemo(() => {
+    if (!roles) return [];
+    const q = query.trim().toLowerCase();
+    return Object.entries(roles)
+      .filter(([role, info]) => {
+        if (onlyChanged && !info.overridden && !isDirty(role)) return false;
+        if (!q) return true;
+        return role.toLowerCase().includes(q)
+          || String(info.label || "").toLowerCase().includes(q)
+          || String(roleLabel(roleCatalog, role)).toLowerCase().includes(q);
+      })
+      .sort((a, b) => a[0].localeCompare(b[0]));
+  }, [roles, query, onlyChanged, drafts, roleCatalog]);
+
+  if (error) return <div className="vse-empty-roles"><strong>Не загрузились стили.</strong><span>{error}</span></div>;
+  if (!roles) return <div className="vse-empty-roles"><span>Загрузка стилей…</span></div>;
+
+  const cell = { padding: "5px 7px", verticalAlign: "middle" };
+  const colorInput = (role, attr) => {
+    const val = effective(role)[attr] ?? "none";
+    const isNone = !val || val === "none";
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+        <input type="color" value={isNone ? "#000000" : val} disabled={isNone}
+          onChange={e => setAttr(role, attr, e.target.value.toUpperCase())}
+          style={{ width: 30, height: 22, padding: 0, border: "1px solid #cfc6ad", borderRadius: 3, background: "none", cursor: isNone ? "default" : "pointer", opacity: isNone ? 0.35 : 1 }} />
+        <label style={{ fontSize: 10, color: "#7a8794", display: "flex", alignItems: "center", gap: 3, cursor: "pointer" }}>
+          <input type="checkbox" checked={isNone}
+            onChange={e => setAttr(role, attr, e.target.checked ? "none" : "#808080")} />
+          нет
+        </label>
+      </div>
+    );
+  };
+
+  return (
+    <div className="vse-node-styles" style={{ padding: "0 0 40px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", padding: "10px 12px", margin: "0 0 10px", background: "rgba(200,168,75,0.10)", border: "1px solid #C8A84B", borderRadius: 6 }}>
+        <input className="ref-search" style={{ flex: "1 1 220px", minWidth: 180 }} placeholder="Поиск роли…"
+          value={query} onChange={e => setQuery(e.target.value)} />
+        <label style={{ fontSize: 12, color: "#5c7180", display: "flex", alignItems: "center", gap: 5, cursor: "pointer" }}>
+          <input type="checkbox" checked={onlyChanged} onChange={e => setOnlyChanged(e.target.checked)} />
+          только изменённые
+        </label>
+        <span style={{ fontSize: 12, color: dirtyCount ? "#C8A84B" : "#7a8794", fontWeight: dirtyCount ? 600 : 400 }}>
+          {dirtyCount ? `● ${dirtyCount} ${pluralPravki(dirtyCount)} — не сохранено` : "все правки сохранены"}
+        </span>
+        <button type="button" onClick={save} disabled={saving || !dirtyCount}
+          style={{ fontSize: 12, fontWeight: 600, padding: "5px 12px", borderRadius: 4, border: "none", background: dirtyCount ? "#C8A84B" : "#b9b1a0", color: "#1a1a1a", cursor: dirtyCount && !saving ? "pointer" : "default" }}>
+          {saving ? "Сохраняю…" : "Сохранить"}
+        </button>
+        {dirtyCount > 0 && (
+          <button type="button" onClick={() => setDrafts({})} disabled={saving}
+            style={{ fontSize: 12, padding: "5px 10px", borderRadius: 4, border: "1px solid #8a7a45", background: "transparent", color: "#C8A84B", cursor: "pointer" }}>Отменить</button>
+        )}
+      </div>
+      {status && <div style={{ fontSize: 12, color: status.startsWith("Ошибка") ? "#b06a5a" : "#4c7a52", padding: "0 12px 8px" }}>{status}</div>}
+
+      <table className="vse-table">
+        <thead>
+          <tr>
+            <th style={{ width: 240 }}>Роль</th>
+            <th style={{ width: 128 }}>Вид</th>
+            <th style={{ width: 108 }}>Обводка</th>
+            <th style={{ width: 108 }}>Заливка</th>
+            <th style={{ width: 84 }}>Толщина</th>
+            <th style={{ width: 150 }}>Штрих</th>
+            <th style={{ width: 96 }}>Прозрачн.</th>
+            <th style={{ width: 90 }}></th>
+          </tr>
+        </thead>
+        <tbody>
+          {visible.map(([role, info]) => {
+            const st = effective(role);
+            const dirty = isDirty(role);
+            const dash = st["stroke-dasharray"] || "none";
+            const known = DASH_PRESETS.some(p => p.value === dash);
+            return (
+              <tr key={role} style={{ background: dirty ? "rgba(200,168,75,0.12)" : undefined }}>
+                <td style={cell}>
+                  <div style={{ fontWeight: 600, fontSize: 12 }}>{roleLabel(roleCatalog, role) || info.label}</div>
+                  <div style={{ fontSize: 10, color: "#8a8577" }}>
+                    <code>{role}</code>
+                    {info.overridden && !dirty && <span style={{ color: "#4c7a52", marginLeft: 6 }}>● изменён</span>}
+                    {dirty && <span style={{ color: "#C8A84B", marginLeft: 6 }}>● не сохранено</span>}
+                  </div>
+                </td>
+                <td style={cell}><StylePreview style={st} /></td>
+                <td style={cell}>{colorInput(role, "stroke")}</td>
+                <td style={cell}>{colorInput(role, "fill")}</td>
+                <td style={cell}>
+                  <input type="number" min="0" max="20" step="0.25"
+                    value={parseFloat(st["stroke-width"]) || 0}
+                    onChange={e => setAttr(role, "stroke-width", String(e.target.value))}
+                    style={{ width: 62, fontSize: 12, padding: "3px 5px", border: "1px solid #cfc6ad", borderRadius: 3 }} />
+                </td>
+                <td style={cell}>
+                  <select value={known ? dash : "__custom"}
+                    onChange={e => { if (e.target.value !== "__custom") setAttr(role, "stroke-dasharray", e.target.value); }}
+                    style={{ width: 138, fontSize: 12, padding: "3px 4px", border: "1px solid #cfc6ad", borderRadius: 3 }}>
+                    {DASH_PRESETS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
+                    {!known && <option value="__custom">свой: {dash}</option>}
+                  </select>
+                </td>
+                <td style={cell}>
+                  <input type="number" min="0" max="1" step="0.05"
+                    value={st.opacity !== undefined ? parseFloat(st.opacity) : 1}
+                    onChange={e => setAttr(role, "opacity", String(e.target.value))}
+                    style={{ width: 62, fontSize: 12, padding: "3px 5px", border: "1px solid #cfc6ad", borderRadius: 3 }} />
+                </td>
+                <td style={cell}>
+                  {(info.overridden || dirty) && (
+                    <button type="button" onClick={() => resetRole(role)}
+                      title="Вернуть стандартный стиль"
+                      style={{ fontSize: 11, padding: "3px 7px", borderRadius: 3, border: "1px solid #b06a5a", background: "transparent", color: "#b06a5a", cursor: "pointer", whiteSpace: "nowrap" }}>
+                      ↺ стандарт
+                    </button>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      {!visible.length && <div className="vse-empty-roles"><span>Ничего не найдено.</span></div>}
+    </div>
+  );
+}
+
 function TabRegistry({ registry, setRegistry, manifest, roleCatalog }) {
   const filled = registry.filter(r => r.role !== "?").length;
 
@@ -2575,6 +2806,10 @@ export default function VseReview() {
   const [meanings, setMeanings]     = useState({});
   const [buildStatus, setBuildStatus] = useState(null); // null | {state, message}
   const [buildTs, setBuildTs] = useState(Date.now());
+  // Role labels for the registry and role-style tabs. Both referenced this before it
+  // existed here; the crash stayed hidden because `tab === … && <Tab …>` short-circuits,
+  // so the prop was only ever evaluated once one of those tabs was opened.
+  const [roleCatalog, setRoleCatalog] = useState(null);
 
   const API = `http://${window.location.hostname}:7070`;
 
@@ -2583,6 +2818,10 @@ export default function VseReview() {
     fetch("/vse/manifest.json" + t).then(r => r.json()).then(setManifest);
     fetch("/vse/callout_graph.json" + t).then(r => r.json()).then(setCallout);
     fetch("/vse/style_registry.json" + t).then(r => r.json()).then(setRegistry);
+    fetch(`${API}/api/role-catalog` + t)
+      .then(r => r.json())
+      .then(d => setRoleCatalog(d?.catalog || d || null))
+      .catch(() => setRoleCatalog(null));
   }, []);
 
   // Poll build status while building
@@ -2637,6 +2876,7 @@ export default function VseReview() {
     { id: "compare",  label: "Разметка" },
     { id: "callouts", label: "Выноски и обозначения" },
     { id: "registry", label: "Реестр стилей" },
+    { id: "rolestyles", label: "Стили ролей" },
   ];
 
   return (
@@ -2691,6 +2931,7 @@ export default function VseReview() {
         )}
         {tab === "callouts" && <TabCallouts calloutGraph={calloutGraph} meanings={meanings} setMeanings={setMeanings} />}
         {tab === "registry" && <TabRegistry registry={registry} setRegistry={setRegistry} manifest={manifest} roleCatalog={roleCatalog} />}
+        {tab === "rolestyles" && <TabRoleStyles roleCatalog={roleCatalog} />}
       </div>
     </div>
   );

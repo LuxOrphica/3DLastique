@@ -23,7 +23,9 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from role_cleanup import normalize_active_role
 from stitch_logic import find_stitch_operation_codes, load_stitch_operation_codes, normalize_stitch_role
-from visual_standard import ROLE_STYLES
+from visual_standard import (
+    ROLE_STYLES, default_style, get_style, load_style_overrides, save_style_overrides,
+)
 from vse_keys import compute_group_key, compute_elem_key
 
 HERE = Path(__file__).resolve().parent
@@ -224,12 +226,30 @@ def _load_manifest_index():
 
 
 def _public_role_styles():
+    """Effective styles (defaults with user overrides applied)."""
     payload = {}
     for role, raw in ROLE_STYLES.items():
         if not isinstance(raw, dict):
             continue
-        payload[role] = {k: v for k, v in raw.items() if not str(k).startswith("_")}
+        payload[role] = get_style(role)
     return payload
+
+
+def _role_style_detail():
+    """Per role: the effective style, the shipped default, and its label — so the UI can
+    show what changed and offer a reset."""
+    overrides = load_style_overrides()
+    out = {}
+    for role, raw in ROLE_STYLES.items():
+        if not isinstance(raw, dict):
+            continue
+        out[role] = {
+            "style": get_style(role),
+            "default": default_style(role),
+            "label": raw.get("_label", role),
+            "overridden": role in overrides,
+        }
+    return out
 
 
 def _canonical_node_id(node_id, manifest_index=None):
@@ -1106,6 +1126,26 @@ def get_role_styles():
         "ok": True,
         "styles": _public_role_styles(),
     })
+
+
+@app.route("/api/role-style-editor", methods=["GET"])
+def get_role_style_editor():
+    return jsonify({"ok": True, "roles": _role_style_detail()})
+
+
+@app.route("/api/role-styles", methods=["PUT"])
+def put_role_styles():
+    """Save user style overrides: { role: {stroke, fill, stroke-width, …} }.
+    Sending an empty object for a role (or omitting it) restores the shipped default."""
+    body = request.get_json(force=True) or {}
+    overrides = body.get("overrides")
+    if not isinstance(overrides, dict):
+        return jsonify({"ok": False, "error": "overrides must be an object"}), 400
+    unknown = [r for r in overrides if r not in ROLE_STYLES]
+    if unknown:
+        return jsonify({"ok": False, "error": f"unknown roles: {', '.join(sorted(unknown)[:5])}"}), 400
+    saved = save_style_overrides(overrides)
+    return jsonify({"ok": True, "overrides": saved, "roles": _role_style_detail()})
 
 
 @app.route("/api/role-catalog", methods=["GET"])
