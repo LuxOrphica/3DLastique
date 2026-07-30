@@ -7,7 +7,7 @@ import sys, json, os, math, hashlib, re
 import fitz
 import xml.etree.ElementTree as ET
 from roles import classify_path, near_any_text
-from stitch_logic import normalize_stitch_role
+from stitch_logic import find_stitch_operation_codes, load_stitch_operation_codes, normalize_stitch_role
 from visual_standard import style_attr, get_style, ROLE_STYLES
 from role_cleanup import normalize_active_role
 from bbox import get_content_bbox
@@ -1300,6 +1300,78 @@ def parse_svg_path_d(d):
     return items
 
 
+# Roles assigned purely from how a line looks (red / dashed / thick). They say nothing
+# about the actual stitch type, so an operation code found next to the line may refine
+# them — but a role the user set by hand must never be touched.
+_GENERIC_STITCH_ROLES = {"stitch_edge", "stitch_thru", "stitch_Bt", "stitch_symbol"}
+
+# How far a code label may sit from the line it annotates, in PDF units. Measured from
+# real drawings: labels sit right beside the seam, but a leader line can push them out to
+# ~50. Each label still claims only its single closest line, so a loose radius cannot
+# repaint a neighbourhood.
+_CODE_LABEL_RADIUS = 60.0
+
+
+def apply_operation_code_roles(classified, text_words):
+    """Refine stitch roles from operation codes written in the drawing (Bt, Bc, O4, F3…).
+
+    roles.py can only tell a stitch by its appearance, which collapses every type into
+    "edge" or "through". Where the drawing states the code, the real type is known, so
+    the nearest generic stitch line is upgraded to that code's family role. This is the
+    only trustworthy source of stitch type we have — and it is sparse: most drawings
+    carry no code at all, and the ones that do are overwhelmingly bar tacks.
+
+    Each label claims at most one line, the closest, so a code cannot sweep up a whole
+    area of unrelated stitching.
+    """
+    if not text_words:
+        return classified
+    code_ref = load_stitch_operation_codes()
+    if not code_ref:
+        return classified
+
+    labels = []
+    for w in text_words:
+        if len(w) < 5:
+            continue
+        x0, y0, x1, y1, word = w[0], w[1], w[2], w[3], str(w[4])
+        for code in find_stitch_operation_codes(word):
+            role = (code_ref.get(code) or {}).get("default_role")
+            if role:
+                labels.append((code, role, (x0 + x1) / 2.0, (y0 + y1) / 2.0))
+    if not labels:
+        return classified
+
+    candidates = [
+        i for i, (role, p) in enumerate(classified)
+        if role in _GENERIC_STITCH_ROLES
+        and not p.get("_vse_manual_role_override")
+        and p.get("items")
+    ]
+    if not candidates:
+        return classified
+
+    taken = set()
+    limit2 = _CODE_LABEL_RADIUS ** 2
+    for _code, new_role, cx, cy in labels:
+        best_i, best_d2 = None, limit2
+        for i in candidates:
+            if i in taken:
+                continue
+            _ii, _t, d2 = _nearest_on_items(classified[i][1].get("items") or [], cx, cy)
+            if d2 is not None and d2 < best_d2:
+                best_d2, best_i = d2, i
+        if best_i is None:
+            continue
+        taken.add(best_i)
+        role_before, p = classified[best_i]
+        if new_role != role_before:
+            p["_vse_final_role"] = new_role
+            p["_vse_role_from_code"] = _code
+            classified[best_i] = (new_role, p)
+    return classified
+
+
 def _node_geometry_overrides(node_id, node_annotations):
     if not node_id:
         return {}
@@ -2362,6 +2434,7 @@ def standardize(ai_path, svg_out, elem_overrides=None):
         p["_vse_manual_role_override"] = role != role_before_manual
         p["_vse_final_role"] = role
         classified.append((role, p))
+    classified = apply_operation_code_roles(classified, text_words)
     classified = normalize_fragmented_stitches(classified)
     classified = apply_geometry_overrides(classified, node_id, node_annotations)
     classified = apply_vertex_moves(classified, node_id, node_annotations)
@@ -2561,9 +2634,30 @@ def standardize(ai_path, svg_out, elem_overrides=None):
                 lines.append(f'    <g data-role="hw_zipper" data-render-kind="generated_symbol">\n    {snippet}\n    </g>')
         lines.append('  </g>')
 
-    # Stitch symbol glyphs (e.g. vvvvv in small font = stitch marking)
+    # Bar-tack combs. The source writes them as a run of "v" glyphs in a small font and
+    # they are redrawn below as a real zigzag, which is the right shape. What was wrong is
+    # the meaning and the paint: these are закрепки — Bt by default, Bc where the drawing
+    # labels them so — not a nameless "stitch symbol", and they used a hardcoded dark
+    # stroke, so neither the visual standard nor the style editor could reach them.
     if stitch_symbols:
-        lines.append('  <g id="role-stitch_symbol" data-role="stitch_symbol" data-trace-ignore="1">')
+        _bar_tack_labels = []
+        for w in (text_words or []):
+            if len(w) < 5:
+                continue
+            for code in find_stitch_operation_codes(str(w[4])):
+                if code in ("Bt", "Bc"):
+                    _bar_tack_labels.append((code, (w[0] + w[2]) / 2.0, (w[1] + w[3]) / 2.0))
+
+        def _bar_tack_role(cx, cy):
+            best, best_d2 = "stitch_Bt", _CODE_LABEL_RADIUS ** 2
+            for code, lx, ly in _bar_tack_labels:
+                d2 = (lx - cx) ** 2 + (ly - cy) ** 2
+                if d2 < best_d2:
+                    best_d2 = d2
+                    best = "stitch_backtack" if code == "Bc" else "stitch_Bt"
+            return best
+
+        _symbol_paths = []   # (role, d)
         for (x0, y0, x1, y1, txt, size, color) in stitch_symbols:
             count = max(1, len(txt.strip()))
             width = max(x1 - x0, size * count * 0.55)
@@ -2583,8 +2677,28 @@ def standardize(ai_path, svg_out, elem_overrides=None):
                 pts.append((mid, y_bottom))
                 pts.append((right, y_top))
             d = "M " + " L ".join(f"{px:.2f} {py:.2f}" for px, py in pts)
-            lines.append(f'    <path d="{d}" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:1" data-role="stitch_symbol" data-trace-ignore="1"/>')
-        lines.append('  </g>')
+            # Colour and dash come from the role, but the width is fitted to the glyph:
+            # a bar tack's role width (3.0) is meant for a short thick bar and would fill
+            # a comb this small into an unreadable blob.
+            _amp = max(y_bottom - y_top, 0.1)
+            _symbol_paths.append((_bar_tack_role((x0 + x1) / 2.0, (y0 + y1) / 2.0), d, _amp))
+
+        for _role in sorted({r for r, _d, _a in _symbol_paths}):
+            _base = dict(get_style(_role))
+            lines.append(f'  <g id="role-{_role}-symbols" data-role="{_role}" data-trace-ignore="1">')
+            for _r, _d, _amp in _symbol_paths:
+                if _r != _role:
+                    continue
+                try:
+                    _role_w = float(_base.get("stroke-width", 1) or 1)
+                except (TypeError, ValueError):
+                    _role_w = 1.0
+                _w = min(_role_w, max(0.3, _amp / 3.0))
+                _st = {**_base, "stroke-width": f"{_w:.2f}", "fill": "none",
+                       "stroke-linecap": "round", "stroke-linejoin": "round"}
+                _style = ";".join(f"{k}:{v}" for k, v in _st.items() if not k.startswith("_"))
+                lines.append(f'    <path d="{_d}" style="{_style}" data-role="{_role}" data-trace-ignore="1"/>')
+            lines.append('  </g>')
 
     # Text labels — full lines, not individual words
     lines.append('  <g id="role-label" data-role="label" data-trace-ignore="1">')
