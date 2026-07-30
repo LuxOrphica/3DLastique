@@ -3,7 +3,7 @@ VSE — Visual Standardization Engine
 Usage: python engine.py input.ai output.svg
 """
 
-import sys, json, os, math, hashlib
+import sys, json, os, math, hashlib, re
 import fitz
 import xml.etree.ElementTree as ET
 from roles import classify_path, near_any_text
@@ -1198,6 +1198,162 @@ def _path_endpoints(p):
     return pts
 
 
+_PATH_TOKEN_RE = re.compile(r"[MmLlHhVvCcSsQqTtAaZz]|-?\d*\.?\d+(?:[eE][-+]?\d+)?")
+
+
+def parse_svg_path_d(d):
+    """Parse an SVG path `d` string into pymupdf-style items.
+
+    The inverse of items_to_svg_d(), so geometry computed on the client (paper.js)
+    can be handed back to the engine. Emits only ('l', …) and ('c', …) — quadratics
+    are elevated to cubics, and every command is resolved to absolute coordinates.
+    Arcs are approximated by a straight chord; paper.js does not emit them for the
+    shapes we handle, so this is a safety net rather than a real code path.
+    """
+    if not d:
+        return []
+    toks = _PATH_TOKEN_RE.findall(str(d))
+    items = []
+    i = 0
+    cx = cy = sx = sy = 0.0
+    cmd = ""
+    prev_c2 = None   # reflection anchor for S
+    prev_q = None    # reflection anchor for T
+
+    def num():
+        nonlocal i
+        v = float(toks[i]); i += 1
+        return v
+
+    while i < len(toks):
+        if toks[i].isalpha():
+            cmd = toks[i]; i += 1
+            if cmd in ("Zz"):
+                pass
+        if not cmd:
+            i += 1
+            continue
+        C = cmd.upper()
+        rel = cmd.islower()
+        try:
+            if C == "M":
+                x, y = num(), num()
+                if rel: x, y = cx + x, cy + y
+                cx, cy, sx, sy = x, y, x, y
+                prev_c2 = prev_q = None
+                cmd = "l" if rel else "L"   # extra pairs after M are implicit lineto
+            elif C == "L":
+                x, y = num(), num()
+                if rel: x, y = cx + x, cy + y
+                items.append(("l", fitz.Point(cx, cy), fitz.Point(x, y)))
+                cx, cy = x, y; prev_c2 = prev_q = None
+            elif C == "H":
+                x = num()
+                if rel: x = cx + x
+                items.append(("l", fitz.Point(cx, cy), fitz.Point(x, cy)))
+                cx = x; prev_c2 = prev_q = None
+            elif C == "V":
+                y = num()
+                if rel: y = cy + y
+                items.append(("l", fitz.Point(cx, cy), fitz.Point(cx, y)))
+                cy = y; prev_c2 = prev_q = None
+            elif C == "C":
+                x1, y1, x2, y2, x, y = (num() for _ in range(6))
+                if rel:
+                    x1, y1, x2, y2, x, y = cx+x1, cy+y1, cx+x2, cy+y2, cx+x, cy+y
+                items.append(("c", fitz.Point(cx, cy), fitz.Point(x1, y1), fitz.Point(x2, y2), fitz.Point(x, y)))
+                cx, cy = x, y; prev_c2 = (x2, y2); prev_q = None
+            elif C == "S":
+                x2, y2, x, y = (num() for _ in range(4))
+                if rel:
+                    x2, y2, x, y = cx+x2, cy+y2, cx+x, cy+y
+                rx, ry = (2*cx - prev_c2[0], 2*cy - prev_c2[1]) if prev_c2 else (cx, cy)
+                items.append(("c", fitz.Point(cx, cy), fitz.Point(rx, ry), fitz.Point(x2, y2), fitz.Point(x, y)))
+                cx, cy = x, y; prev_c2 = (x2, y2); prev_q = None
+            elif C in ("Q", "T"):
+                if C == "Q":
+                    qx, qy, x, y = (num() for _ in range(4))
+                    if rel:
+                        qx, qy, x, y = cx+qx, cy+qy, cx+x, cy+y
+                else:
+                    x, y = num(), num()
+                    if rel: x, y = cx + x, cy + y
+                    qx, qy = (2*cx - prev_q[0], 2*cy - prev_q[1]) if prev_q else (cx, cy)
+                # quadratic -> cubic
+                c1 = fitz.Point(cx + 2.0/3.0*(qx - cx), cy + 2.0/3.0*(qy - cy))
+                c2 = fitz.Point(x + 2.0/3.0*(qx - x), y + 2.0/3.0*(qy - y))
+                items.append(("c", fitz.Point(cx, cy), c1, c2, fitz.Point(x, y)))
+                cx, cy = x, y; prev_q = (qx, qy); prev_c2 = None
+            elif C == "A":
+                _rx, _ry, _rot, _laf, _sf, x, y = (num() for _ in range(7))
+                if rel: x, y = cx + x, cy + y
+                items.append(("l", fitz.Point(cx, cy), fitz.Point(x, y)))
+                cx, cy = x, y; prev_c2 = prev_q = None
+            elif C == "Z":
+                if abs(cx - sx) > 1e-9 or abs(cy - sy) > 1e-9:
+                    items.append(("l", fitz.Point(cx, cy), fitz.Point(sx, sy)))
+                cx, cy = sx, sy; prev_c2 = prev_q = None
+            else:
+                i += 1
+        except (IndexError, ValueError):
+            break
+    return items
+
+
+def _node_geometry_overrides(node_id, node_annotations):
+    if not node_id:
+        return {}
+    nodes = node_annotations.get("nodes", {}) if isinstance(node_annotations, dict) else {}
+    node = nodes.get(node_id, {}) if isinstance(nodes, dict) else {}
+    ov = node.get("geometry_overrides", {}) if isinstance(node, dict) else {}
+    return ov if isinstance(ov, dict) else {}
+
+
+def apply_geometry_overrides(classified, node_id, node_annotations):
+    """Client-authored final geometry, keyed by elem_key:
+
+        geometry_overrides: { elem_key: [ {d, role?}, … ] }
+
+    Each entry is the list of parts the element becomes, so one record type covers
+    every edit the point editor can make: one part = moved/trimmed, several = split,
+    none = deleted. The client owns the geometry maths (paper.js) and the engine just
+    replays the result, which is what lets new tools ship without touching the server.
+    Legacy split/merge/vertex records still apply on top for drawings edited before this.
+    """
+    overrides = _node_geometry_overrides(node_id, node_annotations)
+    if not overrides:
+        return classified
+    result = []
+    for role, p in classified:
+        ek = str(p.get("_vse_elem_key") or "")
+        parts = overrides.get(ek) if ek else None
+        if parts is None:
+            result.append((role, p))
+            continue
+        if not isinstance(parts, list):
+            result.append((role, p))
+            continue
+        for idx, part in enumerate(parts):
+            if not isinstance(part, dict):
+                continue
+            items = parse_svg_path_d(part.get("d"))
+            if not items:
+                continue
+            np = dict(p)
+            np["items"] = items
+            np["rect"] = _items_bbox2(items) or p.get("rect")
+            np["closePath"] = False
+            part_role = part.get("role") or role
+            if len(parts) > 1:
+                part_key, part_prefix = compute_elem_key(node_id, f"{ek}|o{idx}")
+                np["_vse_elem_key"] = part_key
+                np["_vse_elem_keys"] = [part_key]
+                np["_vse_path_d_prefix"] = part_prefix
+            np["_vse_final_role"] = part_role
+            result.append((part_role, np))
+    return result
+
+
 def _lerp(a, b, t):
     return fitz.Point(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t)
 
@@ -2207,6 +2363,7 @@ def standardize(ai_path, svg_out, elem_overrides=None):
         p["_vse_final_role"] = role
         classified.append((role, p))
     classified = normalize_fragmented_stitches(classified)
+    classified = apply_geometry_overrides(classified, node_id, node_annotations)
     classified = apply_vertex_moves(classified, node_id, node_annotations)
     classified = apply_explicit_splits(classified, node_id, node_annotations)
     classified = apply_explicit_merges(classified, node_id, node_annotations)

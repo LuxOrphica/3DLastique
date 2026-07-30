@@ -655,6 +655,7 @@ def _build_node_state(node_id):
         "splits": node_ann.get("splits", []) if isinstance(node_ann, dict) else [],
         "geometry_edits": node_ann.get("geometry_edits", []) if isinstance(node_ann, dict) else [],
         "deleted_elements": node_ann.get("deleted_elements", []) if isinstance(node_ann, dict) else [],
+        "geometry_overrides": node_ann.get("geometry_overrides", {}) if isinstance(node_ann, dict) else {},
         "operation_codes": operation_codes,
         "warnings": top_warnings,
     }
@@ -1143,6 +1144,7 @@ def put_node_annotations(node_id):
     splits = body.get("splits")
     geometry_edits = body.get("geometry_edits")
     deleted_elements = body.get("deleted_elements")
+    geometry_overrides = body.get("geometry_overrides")
     if group_overrides is not None and not isinstance(group_overrides, dict):
         return jsonify({"ok": False, "error": "group_overrides must be an object"}), 400
     if element_overrides is not None and not isinstance(element_overrides, dict):
@@ -1155,6 +1157,8 @@ def put_node_annotations(node_id):
         return jsonify({"ok": False, "error": "geometry_edits must be an array"}), 400
     if deleted_elements is not None and not isinstance(deleted_elements, list):
         return jsonify({"ok": False, "error": "deleted_elements must be an array"}), 400
+    if geometry_overrides is not None and not isinstance(geometry_overrides, dict):
+        return jsonify({"ok": False, "error": "geometry_overrides must be an object"}), 400
     if review_status is not None and review_status not in ("approved", "complex", "pending"):
         return jsonify({"ok": False, "error": "review_status must be approved, complex, or pending"}), 400
     current_state = _build_node_state(node_id)
@@ -1263,6 +1267,28 @@ def put_node_annotations(node_id):
             if k and k not in seen:
                 seen.append(k)
         node["deleted_elements"] = seen
+    if geometry_overrides is not None:
+        # { elem_key: [ {d, role?}, … ] } — the parts an element becomes. An empty list
+        # is meaningful (element deleted), so it is kept; only malformed entries drop.
+        normalized_overrides = {}
+        for elem_key, parts in geometry_overrides.items():
+            key = str(elem_key or "").strip()
+            if not key or not isinstance(parts, list):
+                continue
+            clean_parts = []
+            for part in parts:
+                if not isinstance(part, dict):
+                    continue
+                d = str(part.get("d") or "").strip()
+                if not d:
+                    continue
+                entry = {"d": d}
+                role = part.get("role")
+                if role:
+                    entry["role"] = str(role)
+                clean_parts.append(entry)
+            normalized_overrides[key] = clean_parts
+        node["geometry_overrides"] = normalized_overrides
     if review_status is not None:
         node["review_status"] = review_status
     node["updated_at"] = timestamp

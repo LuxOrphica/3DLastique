@@ -1,4 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useMemo, useRef, useCallback } from "react";
+import LineEditor, { TOOLS } from "./LineEditor";
 import "./VseReview.css";
 
 const ROLE_STYLES = {
@@ -431,7 +432,7 @@ function cssAttrEscape(value) {
   return String(value ?? "").replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
 
-function buildSvgOverrideCss({ roleOverrides, elemOverrides, selectedElemKey, singleOverride, mergeSelectedKeys }) {
+function buildSvgOverrideCss({ roleOverrides, elemOverrides, selectedElemKey, singleOverride, mergeSelectedKeys, workingKeys }) {
   const shapeTags = ["path", "line", "polyline", "polygon", "rect", "circle", "ellipse"];
   // Scope every shape tag as a descendant of the key selector AND match the keyed
   // element itself. Writing `[key] path, line, polyline, …` would leave line/polyline/…
@@ -492,7 +493,14 @@ ${sel} {
 }`;
   }).join("\n");
 
-  return [groupRules, elemRules, singleRule, mergeSelRule].filter(Boolean).join("\n");
+  // Elements the editor has changed locally are hidden here and redrawn by LineEditor
+  // from the working geometry, so an edit shows instantly without refetching the SVG.
+  const workingRule = (workingKeys || []).map(k => {
+    const e = cssAttrEscape(k);
+    return `${scoped(`[data-elem-key="${e}"]`)} { display: none !important; }`;
+  }).join("\n");
+
+  return [groupRules, elemRules, singleRule, mergeSelRule, workingRule].filter(Boolean).join("\n");
 }
 
 function injectSvgOverrideStyle(svgText, cssText) {
@@ -603,36 +611,6 @@ function distToGeometryPx(el, cx, cy) {
 // path's user-space (same coordinate system as the top-level viewBox — these SVGs have
 // no per-element transforms). Used both to send a more accurate cut coordinate than a
 // bbox-proportional guess, and to draw a preview marker so "cut here" isn't a blind click.
-function nearestPointOnElement(el, cx, cy) {
-  if (typeof el.getTotalLength !== "function") return null;
-  let total = 0;
-  try { total = el.getTotalLength(); } catch { return null; }
-  if (!total) return null;
-  const m = userToScreenMapper(el);
-  if (!m) return null;
-  const n = Math.min(200, Math.max(16, Math.round(total / 2)));
-  let bestD = Infinity, bestLen = 0;
-  for (let i = 0; i <= n; i++) {
-    const len = (total * i) / n;
-    let p;
-    try { p = el.getPointAtLength(len); } catch { continue; }
-    const d = Math.hypot(m.x(p.x) - cx, m.y(p.y) - cy);
-    if (d < bestD) { bestD = d; bestLen = len; }
-  }
-  // Refine around the best sample with a finer local search (halves the coarse step twice).
-  let step = total / n;
-  for (let pass = 0; pass < 2 && step > 0.01; pass++) {
-    step /= 4;
-    for (const len of [bestLen - step, bestLen + step]) {
-      if (len < 0 || len > total) continue;
-      let p;
-      try { p = el.getPointAtLength(len); } catch { continue; }
-      const d = Math.hypot(m.x(p.x) - cx, m.y(p.y) - cy);
-      if (d < bestD) { bestD = d; bestLen = len; }
-    }
-  }
-  try { const p = el.getPointAtLength(bestLen); return { x: p.x, y: p.y }; } catch { return null; }
-}
 
 // Screen-pixel half-thickness of an element's stroke — the band within which a click
 // counts as landing ON the line rather than merely near it.
@@ -670,225 +648,13 @@ function nearestGeometry(container, cx, cy, maxDist = 22) {
   return topHit || best;
 }
 
-// ── Vertex editing ──────────────────────────────────────────────────────────
-// Parse an SVG path `d` into anchor points (segment endpoints; control points are
-// skipped). Each anchor carries its subpath id and whether it is an open end of that
-// subpath, so we can offer "cut here" / "join ends" only where they make sense.
-function parsePathAnchors(d) {
-  if (!d) return [];
-  const tokens = String(d).match(/[a-zA-Z]|-?\d*\.?\d+(?:e[-+]?\d+)?/gi) || [];
-  const anchors = [];
-  const subs = [];
-  let i = 0, cx = 0, cy = 0, sx = 0, sy = 0, cmd = "", sp = -1, cur = null;
-  const num = () => parseFloat(tokens[i++]);
-  const push = (x, y) => { anchors.push({ x, y, sp, end: false }); return anchors.length - 1; };
-  while (i < tokens.length) {
-    if (/[a-zA-Z]/.test(tokens[i])) { cmd = tokens[i]; i++; }
-    const rel = cmd === cmd.toLowerCase();
-    const C = cmd.toUpperCase();
-    if (C === "M") {
-      let x = num(), y = num();
-      if (rel && anchors.length) { x += cx; y += cy; }
-      cx = x; cy = y; sx = x; sy = y;
-      if (cur) subs.push(cur);
-      sp += 1; const idx = push(cx, cy);
-      cur = { start: idx, end: idx, closed: false };
-      cmd = rel ? "l" : "L"; // extra coordinate pairs after M are implicit lineto
-    } else if (C === "L") {
-      let x = num(), y = num(); if (rel) { x += cx; y += cy; } cx = x; cy = y; if (cur) cur.end = push(cx, cy);
-    } else if (C === "H") {
-      let x = num(); if (rel) x += cx; cx = x; if (cur) cur.end = push(cx, cy);
-    } else if (C === "V") {
-      let y = num(); if (rel) y += cy; cy = y; if (cur) cur.end = push(cx, cy);
-    } else if (C === "C") {
-      i += 4; let x = num(), y = num(); if (rel) { x += cx; y += cy; } cx = x; cy = y; if (cur) cur.end = push(cx, cy);
-    } else if (C === "S" || C === "Q") {
-      i += 2; let x = num(), y = num(); if (rel) { x += cx; y += cy; } cx = x; cy = y; if (cur) cur.end = push(cx, cy);
-    } else if (C === "T") {
-      let x = num(), y = num(); if (rel) { x += cx; y += cy; } cx = x; cy = y; if (cur) cur.end = push(cx, cy);
-    } else if (C === "A") {
-      i += 5; let x = num(), y = num(); if (rel) { x += cx; y += cy; } cx = x; cy = y; if (cur) cur.end = push(cx, cy);
-    } else if (C === "Z") {
-      if (cur) cur.closed = true; cx = sx; cy = sy;
-    } else { i++; }
-  }
-  if (cur) subs.push(cur);
-  for (const s of subs) {
-    if (!s.closed) { if (anchors[s.start]) anchors[s.start].end = true; if (anchors[s.end]) anchors[s.end].end = true; }
-  }
-  return anchors;
-}
-
-// Anchor points for any line-like SVG element (path/line/polyline/polygon).
-function anchorsFromEl(el) {
-  if (!el) return [];
-  const tag = (el.tagName || "").toLowerCase();
-  if (tag === "line") {
-    const x1 = +el.getAttribute("x1"), y1 = +el.getAttribute("y1");
-    const x2 = +el.getAttribute("x2"), y2 = +el.getAttribute("y2");
-    return [{ x: x1, y: y1, sp: 0, end: true }, { x: x2, y: y2, sp: 0, end: true }];
-  }
-  if (tag === "polyline" || tag === "polygon") {
-    const nums = (el.getAttribute("points") || "").match(/-?\d*\.?\d+(?:e[-+]?\d+)?/gi) || [];
-    const a = [];
-    for (let k = 0; k + 1 < nums.length; k += 2) a.push({ x: +nums[k], y: +nums[k + 1], sp: 0, end: false });
-    if (a.length && tag === "polyline") { a[0].end = true; a[a.length - 1].end = true; }
-    return a;
-  }
-  return parsePathAnchors(el.getAttribute("d") || "");
-}
-
-// Open endpoints of every OTHER line in the drawing, in user coords — join targets.
-function collectOtherEndpoints(container, excludeElemKey) {
-  if (!container) return [];
-  const out = [];
-  const els = [...container.querySelectorAll("path, line, polyline, polygon")]
-    .filter(el => !el.closest("defs") && !isTraceIgnored(el) && el.getAttribute("data-elem-key"));
-  for (const el of els) {
-    const ek = el.getAttribute("data-elem-key");
-    if (!ek || ek === excludeElemKey) continue;
-    const role = el.getAttribute("data-role") || el.closest("[data-role]")?.getAttribute("data-role") || "";
-    for (const a of anchorsFromEl(el)) {
-      if (a.end) out.push({ x: a.x, y: a.y, elemKey: ek, role });
-    }
-  }
-  return out;
-}
-
-// Draggable vertex handles over the selected line. Drag = move a vertex (welds both
-// adjacent segments); drop on another line's endpoint = join; double-click = cut here.
-function VertexHandles({ selEl, viewBox, elemKey, role, container, disabled, onMoveVertex, onCutVertex, onJoinVertex }) {
-  const svgRef = useRef(null);
-  const [drag, setDrag] = useState(null); // { idx, from:{x,y}, cur:{x,y}, snap:{x,y,elemKey}|null }
-  const dragRef = useRef(null);
-
-  const anchors = useMemo(() => (selEl ? anchorsFromEl(selEl) : []), [selEl, selEl?.getAttribute?.("d")]);
-  const vb = useMemo(() => (viewBox || "").split(/[ ,]+/).map(Number), [viewBox]);
-  const [vx, vy, vw, vh] = vb.length === 4 ? vb : [0, 0, 100, 100];
-
-  // Handle/hit-target sizes are fixed in SCREEN pixels, not viewBox units — the SVG is
-  // scaled by an ancestor's CSS transform (pan/zoom), which getBoundingClientRect already
-  // reflects but a plain viewBox-proportional radius does not. Without this a handle can
-  // shrink to a ~7px hit target at typical zoom, which is unclickable with a real mouse
-  // (confirmed: synthetic pixel-precise events could drag it, a real cursor could not).
-  const pxPerUserRef = useRef(1);
-  const [, bumpScale] = useState(0);
-  useLayoutEffect(() => {
-    const svg = svgRef.current;
-    if (!svg || !vw) return;
-    const r = svg.getBoundingClientRect();
-    if (!r.width) return;
-    const next = r.width / vw;
-    if (Math.abs(next - pxPerUserRef.current) > 0.001) {
-      pxPerUserRef.current = next;
-      bumpScale(t => t + 1);
-    }
-  });
-  const pxPerUser = pxPerUserRef.current || 1;
-  const uR = 5 / pxPerUser;      // visible dot radius ≈ 5 screen px
-  const hitR = 16 / pxPerUser;   // invisible hit target radius ≈ 16 screen px (32px target)
-
-  const map = useCallback((clientX, clientY) => {
-    const svg = svgRef.current;
-    if (!svg) return null;
-    const r = svg.getBoundingClientRect();
-    if (!r.width || !r.height) return null;
-    return {
-      x: vx + (clientX - r.left) / r.width * vw,
-      y: vy + (clientY - r.top) / r.height * vh,
-      ux: vw / r.width, uy: vh / r.height,
-    };
-  }, [vx, vy, vw, vh]);
-
-  useEffect(() => {
-    if (!drag) return;
-    const onMove = (e) => {
-      const m = map(e.clientX, e.clientY);
-      if (!m) return;
-      // snap to nearest other endpoint within ~12px
-      let snap = null, bestD = 12 * Math.max(m.ux, m.uy);
-      const isEnd = anchors[drag.idx]?.end;
-      if (isEnd) {
-        for (const ep of dragRef.current.targets) {
-          const d = Math.hypot(ep.x - m.x, ep.y - m.y);
-          if (d < bestD) { bestD = d; snap = ep; }
-        }
-      }
-      const cur = snap ? { x: snap.x, y: snap.y } : { x: m.x, y: m.y };
-      dragRef.current.cur = cur; dragRef.current.snap = snap;
-      setDrag(d => (d ? { ...d, cur, snap } : d));
-    };
-    const onUp = () => {
-      const st = dragRef.current;
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
-      setDrag(null); dragRef.current = null;
-      if (!st) return;
-      const moved = Math.hypot(st.cur.x - st.from.x, st.cur.y - st.from.y) > uR * 0.5;
-      if (st.snap && st.snap.elemKey) {
-        onJoinVertex?.({ elemKey, from: [st.from.x, st.from.y], to: [st.snap.x, st.snap.y], targetElemKey: st.snap.elemKey, role });
-      } else if (moved) {
-        onMoveVertex?.({ elemKey, from: [st.from.x, st.from.y], to: [st.cur.x, st.cur.y] });
-      }
-    };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
-    return () => { window.removeEventListener("mousemove", onMove); window.removeEventListener("mouseup", onUp); };
-  }, [drag?.idx, map, anchors, uR, elemKey, role, onMoveVertex, onJoinVertex]);
-
-  if (!selEl || disabled || !anchors.length || vb.length !== 4) return null;
-
-  const startDrag = (idx, e) => {
-    if (e.button !== 0) return;
-    e.preventDefault(); e.stopPropagation();
-    const a = anchors[idx];
-    const st = { idx, from: { x: a.x, y: a.y }, cur: { x: a.x, y: a.y }, snap: null, targets: collectOtherEndpoints(container, elemKey) };
-    dragRef.current = st;
-    setDrag({ idx, from: st.from, cur: st.cur, snap: null });
-  };
-
-  const dragCur = drag?.cur;
-  return (
-    <svg ref={svgRef} viewBox={viewBox} className="vse-zoom-overlay vse-vertex-overlay"
-      xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-      {/* live guide from the neighbours to the dragged position */}
-      {drag && anchors.map((a, k) => {
-        if (a.sp !== anchors[drag.idx].sp) return null;
-        if (Math.abs(k - drag.idx) !== 1) return null;
-        return <line key={`g${k}`} x1={a.x} y1={a.y} x2={dragCur.x} y2={dragCur.y}
-          stroke="#C8A84B" strokeWidth={uR * 0.4} strokeDasharray={`${uR} ${uR}`} vectorEffect="non-scaling-stroke" />;
-      })}
-      {anchors.map((a, idx) => {
-        const isDrag = drag?.idx === idx;
-        const cx = isDrag ? dragCur.x : a.x;
-        const cy = isDrag ? dragCur.y : a.y;
-        const snapped = isDrag && drag.snap;
-        return (
-          <g key={idx}>
-            {/* large invisible hit target */}
-            <circle cx={cx} cy={cy} r={hitR} fill="transparent" style={{ cursor: "grab", pointerEvents: "all" }}
-              onMouseDown={e => startDrag(idx, e)}
-              onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-              onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); onCutVertex?.({ elemKey, x: a.x, y: a.y }); }} />
-            <circle cx={cx} cy={cy} r={uR}
-              fill={snapped ? "#2ec26a" : a.end ? "#fff" : "#C8A84B"}
-              stroke={snapped ? "#2ec26a" : "#6b4f1d"} strokeWidth={uR * 0.35}
-              style={{ pointerEvents: "none" }} />
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
-
 // Zoomable SVG panel — plain <img> for display, CSS overlay for highlight
-function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides, elemOverrides, selectedElemKey, selectedElemIndex, selectedRole, singleOverride, onElementClick, mergeSelectedKeys, onSplit, onDelete, onEditPoints, onMoveVertex, onCutVertex, onJoinVertex, vertexEdit }) {
+function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix, roleOverrides, elemOverrides, selectedElemKey, selectedElemIndex, selectedRole, singleOverride, onElementClick, mergeSelectedKeys, editorOn, tool, working, onChangeElement }) {
   const wrapRef  = useRef(null);
   const hlRef    = useRef(null); // ref to query SVG elements
   const [svgHtml, setSvgHtml] = useState(""); // SVG content managed by React
   const [ready, setReady]     = useState(false);
   const [loadError, setLoadError] = useState("");
-  const [ctxMenu, setCtxMenu] = useState(null); // right-click "cut here" menu
   // CSS-based live preview: inject <style> overrides that survive innerHTML resets
   const overrideStyleId = `vse-override-${svgPrefix}`;
   useEffect(() => {
@@ -957,11 +723,12 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
     });
   }, [selectedElemKey, selectedElemIndex, svgHtml, ready, mergeSelectedKeys]);
 
+  const workingKeys = useMemo(() => Object.keys(working || {}), [working]);
   const displayHtml = useMemo(() => {
     if (mode !== "std") return svgHtml;
-    const cssText = buildSvgOverrideCss({ roleOverrides, elemOverrides, selectedElemKey, singleOverride, mergeSelectedKeys });
+    const cssText = buildSvgOverrideCss({ roleOverrides, elemOverrides, selectedElemKey, singleOverride, mergeSelectedKeys, workingKeys });
     return injectSvgOverrideStyle(svgHtml, cssText);
-  }, [svgHtml, mode, roleOverrides, elemOverrides, selectedElemKey, singleOverride, mergeSelectedKeys]);
+  }, [svgHtml, mode, roleOverrides, elemOverrides, selectedElemKey, singleOverride, mergeSelectedKeys, workingKeys]);
   const [scale, setScale]     = useState(1);
   const [pan,   setPan]       = useState({ x: 0, y: 0 });
   // Set of path indices that should be highlighted (index into `els` query)
@@ -1158,47 +925,6 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
     });
   };
 
-  const onContextMenu = e => {
-    if ((!onSplit && !onDelete && !onEditPoints) || mode !== "std" || !hlRef.current) return;
-    e.preventDefault();
-    const svgEl = hlRef.current.querySelector("svg");
-    if (!svgEl) return;
-    let path = e.target.closest("path, line, polyline, polygon, circle, ellipse, rect");
-    if (path && isTraceIgnored(path)) path = null;
-    const near = nearestGeometry(hlRef.current, e.clientX, e.clientY, 22);
-    if (near) path = near;
-    const elemKey = path && path.getAttribute("data-elem-key");
-    if (!elemKey) { setCtxMenu(null); return; }
-    // The exact point on the line's own outline nearest the cursor — not a bbox guess.
-    // This is what actually gets cut, and what the preview marker below points at.
-    let point = nearestPointOnElement(path, e.clientX, e.clientY);
-    if (!point) {
-      let ub;
-      try { ub = path.getBBox(); } catch { setCtxMenu(null); return; }
-      const sb = path.getBoundingClientRect();
-      point = {
-        x: ub.width ? ub.x + (e.clientX - sb.left) / sb.width * ub.width : ub.x,
-        y: ub.height ? ub.y + (e.clientY - sb.top) / sb.height * ub.height : ub.y,
-      };
-    }
-    const svgVb = svgEl.getAttribute("viewBox");
-    const role = path.getAttribute("data-role") || path.closest("[data-role]")?.getAttribute("data-role") || "";
-    const pathD = path.getAttribute("d") || path.getAttribute("points") || "";
-    setCtxMenu({ clientX: e.clientX, clientY: e.clientY, elemKey, role, pathD, x: point.x, y: point.y, viewBox: svgVb });
-  };
-
-  useEffect(() => {
-    if (!ctxMenu) return;
-    const close = () => setCtxMenu(null);
-    window.addEventListener("click", close);
-    window.addEventListener("scroll", close, true);
-    window.addEventListener("keydown", close);
-    return () => {
-      window.removeEventListener("click", close);
-      window.removeEventListener("scroll", close, true);
-      window.removeEventListener("keydown", close);
-    };
-  }, [ctxMenu]);
 
   const dimmed = matchedIndices !== null;
 
@@ -1212,7 +938,7 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
       <div ref={wrapRef} className="vse-zoom-viewport"
         onMouseDown={onMouseDown} onMouseMove={onMouseMove}
         onMouseUp={onMouseUp} onMouseLeave={onMouseLeaveViewport}
-        onClick={onViewportClick} onContextMenu={onContextMenu}
+        onClick={onViewportClick}
       >
         {!ready && !loadError && <div className="vse-svg-state">Загрузка SVG...</div>}
         {loadError && <div className="vse-svg-state vse-svg-state-error">Ошибка SVG: {loadError}</div>}
@@ -1259,53 +985,23 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
               </svg>
             );
           })()}
-          {/* Vertex editor — draggable point handles on the selected line */}
-          {ready && vertexEdit && selectedElemKey && mode === "std" && (() => {
+          {/* Line editor — all edits are computed locally and drawn here; the SVG is
+              never re-fetched mid-edit. */}
+          {ready && editorOn && mode === "std" && (() => {
             const hidden = hlRef.current;
             const svgEl = hidden?.querySelector("svg");
             if (!svgEl) return null;
-            const vb = svgEl.getAttribute("viewBox");
-            const els = [...hidden.querySelectorAll("path, line, polyline, polygon")]
-              .filter(el => !el.closest("defs"));
-            const sel = els.find(el => el.getAttribute("data-elem-key") === selectedElemKey);
-            if (!sel) return null;
             return (
-              <VertexHandles
-                selEl={sel} viewBox={vb} elemKey={selectedElemKey} role={selectedRole}
-                container={hidden} disabled={false}
-                onMoveVertex={onMoveVertex} onCutVertex={onCutVertex} onJoinVertex={onJoinVertex}
+              <LineEditor
+                container={hidden}
+                viewBox={svgEl.getAttribute("viewBox")}
+                tool={tool}
+                selectedElemKey={selectedElemKey}
+                working={working || {}}
+                onChangeElement={onChangeElement}
+                styleForRole={r => ROLE_STYLES[r]}
+                disabled={false}
               />
-            );
-          })()}
-          {/* Cut-point preview — marks exactly where "Разрезать здесь" will cut AND
-              outlines the whole target line. The point alone isn't enough: when a stitch
-              line runs right next to a contour/other line, the nearest-geometry search
-              that resolves which element you're pointing at can pick the OTHER one — this
-              makes that visible (and correctable, by closing the menu) before you confirm. */}
-          {ctxMenu && ctxMenu.viewBox && (() => {
-            const hidden = hlRef.current;
-            const els = hidden ? [...hidden.querySelectorAll("path, line, polyline, polygon")].filter(el => !el.closest("defs")) : [];
-            const target = els.find(el => el.getAttribute("data-elem-key") === ctxMenu.elemKey);
-            const [, , vw, vh] = ctxMenu.viewBox.split(/[ ,]+/).map(Number);
-            const s = Math.max(vw, vh) * 0.01;
-            return (
-              <svg viewBox={ctxMenu.viewBox} className="vse-zoom-overlay vse-cut-preview"
-                xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-                {target && (
-                  <g dangerouslySetInnerHTML={{ __html: (() => {
-                    const clone = target.cloneNode(true);
-                    clone.style.stroke = "#e05a3a";
-                    clone.style.filter = "drop-shadow(0 0 3px #e05a3a)";
-                    clone.style.opacity = "1";
-                    return clone.outerHTML;
-                  })() }} />
-                )}
-                <g stroke="#e05a3a" strokeWidth={s * 0.3} vectorEffect="non-scaling-stroke">
-                  <line x1={ctxMenu.x - s} y1={ctxMenu.y} x2={ctxMenu.x + s} y2={ctxMenu.y} />
-                  <line x1={ctxMenu.x} y1={ctxMenu.y - s} x2={ctxMenu.x} y2={ctxMenu.y + s} />
-                  <circle cx={ctxMenu.x} cy={ctxMenu.y} r={s * 0.9} fill="none" />
-                </g>
-              </svg>
             );
           })()}
           {dimmed && ready && matchedIndices && (() => {
@@ -1346,26 +1042,6 @@ function ZoomableSvgPanel({ url, label, hdrClass, hoveredEntry, mode, svgPrefix,
           })()}
         </div>
       </div>
-      {ctxMenu && (
-        <div style={{position:"fixed",left:ctxMenu.clientX,top:ctxMenu.clientY,zIndex:3000,background:"#26231e",border:"1px solid #C8A84B",borderRadius:6,boxShadow:"0 6px 20px rgba(0,0,0,0.45)",padding:4}}
-          onClick={e => e.stopPropagation()} onContextMenu={e => e.preventDefault()}>
-          <button type="button"
-            onMouseDown={e => { e.preventDefault(); onEditPoints?.({ elemKey: ctxMenu.elemKey, role: ctxMenu.role, pathD: ctxMenu.pathD }); setCtxMenu(null); }}
-            style={{fontSize:12,fontWeight:600,padding:"5px 12px",borderRadius:4,border:"none",background:"transparent",color:"#e6dcc2",cursor:"pointer",whiteSpace:"nowrap",display:"block",width:"100%",textAlign:"left"}}>
-            ✎ Редактировать точки
-          </button>
-          <button type="button"
-            onMouseDown={e => { e.preventDefault(); onSplit?.({ elemKey: ctxMenu.elemKey, x: ctxMenu.x, y: ctxMenu.y }); setCtxMenu(null); }}
-            style={{fontSize:12,fontWeight:600,padding:"5px 12px",borderRadius:4,border:"none",background:"transparent",color:"#e6dcc2",cursor:"pointer",whiteSpace:"nowrap",display:"block",width:"100%",textAlign:"left"}}>
-            ✂ Разрезать здесь
-          </button>
-          <button type="button"
-            onMouseDown={e => { e.preventDefault(); onDelete?.(ctxMenu.elemKey); setCtxMenu(null); }}
-            style={{fontSize:12,fontWeight:600,padding:"5px 12px",borderRadius:4,border:"none",background:"transparent",color:"#d98a7a",cursor:"pointer",whiteSpace:"nowrap",display:"block",width:"100%",textAlign:"left"}}>
-            🗑 Удалить фрагмент
-          </button>
-        </div>
-      )}
     </div>
   );
 }
@@ -1748,7 +1424,13 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
   const [mergeSelection, setMergeSelection] = useState([]);
   const [mergeRole, setMergeRole] = useState("stitch_thru");
   const [merging, setMerging] = useState(false);
-  const [pointsEditKey, setPointsEditKey] = useState(null); // elem_key currently showing drag handles, or null
+  // Line editor: on/off, active tool, and the locally edited geometry
+  // (elem_key -> [{d, role}]). `working` is what the user sees; the server copy trails
+  // behind it via a debounced save.
+  const [editorOn, setEditorOn] = useState(false);
+  const [tool, setTool] = useState("move");
+  const [working, setWorking] = useState({});
+  const [editorDirty, setEditorDirty] = useState(false);
   // Keys of the merge group under the cursor in the list, so hovering "✕ снять"
   // lights up which line it is (the entries are otherwise identical).
   const [hoverMergeKeys, setHoverMergeKeys] = useState([]);
@@ -1822,6 +1504,9 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     setContractError("");
     setContractFilter("all");
     setSaveStatus({ state: "idle", message: "" });
+    // Local geometry belongs to the node it was drawn on.
+    setWorking({});
+    setEditorDirty(false);
   }, [activeId]);
 
   const refreshNodeState = async () => {
@@ -1837,6 +1522,16 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
       setNodeStateError(String(err?.message || err));
     }
   };
+
+  // Adopt geometry saved earlier but not yet rebuilt into the SVG, so reopening a node
+  // shows the edited lines. Safe once rebuilt too: the keys then no longer match any
+  // element, and overrides are idempotent because the engine always replays them from
+  // the original drawing. Never runs while local edits are in flight.
+  useEffect(() => {
+    if (editorDirty || Object.keys(working).length) return;
+    const saved = nodeState?.geometry_overrides;
+    if (saved && Object.keys(saved).length) setWorking(saved);
+  }, [nodeState]);
 
   const refreshContractTrace = async () => {
     if (!activeId) return;
@@ -2259,30 +1954,6 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     }
   };
 
-  const applySplit = async ({ elemKey, x, y }) => {
-    if (!activeId || !elemKey) return;
-    setMerging(true);
-    setSaveStatus({ state: "building", message: "Разрезаю…" });
-    try {
-      const splits = [...(nodeState?.splits || []), { elem_key: elemKey, x, y }];
-      const putRes = await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
-        method: "PUT", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ splits }),
-      });
-      if (!putRes.ok) throw new Error(`PUT failed: HTTP ${putRes.status}`);
-      const regenRes = await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
-      const regenData = await regenRes.json();
-      if (!regenRes.ok || regenData?.ok === false) throw new Error(regenData?.error || `Regenerate failed: HTTP ${regenRes.status}`);
-      clearNodeCache("");
-      onNodeUpdated?.();
-      await refreshNodeState();
-      setSaveStatus({ state: "ok", message: "Разрезано." });
-    } catch (err) {
-      setSaveStatus({ state: "error", message: String(err?.message || err) });
-    } finally {
-      setMerging(false);
-    }
-  };
 
   const removeSplit = async (idx) => {
     if (!activeId) return;
@@ -2305,113 +1976,33 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     }
   };
 
-  const applyVertexMove = async ({ elemKey, from, to }) => {
-    if (!activeId || !elemKey || !from || !to) return;
-    setMerging(true);
-    setSaveStatus({ state: "building", message: "Двигаю точку…" });
-    try {
-      const geometry_edits = [...(nodeState?.geometry_edits || []), { elem_key: elemKey, from, to }];
-      const putRes = await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
-        method: "PUT", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ geometry_edits }),
-      });
-      if (!putRes.ok) throw new Error(`PUT failed: HTTP ${putRes.status}`);
-      const regenRes = await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
-      const regenData = await regenRes.json();
-      if (!regenRes.ok || regenData?.ok === false) throw new Error(regenData?.error || `Regenerate failed: HTTP ${regenRes.status}`);
-      clearNodeCache("");
-      onNodeUpdated?.();
-      await refreshNodeState();
-      setSaveStatus({ state: "ok", message: "Точка сдвинута." });
-    } catch (err) {
-      setSaveStatus({ state: "error", message: String(err?.message || err) });
-    } finally {
-      setMerging(false);
-    }
-  };
-
-  // Join: weld the dragged endpoint onto the target endpoint (geometry_edit), then merge
-  // the two elements so they become one continuous line under a single role.
-  const applyJoin = async ({ elemKey, from, to, targetElemKey, role }) => {
-    if (!activeId || !elemKey || !targetElemKey || elemKey === targetElemKey) return;
-    setMerging(true);
-    setSaveStatus({ state: "building", message: "Соединяю…" });
-    try {
-      // Weld (geometry_edit) + merge (merge_group) are two separate records that must be
-      // undone together — tag both with the same join_id so "Разъединить" can remove both
-      // in one action instead of leaving the weld behind when only the merge is dropped.
-      const join_id = `j_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-      const geometry_edits = [...(nodeState?.geometry_edits || []), { elem_key: elemKey, from, to, join_id }];
-      const merge_groups = [...(nodeState?.merge_groups || []), { elem_keys: [elemKey, targetElemKey], role: role || mergeRole, join_id }];
-      const putRes = await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
-        method: "PUT", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ geometry_edits, merge_groups }),
-      });
-      if (!putRes.ok) throw new Error(`PUT failed: HTTP ${putRes.status}`);
-      const regenRes = await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
-      const regenData = await regenRes.json();
-      if (!regenRes.ok || regenData?.ok === false) throw new Error(regenData?.error || `Regenerate failed: HTTP ${regenRes.status}`);
-      clearNodeCache("");
-      onNodeUpdated?.();
-      await refreshNodeState();
-      setSelectedEl(null);
-      setSaveStatus({ state: "ok", message: "Соединено." });
-    } catch (err) {
-      setSaveStatus({ state: "error", message: String(err?.message || err) });
-    } finally {
-      setMerging(false);
-    }
-  };
-
-  const removeJoin = async (join_id) => {
-    if (!activeId || !join_id) return;
-    setMerging(true);
-    try {
-      const geometry_edits = (nodeState?.geometry_edits || []).filter(ed => ed.join_id !== join_id);
-      const merge_groups = (nodeState?.merge_groups || []).filter(g => g.join_id !== join_id);
-      await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
-        method: "PUT", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ geometry_edits, merge_groups }),
-      });
-      await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
-      clearNodeCache("");
-      onNodeUpdated?.();
-      await refreshNodeState();
-      setSaveStatus({ state: "ok", message: "Соединение снято." });
-    } catch (err) {
-      setSaveStatus({ state: "error", message: String(err?.message || err) });
-    } finally {
-      setMerging(false);
-    }
-  };
-
-  const handleEditPoints = ({ elemKey, role, pathD }) => {
+  // ── Line editor ───────────────────────────────────────────────────────────
+  // `working` is the locally edited geometry: elem_key -> [{d, role}, …] (an empty
+  // array means the element was erased). Edits land here instantly — paper.js already
+  // computed the result — so nothing waits on the server and the drawing never reloads
+  // while you work. Saving is debounced and does NOT regenerate the SVG; rebuilding is
+  // an explicit step, because regeneration is what makes the picture flash.
+  const changeElement = useCallback((elemKey, parts) => {
     if (!elemKey) return;
-    setSelectedEl({ elemKey, role, pathD, idx: null });
-    setSingleOverride(null);
-    setSelectedScope("element");
-    setPointsEditKey(elemKey);
-  };
+    setWorking(prev => ({ ...prev, [elemKey]: parts }));
+    setEditorDirty(true);
+  }, []);
 
-  const applyDeleteElement = async (elemKey) => {
-    if (!activeId || !elemKey) return;
+  // Undo for records written by the older editor. Those still apply in the engine, so
+  // drawings edited before this must keep a way to roll them back.
+  const legacyUndo = async (patch, message) => {
+    if (!activeId) return;
     setMerging(true);
-    setSaveStatus({ state: "building", message: "Удаляю…" });
     try {
-      const deleted_elements = [...(nodeState?.deleted_elements || []), elemKey];
-      const putRes = await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
+      await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
         method: "PUT", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ deleted_elements }),
+        body: JSON.stringify(patch),
       });
-      if (!putRes.ok) throw new Error(`PUT failed: HTTP ${putRes.status}`);
-      const regenRes = await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
-      const regenData = await regenRes.json();
-      if (!regenRes.ok || regenData?.ok === false) throw new Error(regenData?.error || `Regenerate failed: HTTP ${regenRes.status}`);
+      await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
       clearNodeCache("");
       onNodeUpdated?.();
       await refreshNodeState();
-      setSelectedEl(null);
-      setSaveStatus({ state: "ok", message: "Фрагмент удалён." });
+      setSaveStatus({ state: "ok", message });
     } catch (err) {
       setSaveStatus({ state: "error", message: String(err?.message || err) });
     } finally {
@@ -2419,41 +2010,68 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     }
   };
 
-  const restoreDeletedElement = async (idx) => {
-    if (!activeId) return;
-    setMerging(true);
-    try {
-      const deleted_elements = (nodeState?.deleted_elements || []).filter((_, i) => i !== idx);
-      await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
-        method: "PUT", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ deleted_elements }),
-      });
-      await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
-      clearNodeCache("");
-      onNodeUpdated?.();
-      await refreshNodeState();
-      setSaveStatus({ state: "ok", message: "Фрагмент восстановлен." });
-    } catch (err) {
-      setSaveStatus({ state: "error", message: String(err?.message || err) });
-    } finally {
-      setMerging(false);
-    }
-  };
+  const removeJoin = (join_id) => legacyUndo({
+    geometry_edits: (nodeState?.geometry_edits || []).filter(ed => ed.join_id !== join_id),
+    merge_groups: (nodeState?.merge_groups || []).filter(g => g.join_id !== join_id),
+  }, "Соединение снято.");
 
-  const removeGeometryEdit = async (idx) => {
+  const removeGeometryEdit = (idx) => legacyUndo({
+    geometry_edits: (nodeState?.geometry_edits || []).filter((_, i) => i !== idx),
+  }, "Сдвиг точки отменён.");
+
+  const restoreDeletedElement = (idx) => legacyUndo({
+    deleted_elements: (nodeState?.deleted_elements || []).filter((_, i) => i !== idx),
+  }, "Фрагмент восстановлен.");
+
+  const discardEdits = useCallback(() => {
+    setWorking({});
+    // Must stay dirty: the empty state has to reach the server, otherwise the discarded
+    // geometry is still stored and gets adopted again on the next load.
+    setEditorDirty(true);
+    setSaveStatus({ state: "ok", message: "Правки геометрии сброшены." });
+  }, []);
+
+  // Debounced background save. Deliberately no regenerate-node here.
+  useEffect(() => {
+    if (!editorDirty || !activeId) return;
+    const t = setTimeout(async () => {
+      try {
+        setSaveStatus({ state: "building", message: "Сохраняю…" });
+        const res = await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
+          method: "PUT", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ geometry_overrides: working }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        setEditorDirty(false);
+        setSaveStatus({ state: "ok", message: "Сохранено (картинка не пересобиралась)." });
+      } catch (err) {
+        setSaveStatus({ state: "error", message: String(err?.message || err) });
+      }
+    }, 700);
+    return () => clearTimeout(t);
+  }, [editorDirty, working, activeId]);
+
+  // Explicit rebuild — the only place the SVG is regenerated and refetched.
+  const rebuildFromEdits = async () => {
     if (!activeId) return;
     setMerging(true);
+    setSaveStatus({ state: "building", message: "Пересобираю…" });
     try {
-      const geometry_edits = (nodeState?.geometry_edits || []).filter((_, i) => i !== idx);
-      await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
+      const put = await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
         method: "PUT", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ geometry_edits }),
+        body: JSON.stringify({ geometry_overrides: working }),
       });
-      await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
+      if (!put.ok) throw new Error(`PUT failed: HTTP ${put.status}`);
+      const regen = await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
+      const data = await regen.json();
+      if (!regen.ok || data?.ok === false) throw new Error(data?.error || `Regenerate failed: HTTP ${regen.status}`);
       clearNodeCache("");
       onNodeUpdated?.();
       await refreshNodeState();
-      setSaveStatus({ state: "ok", message: "Сдвиг точки отменён." });
+      // The server drawing now matches; the local layer is no longer needed.
+      setWorking({});
+      setEditorDirty(false);
+      setSaveStatus({ state: "ok", message: "Пересобрано." });
     } catch (err) {
       setSaveStatus({ state: "error", message: String(err?.message || err) });
     } finally {
@@ -2502,7 +2120,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
           <div className="vse-panels-sticky">
             <div className="vse-dual-panels">
               <ZoomableSvgPanel url={node.origSvg + "?t=" + buildTs} label="ОРИГИНАЛ" hdrClass="orig" hoveredEntry={hoveredEntry} mode="orig" svgPrefix={`${activeId}_orig`} />
-              <ZoomableSvgPanel url={node.stdSvg + "?t=" + buildTs} label="СТАНДАРТ" hdrClass="std" hoveredEntry={hoveredEntry} mode="std" svgPrefix={`${activeId}_std`} roleOverrides={groupDrafts} elemOverrides={elementDrafts} selectedElemKey={selectedEl?.elemKey || selectedState?.elem_key || ""} selectedElemIndex={selectedEl?.idx ?? null} selectedRole={selectedDisplayRole} singleOverride={singleOverride} mergeSelectedKeys={[...mergeSelection.map(m => m.elemKey), ...hoverMergeKeys]} vertexEdit={pointsEditKey !== null && pointsEditKey === (selectedEl?.elemKey || selectedState?.elem_key || "")} onMoveVertex={applyVertexMove} onCutVertex={applySplit} onJoinVertex={applyJoin} onDelete={applyDeleteElement} onEditPoints={handleEditPoints} onElementClick={el => {
+              <ZoomableSvgPanel url={node.stdSvg + "?t=" + buildTs} label="СТАНДАРТ" hdrClass="std" hoveredEntry={hoveredEntry} mode="std" svgPrefix={`${activeId}_std`} roleOverrides={groupDrafts} elemOverrides={elementDrafts} selectedElemKey={selectedEl?.elemKey || selectedState?.elem_key || ""} selectedElemIndex={selectedEl?.idx ?? null} selectedRole={selectedDisplayRole} singleOverride={singleOverride} mergeSelectedKeys={[...mergeSelection.map(m => m.elemKey), ...hoverMergeKeys]} editorOn={editorOn} tool={tool} working={working} onChangeElement={changeElement} onElementClick={el => {
                 if (el.addToSelection && el.elemKey) {
                   setMergeSelection(prev => {
                     // Seed from the current single selection so the natural flow
@@ -2516,33 +2134,52 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                       : [...base, { elemKey: el.elemKey, role: el.role, pathD: el.pathD }];
                   });
                   // Fold the single selection into the merge set — drop its own UI.
-                  setSelectedEl(null); setSingleOverride(null); setPointsEditKey(null);
+                  setSelectedEl(null); setSingleOverride(null);
                   return;
                 }
-                // A plain click is a role-assignment selection, distinct from the
-                // explicit "Редактировать точки" context-menu action — drop point mode
-                // unless re-clicking the same element that's already in it.
-                setPointsEditKey(k => (k === el.elemKey ? k : null));
                 setSelectedEl(el); setSingleOverride(null); setSelectedScope("element");
-              }} onSplit={applySplit} />
+              }} />
             </div>
           </div>
 
           <div className="vse-annotate-right-sticky">
             <div className="vse-annotate-right">
               {nodeStateError && <div className="vse-empty-roles"><strong>Ошибка загрузки node-state.</strong><span>{nodeStateError}</span></div>}
-              <div style={{display:"flex",flexDirection:"column",gap:6,padding:"8px 10px",margin:"0 0 8px",background:pointsEditKey?"rgba(46,194,106,0.12)":"rgba(120,135,148,0.10)",border:`1px solid ${pointsEditKey?"#2ec26a":"#3a4750"}`,borderRadius:6}}>
+              <div style={{display:"flex",flexDirection:"column",gap:6,padding:"8px 10px",margin:"0 0 8px",background:editorOn?"rgba(46,194,106,0.12)":"rgba(120,135,148,0.10)",border:`1px solid ${editorOn?"#2ec26a":"#3a4750"}`,borderRadius:6}}>
                 <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-                  {pointsEditKey ? (
-                    <>
-                      <span style={{fontSize:12,fontWeight:600,color:"#2ec26a"}}>✓ Точки: тащи — сдвиг · брось на конец другой линии — соединить</span>
-                      <button type="button" onClick={() => setPointsEditKey(null)} disabled={merging}
-                        style={{fontSize:11,padding:"3px 8px",borderRadius:4,border:"1px solid #5c7180",background:"transparent",color:"#C8A84B",cursor:"pointer"}}>Готово</button>
-                    </>
-                  ) : (
-                    <span style={{fontSize:11,color:"#7a8794"}}>ПКМ по линии → редактировать точки / разрезать / удалить</span>
-                  )}
+                  <button type="button" onClick={() => setEditorOn(v => !v)}
+                    style={{fontSize:12,fontWeight:600,padding:"4px 10px",borderRadius:4,border:"none",background:editorOn?"#2ec26a":"#5c7180",color:"#fff",cursor:"pointer"}}>
+                    {editorOn ? "✓ Редактор линий" : "Редактор линий"}
+                  </button>
+                  {editorOn && TOOLS.map(t => (
+                    <button key={t.key} type="button" title={t.hint} onClick={() => setTool(t.key)}
+                      style={{fontSize:12,fontWeight:tool===t.key?700:500,padding:"4px 9px",borderRadius:4,
+                        border:`1px solid ${tool===t.key?"#2ec26a":"#3a4750"}`,
+                        background:tool===t.key?"rgba(46,194,106,0.18)":"transparent",
+                        color:tool===t.key?"#2ec26a":"#C8A84B",cursor:"pointer"}}>{t.label}</button>
+                  ))}
                 </div>
+                {editorOn && (
+                  <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                    <span style={{fontSize:11,color:"#7a8794",flex:1}}>
+                      {TOOLS.find(t => t.key === tool)?.hint}
+                      {tool === "move" && " Выдели линию кликом, чтобы увидеть её точки."}
+                    </span>
+                    {Object.keys(working).length > 0 && (
+                      <>
+                        <span style={{fontSize:11,color:editorDirty?"#C8A84B":"#5c7180"}}>
+                          правок: {Object.keys(working).length}{editorDirty ? " · сохраняю…" : " · сохранено"}
+                        </span>
+                        <button type="button" onClick={rebuildFromEdits} disabled={merging}
+                          style={{fontSize:12,fontWeight:600,padding:"4px 10px",borderRadius:4,border:"none",background:"#C8A84B",color:"#1a1a1a",cursor:merging?"default":"pointer"}}>
+                          {merging ? "Пересобираю…" : "Пересобрать"}
+                        </button>
+                        <button type="button" onClick={discardEdits} disabled={merging}
+                          style={{fontSize:11,padding:"3px 8px",borderRadius:4,border:"1px solid #b06a5a",background:"transparent",color:"#b06a5a",cursor:"pointer"}}>Сбросить</button>
+                      </>
+                    )}
+                  </div>
+                )}
                 {/* Joins (weld + merge together) get one undo button — removing only one
                     side used to leave the other active, so the lines still looked joined. */}
                 {(nodeState?.merge_groups || []).filter(g => g.join_id).length > 0 && (
