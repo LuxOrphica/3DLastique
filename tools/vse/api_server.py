@@ -659,13 +659,24 @@ def _build_node_state(node_id):
                 if payload is saved:
                     matched_element_keys.add(k)
                     break
+        # A stitch code assigned to this element decides its role, exactly as it does
+        # when the drawing is rendered — otherwise the table names one stitch and the
+        # picture shows another.
+        code_payload = (node_ann.get("element_codes") or {}).get(elem_key) if isinstance(node_ann, dict) else None
+        stitch_code = code_payload.get("code") if isinstance(code_payload, dict) else code_payload
+        # Закрепки are their own object; every other code names the stitch without
+        # changing what the line denotes.
+        code_role = stitch_code_role(stitch_code) if stitch_code else ""
+        if code_role not in ("stitch_Bt", "stitch_backtack"):
+            code_role = ""
         elements.append({
             "elem_key": elem_key,
             "group_key": _entity_group_key(ent),
             "path_d_prefix": prefix,
             "detected_role": ent["role"],
             "override_role": override_role,
-            "final_role": normalize_active_role(override_role or ent["role"]),
+            "stitch_code": stitch_code or "",
+            "final_role": normalize_active_role(code_role or override_role or ent["role"]),
             "match_status": match_status,
             "warnings": [],
         })
@@ -689,6 +700,7 @@ def _build_node_state(node_id):
         "geometry_edits": node_ann.get("geometry_edits", []) if isinstance(node_ann, dict) else [],
         "deleted_elements": node_ann.get("deleted_elements", []) if isinstance(node_ann, dict) else [],
         "geometry_overrides": node_ann.get("geometry_overrides", {}) if isinstance(node_ann, dict) else {},
+        "element_codes": node_ann.get("element_codes", {}) if isinstance(node_ann, dict) else {},
         "operation_codes": operation_codes,
         "warnings": top_warnings,
     }
@@ -1141,6 +1153,55 @@ def get_role_styles():
     })
 
 
+@app.route("/api/stitch-codes", methods=["GET"])
+def get_stitch_codes():
+    """Every stitch code both tables know, grouped for a picker.
+
+    One line of stitching carries one code, and a node normally mixes several, so this
+    is what the element inspector offers — the role follows from whatever is chosen.
+    """
+    from stitch_logic import _code_index, load_stitch_guideline_codes
+
+    guide_meta = load_stitch_guideline_codes()
+    groups = {}
+    try:
+        with (HERE / "stitch_guideline_codes.json").open(encoding="utf-8") as fh:
+            groups = json.load(fh).get("groups", {})
+    except (OSError, json.JSONDecodeError):
+        pass
+
+    def _label(meta):
+        bits = []
+        if meta.get("needles"):
+            bits.append(f"{meta['needles']} игл.")
+        if meta.get("needle_distance_mm"):
+            bits.append(f"межигольное {meta['needle_distance_mm']} мм")
+        if meta.get("seam_width_mm"):
+            bits.append(f"ширина {meta['seam_width_mm']} мм")
+        if meta.get("density_per_cm"):
+            bits.append(f"{meta['density_per_cm']} ст/см")
+        return ", ".join(bits)
+
+    codes = []
+    for entry in sorted(_code_index(), key=lambda e: e["code"]):
+        meta = entry["meta"] or {}
+        code = entry["code"]
+        group = meta.get("group") or meta.get("family") or "other"
+        codes.append({
+            "code": code,
+            "role": entry["role"],
+            "source": entry["source"],
+            "group": group,
+            "group_label": groups.get(group, group),
+            "name_ru": meta.get("name_ru") or meta.get("label_ru") or "",
+            "iso": meta.get("iso", ""),
+            "spec": _label(meta) or meta.get("spec_ru", ""),
+            "application_ru": meta.get("application_ru", ""),
+            "detailed": code in guide_meta,
+        })
+    return jsonify({"ok": True, "codes": codes, "groups": groups})
+
+
 @app.route("/api/rebuild-all", methods=["POST"])
 def rebuild_all():
     """Rebuild every standardized SVG. Role styles are baked in at generation time, so
@@ -1210,6 +1271,7 @@ def put_node_annotations(node_id):
     geometry_edits = body.get("geometry_edits")
     deleted_elements = body.get("deleted_elements")
     geometry_overrides = body.get("geometry_overrides")
+    element_codes = body.get("element_codes")
     if group_overrides is not None and not isinstance(group_overrides, dict):
         return jsonify({"ok": False, "error": "group_overrides must be an object"}), 400
     if element_overrides is not None and not isinstance(element_overrides, dict):
@@ -1224,6 +1286,8 @@ def put_node_annotations(node_id):
         return jsonify({"ok": False, "error": "deleted_elements must be an array"}), 400
     if geometry_overrides is not None and not isinstance(geometry_overrides, dict):
         return jsonify({"ok": False, "error": "geometry_overrides must be an object"}), 400
+    if element_codes is not None and not isinstance(element_codes, dict):
+        return jsonify({"ok": False, "error": "element_codes must be an object"}), 400
     if review_status is not None and review_status not in ("approved", "complex", "pending"):
         return jsonify({"ok": False, "error": "review_status must be approved, complex, or pending"}), 400
     current_state = _build_node_state(node_id)
@@ -1354,6 +1418,20 @@ def put_node_annotations(node_id):
                 clean_parts.append(entry)
             normalized_overrides[key] = clean_parts
         node["geometry_overrides"] = normalized_overrides
+    if element_codes is not None:
+        # { elem_key: "O4" } — an empty value clears the choice for that element.
+        normalized_codes = {}
+        for elem_key, value in element_codes.items():
+            key = str(elem_key or "").strip()
+            code = value.get("code") if isinstance(value, dict) else value
+            code = str(code or "").strip()
+            if not key or not code:
+                continue
+            if not stitch_code_info(code):
+                return jsonify({"ok": False, "error": f"unknown stitch code: {code}"}), 400
+            normalized_codes[key] = {"code": code, "role": stitch_code_role(code),
+                                     "updated_at": timestamp}
+        node["element_codes"] = normalized_codes
     if review_status is not None:
         node["review_status"] = review_status
     node["updated_at"] = timestamp

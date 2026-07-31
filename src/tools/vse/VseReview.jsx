@@ -2014,6 +2014,61 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     setEditorDirty(true);
   }, []);
 
+  // ── Stitch codes ──────────────────────────────────────────────────────────
+  const [stitchCodes, setStitchCodes] = useState([]);
+  useEffect(() => {
+    fetch(`${API}/api/stitch-codes`).then(r => r.json())
+      .then(d => setStitchCodes(d?.codes || []))
+      .catch(() => setStitchCodes([]));
+  }, []);
+
+  const stitchCodeGroups = useMemo(() => {
+    const by = new Map();
+    for (const c of stitchCodes) {
+      const label = c.group_label || c.group || "Прочее";
+      if (!by.has(label)) by.set(label, []);
+      by.get(label).push(c);
+    }
+    return [...by.entries()];
+  }, [stitchCodes]);
+
+  const selectedElemKeyForCode = selectedEl?.elemKey || selectedState?.elem_key || "";
+  const selectedStitchCode =
+    (nodeState?.element_codes || {})[selectedElemKeyForCode]?.code || "";
+  const selectedStitchCodeInfo = useMemo(
+    () => stitchCodes.find(c => c.code === selectedStitchCode) || null,
+    [stitchCodes, selectedStitchCode],
+  );
+
+  const applyStitchCode = async (elemKey, code) => {
+    if (!activeId || !elemKey) return;
+    setMerging(true);
+    setSaveStatus({ state: "building", message: code ? `Ставлю код ${code}…` : "Убираю код…" });
+    try {
+      const next = { ...(nodeState?.element_codes || {}) };
+      if (code) next[elemKey] = code; else delete next[elemKey];
+      const payload = {};
+      for (const [k, v] of Object.entries(next)) payload[k] = typeof v === "string" ? v : v?.code;
+      const put = await fetch(`${API}/api/node-annotations/${encodeURIComponent(activeId)}`, {
+        method: "PUT", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ element_codes: payload }),
+      });
+      const data = await put.json().catch(() => ({}));
+      if (!put.ok || data?.ok === false) throw new Error(data?.error || `HTTP ${put.status}`);
+      const regen = await fetch(`${API}/api/regenerate-node/${encodeURIComponent(activeId)}`, { method: "POST" });
+      const rd = await regen.json();
+      if (!regen.ok || rd?.ok === false) throw new Error(rd?.error || `HTTP ${regen.status}`);
+      clearNodeCache("");
+      onNodeUpdated?.();
+      await refreshNodeState();
+      setSaveStatus({ state: "ok", message: code ? `Код ${code} применён.` : "Код снят." });
+    } catch (err) {
+      setSaveStatus({ state: "error", message: String(err?.message || err) });
+    } finally {
+      setMerging(false);
+    }
+  };
+
   // Undo for records written by the older editor. Those still apply in the engine, so
   // drawings edited before this must keep a way to roll them back.
   const legacyUndo = async (patch, message) => {
@@ -2334,6 +2389,34 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                                 const newRole = roleForChoice(roleCatalog, e.target.value, selectedActualStyle, selectedDisplayRole);
                                 applySelectedRole(newRole, selectedScope);
                               }}><RoleOptions roleCatalog={roleCatalog} /></select>
+                              {/* One line of stitching carries one code, and a node
+                                  routinely mixes several — so the code is picked here,
+                                  per element, and the role follows from it. */}
+                              {String(selectedDisplayRole || "").startsWith("stitch") && (
+                                <div style={{display:"flex",flexDirection:"column",gap:"2px",marginTop:"4px"}}>
+                                  <span style={{color:"#8a8571",fontSize:"10px"}}>Код операции:</span>
+                                  <select className="vse-role-sel-sm" value={selectedStitchCode}
+                                    onChange={e => applyStitchCode(selectedElemKeyForCode, e.target.value)}>
+                                    <option value="">— не указан —</option>
+                                    {stitchCodeGroups.map(([label, list]) => (
+                                      <optgroup key={label} label={label}>
+                                        {list.map(c => (
+                                          <option key={c.code} value={c.code}>
+                                            {c.code}{c.spec ? ` — ${c.spec}` : ""}
+                                          </option>
+                                        ))}
+                                      </optgroup>
+                                    ))}
+                                  </select>
+                                  {selectedStitchCodeInfo && (
+                                    <span style={{fontSize:"10px",color:"#7a8794",lineHeight:1.25}}>
+                                      {selectedStitchCodeInfo.name_ru}
+                                      {selectedStitchCodeInfo.iso ? ` · ISO ${selectedStitchCodeInfo.iso}` : ""}
+                                      {selectedStitchCodeInfo.application_ru ? ` · ${selectedStitchCodeInfo.application_ru}` : ""}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
                               <div style={{display:"flex",flexDirection:"column",gap:"1px",marginTop:"3px",fontSize:"11px",color:"#c9c2ad"}}>
                                 <span style={{color:"#8a8571",fontSize:"10px"}}>Применить к:</span>
                                 <label style={{display:"flex",alignItems:"center",gap:"5px",cursor:"pointer"}}>

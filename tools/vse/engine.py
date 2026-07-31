@@ -371,6 +371,48 @@ def _merge_trace_identity(paths):
     return elem_keys, group_keys
 
 
+def _node_element_codes(node_id, node_annotations):
+    if not node_id:
+        return {}
+    nodes = node_annotations.get("nodes", {}) if isinstance(node_annotations, dict) else {}
+    node = nodes.get(node_id, {}) if isinstance(nodes, dict) else {}
+    codes = node.get("element_codes", {}) if isinstance(node, dict) else {}
+    return codes if isinstance(codes, dict) else {}
+
+
+def apply_element_stitch_codes(classified, node_id, node_annotations):
+    """Stitch codes assigned per element: { elem_key: "O4" }.
+
+    A stitch carries its own type, and one node routinely mixes several — so the code
+    belongs to the line, not to the drawing. The role follows from the code, which is why
+    only the code is stored: picking "Co2(dn6mm)" is what makes the line a coverstitch.
+    Applied after the shape and label passes, so an explicit choice wins over both.
+    """
+    codes = _node_element_codes(node_id, node_annotations)
+    if not codes:
+        return classified
+    result = []
+    for role, p in classified:
+        ek = str(p.get("_vse_elem_key") or "")
+        payload = codes.get(ek)
+        code = payload.get("code") if isinstance(payload, dict) else payload
+        if not code:
+            result.append((role, p))
+            continue
+        p = dict(p)
+        p["_vse_stitch_code"] = code
+        # The code says WHICH stitch; the role says what the line denotes — по краю,
+        # сквозная. They are different questions, so a code must not overwrite the role:
+        # an edge stitch sewn as a flatlock is still an edge stitch. Закрепки are the
+        # exception, being their own object rather than a stitch along a seam.
+        code_role = stitch_code_role(code)
+        if code_role in ("stitch_Bt", "stitch_backtack"):
+            p["_vse_final_role"] = code_role
+            role = code_role
+        result.append((role, p))
+    return result
+
+
 def apply_node_annotation_element_override(node_id, p, role, node_annotations):
     if not node_id or not role:
         return role
@@ -1380,7 +1422,10 @@ def apply_operation_code_roles(classified, text_words):
             continue
         taken.add(best_i)
         role_before, p = classified[best_i]
-        if new_role != role_before:
+        p["_vse_stitch_code"] = _code
+        # Same rule as for a hand-picked code: the label names the stitch, it does not
+        # change what the line denotes. Only закрепки are a role of their own.
+        if new_role in _BAR_TACK_ROLES and new_role != role_before:
             p["_vse_final_role"] = new_role
             p["_vse_role_from_code"] = _code
             classified[best_i] = (new_role, p)
@@ -2450,6 +2495,7 @@ def standardize(ai_path, svg_out, elem_overrides=None):
         p["_vse_final_role"] = role
         classified.append((role, p))
     classified = apply_operation_code_roles(classified, text_words)
+    classified = apply_element_stitch_codes(classified, node_id, node_annotations)
     classified = normalize_fragmented_stitches(classified)
     classified = apply_geometry_overrides(classified, node_id, node_annotations)
     classified = apply_vertex_moves(classified, node_id, node_annotations)
@@ -2619,6 +2665,11 @@ def standardize(ai_path, svg_out, elem_overrides=None):
                 extra_attrs.append(f'data-group-keys="{",".join(group_keys)}"')
             if p.get("_vse_trace_ignore"):
                 extra_attrs.append('data-trace-ignore="1"')
+            # Which stitch this line is sewn with — separate from data-role, which says
+            # what the line denotes (по краю / сквозная).
+            stitch_code = str(p.get("_vse_stitch_code") or "").strip()
+            if stitch_code:
+                extra_attrs.append(f'data-stitch-code="{stitch_code}"')
             extra_attr_text = (" " + " ".join(extra_attrs)) if extra_attrs else ""
             lines.append(f'    <path d="{d}" style="{style}" data-role="{role}"{extra_attr_text}/>')
 
