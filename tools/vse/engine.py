@@ -7,7 +7,10 @@ import sys, json, os, math, hashlib, re
 import fitz
 import xml.etree.ElementTree as ET
 from roles import classify_path, near_any_text
-from stitch_logic import find_stitch_operation_codes, load_stitch_operation_codes, normalize_stitch_role
+from stitch_logic import (
+    find_stitch_operation_codes, load_stitch_operation_codes, normalize_stitch_role,
+    stitch_code_role,
+)
 from visual_standard import style_attr, get_style, ROLE_STYLES
 from role_cleanup import normalize_active_role
 from bbox import get_content_bbox
@@ -1333,9 +1336,6 @@ def apply_operation_code_roles(classified, text_words):
     """
     if not text_words:
         return classified
-    code_ref = load_stitch_operation_codes()
-    if not code_ref:
-        return classified
 
     labels = []
     for w in text_words:
@@ -1343,7 +1343,9 @@ def apply_operation_code_roles(classified, text_words):
             continue
         x0, y0, x1, y1, word = w[0], w[1], w[2], w[3], str(w[4])
         for code in find_stitch_operation_codes(word):
-            role = (code_ref.get(code) or {}).get("default_role")
+            # Resolved across both code tables; "" for codes that mark no line
+            # (петля, пришивание пуговицы).
+            role = stitch_code_role(code)
             if role:
                 labels.append((code, role, (x0 + x1) / 2.0, (y0 + y1) / 2.0))
     if not labels:

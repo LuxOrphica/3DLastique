@@ -22,7 +22,10 @@ import tempfile
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from role_cleanup import normalize_active_role
-from stitch_logic import find_stitch_operation_codes, load_stitch_operation_codes, normalize_stitch_role
+from stitch_logic import (
+    find_stitch_operation_codes, load_stitch_operation_codes, normalize_stitch_role,
+    stitch_code_info, stitch_code_role,
+)
 from visual_standard import (
     ROLE_STYLES, default_style, get_style, load_style_overrides, save_style_overrides,
 )
@@ -439,21 +442,31 @@ def _svg_operation_codes(svg_path):
         if not text:
             continue
         for code in find_stitch_operation_codes(text):
-            meta = code_ref.get(code, {})
+            meta = (stitch_code_info(code) or {}).get("meta", {})
             rows.append({
                 "code": code,
                 "text": text,
                 "x": _float_attr(el, "x"),
                 "y": _float_attr(el, "y"),
                 "font_size": _float_attr(el, "font-size"),
-                "family": meta.get("family", ""),
-                "label_ru": meta.get("label_ru", ""),
+                "family": meta.get("family", "") or meta.get("group", ""),
+                "label_ru": meta.get("label_ru", "") or meta.get("name_ru", ""),
                 "label_en": meta.get("label_en", ""),
-                "default_role": meta.get("default_role", ""),
+                "default_role": stitch_code_role(code),
                 "confidence": "high_text_label",
                 "relation": "explicit_text_in_original",
                 "visual_description": meta.get("visual_description", ""),
                 "notes": meta.get("notes", ""),
+                # From the Guideline table, where present: the numbers that actually
+                # specify the stitch.
+                "iso": meta.get("iso", ""),
+                "needles": meta.get("needles"),
+                "needle_distance_mm": meta.get("needle_distance_mm"),
+                "seam_width_mm": meta.get("seam_width_mm"),
+                "density_per_cm": meta.get("density_per_cm"),
+                "elastic_required": meta.get("elastic_required"),
+                "application_ru": meta.get("application_ru", ""),
+                "source_table": (stitch_code_info(code) or {}).get("source", ""),
             })
     return rows
 
