@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "status": "draft",
+  "source": {
+    "file": "INFO/drive-download-20260521T084533Z-3-001/Appendix 1_Guideline on Stitching_RU_v3.pdf",
+    "title": "Guideline on Stitching",
+    "revision": "v.3, январь 2022",
+    "author": "А. Демина",
+    "confidential": true,
+    "notes": "Отдельная таблица, не смешивается со stitch_operation_codes.json (тот из SPORTMASTER Workmanship AW24, разд. 5). Здесь коды детальнее: с шириной шва и расстоянием между иглами, плюс семейства Stab / Bh / Bs, которых в разд. 5 нет. Прочитано со стр. 2-5, таблицы графические — текстового слоя в PDF нет."
+  },
+  "field_notes": {
+    "code": "Код как написан в чертеже (может нести параметры: L1_1mm, Co2(dn3mm))",
+    "stitch_type": "Буква семейства из колонки Stitch type",
+    "iso": "Номер стежка по ISO 4915, где указан",
+    "needles": "Число игл",
+    "needle_distance_mm": "Расстояние между иглами (для трёх- и четырёхигольных — между крайними)",
+    "seam_width_mm": "Ширина шва / строчки в мм",
+    "density_per_cm": "Частота строчки, стежков на 1 см",
+    "elastic_required": "Требование «шов должен быть эластичным»"
+  },
+  "groups": {
+    "lockstitch": "Lockstitch — Челночный стежок",
+    "zigzag": "Zigzag stitch — Зигзагообразный стежок",
+    "stabstitch": "Stabstitch",
+    "chainstitch": "Chainstitch — Цепной стежок",
+    "overlock": "Overlock — Оверлок (обмёточный стежок)",
+    "flatlock": "Flatlockstitch — Цепной стежок (на плоскошовной машине)",
+    "semiautomatic": "Semiautomatic — Полуавтомат",
+    "secure_ends": "Secure ends — Закрепка концов"
+  },
+  "codes": {
+    "L1": {
+      "group": "lockstitch", "stitch_type": "L", "iso": "301",
+      "name_ru": "челночный стежок / одна игла",
+      "needles": 1, "density_per_cm": 5,
+      "application_ru": "Одноигольный однолинейный прямой челночный стежок"
+    },
+    "L1_1mm": {
+      "group": "lockstitch", "stitch_type": "L", "iso": "301",
+      "name_ru": "челночный стежок / одна игла",
+      "needles": 1, "seam_width_mm": 1, "density_per_cm": 4,
+      "application_ru": "Отделочные строчки"
+    },
+    "L1_6mm": {
+      "group": "lockstitch", "stitch_type": "L", "iso": "301",
+      "name_ru": "челночный стежок / одна игла",
+      "needles": 1, "seam_width_mm": 6, "density_per_cm": 4,
+      "application_ru": "Отделочные строчки"
+    },
+    "L2(dn3mm)_1mm": {
+      "group": "lockstitch", "stitch_type": "L", "iso": "301",
+      "name_ru": "челночный стежок / две иглы",
+      "needles": 2, "needle_distance_mm": 3, "seam_width_mm": 1, "density_per_cm": 4,
+      "application_ru": "Отделочные строчки"
+    },
+    "L2(dn6mm)_1mm": {
+      "group": "lockstitch", "stitch_type": "L", "iso": "301",
+      "name_ru": "челночный стежок / две иглы",
+      "needles": 2, "needle_distance_mm": 6, "seam_width_mm": 1, "density_per_cm": 4,
+      "application_ru": "Отделочные строчки"
+    },
+    "L3(dn6mm)_1mm": {
+      "group": "lockstitch", "stitch_type": "L", "iso": "301",
+      "name_ru": "челночный стежок / три иглы",
+      "needles": 3, "needle_distance_mm": 6, "seam_width_mm": 1, "density_per_cm": 4,
+      "notes": "Расстояние 6 мм — между крайними иглами",
+      "application_ru": "Отделочные строчки"
+    },
+
+    "Z1": {
+      "group": "zigzag", "stitch_type": "Z", "iso": "304",
+      "name_ru": "зигзагообразный стежок",
+      "seam_width_mm": 3, "density_per_cm": 3,
+      "application_ru": "Бельё, одежда для различных видов спорта, детская одежда: окантовывание, отделочные строчки и т.д."
+    },
+    "Z2": {
+      "group": "zigzag", "stitch_type": "Z", "iso": "308",
+      "name_ru": "зигзагообразный стежок / 2 прокола",
+      "seam_width_mm": 5, "density_per_cm": 6,
+      "application_ru": "Бельё, одежда для различных видов спорта, детская одежда и т.д."
+    },
+    "Z3": {
+      "group": "zigzag", "stitch_type": "Z", "iso": "315",
+      "name_ru": "зигзагообразный стежок / 3 прокола",
+      "seam_width_mm": 5, "density_per_cm": 9,
+      "application_ru": "Бельё, одежда для различных видов спорта, детская одежда и т.д."
+    },
+
+    "Stab": {
+      "group": "stabstitch", "stitch_type": "Stab",
+      "name_ru": "оверлок / одна игла, 3-х ниточная обмёточная машина",
+      "needles": 1, "seam_width_mm": 5, "density_per_cm": 6,
+      "application_ru": "Обработка краёв (например, футболок)"
+    },
+    "Stab2": {
+      "group": "stabstitch", "stitch_type": "Stab-2",
+      "name_ru": "оверлок / одна игла, 3-х ниточная обмёточная машина / спец. машина",
+      "needles": 1, "seam_width_mm": 3, "density_per_cm": 8,
+      "application_ru": "Стачные швы"
+    },
+
+    "C1": {
+      "group": "chainstitch", "stitch_type": "C", "iso": "101",
+      "name_ru": "цепной стежок",
+      "needles": 1, "density_per_cm": 5, "elastic_required": true,
+      "application_ru": "Одноигольный цепной стежок — основные строчки в трикотаже"
+    },
+    "C1_1mm": {
+      "group": "chainstitch", "stitch_type": "C", "iso": "101",
+      "name_ru": "цепной стежок",
+      "needles": 1, "seam_width_mm": 1, "density_per_cm": 4, "elastic_required": true,
+      "notes": "Ширина 1 мм — отделочного шва",
+      "application_ru": "Отделочные строчки"
+    },
+    "C1_6mm": {
+      "group": "chainstitch", "stitch_type": "C", "iso": "101",
+      "name_ru": "цепной стежок",
+      "needles": 1, "seam_width_mm": 6, "density_per_cm": 4, "elastic_required": true,
+      "notes": "Ширина 6 мм — отделочного шва",
+      "application_ru": "Отделочные строчки"
+    },
+    "C2(dn3mm)_1mm": {
+      "group": "chainstitch", "stitch_type": "C", "iso": "101",
+      "name_ru": "цепной стежок / две иглы",
+      "needles": 2, "needle_distance_mm": 3, "seam_width_mm": 1, "density_per_cm": 4, "elastic_required": true,
+      "application_ru": "Отделочные строчки"
+    },
+    "C2(dn6mm)_1mm": {
+      "group": "chainstitch", "stitch_type": "C", "iso": "101",
+      "name_ru": "цепной стежок / две иглы",
+      "needles": 2, "needle_distance_mm": 6, "seam_width_mm": 1, "density_per_cm": 4, "elastic_required": true,
+      "application_ru": "Отделочные строчки"
+    },
+    "C3(dn6mm)_1mm": {
+      "group": "chainstitch", "stitch_type": "C", "iso": "101",
+      "name_ru": "цепной стежок / три иглы",
+      "needles": 3, "needle_distance_mm": 6, "seam_width_mm": 1, "density_per_cm": 4, "elastic_required": true,
+      "notes": "Расстояние 6 мм — между крайними иглами",
+      "application_ru": "Отделочные строчки"
+    },
+
+    "O1_5mm": {
+      "group": "overlock", "stitch_type": "O", "iso": "504",
+      "name_ru": "оверлок / одна игла",
+      "needles": 1, "seam_width_mm": 5, "density_per_cm": 6, "elastic_required": true,
+      "application_ru": "Обработка срезов"
+    },
+    "O2_3mm": {
+      "group": "overlock", "stitch_type": "O", "iso": "504",
+      "name_ru": "микрооверлок / одна игла",
+      "needles": 1, "seam_width_mm": 3, "density_per_cm": 9,
+      "application_ru": "Стачивание трикотажных полотен, эластичных тканей"
+    },
+    "O3": {
+      "group": "overlock", "stitch_type": "O", "iso": "514",
+      "name_ru": "оверлок / две иглы / четырёхниточный",
+      "needles": 2, "threads": 4, "needle_distance_mm": 2, "seam_width_mm": 6, "density_per_cm": 6, "elastic_required": true,
+      "application_ru": "Стачивание трикотажных полотен, эластичных тканей"
+    },
+    "O4": {
+      "group": "overlock", "stitch_type": "O", "iso": "516",
+      "name_ru": "оверлок / две иглы / пятиниточный",
+      "needles": 2, "threads": 5, "needle_distance_mm": 2, "seam_width_mm": 8, "density_per_cm": 6, "elastic_required": true
+    },
+
+    "Co2(dn3mm)": {
+      "group": "flatlock", "stitch_type": "Co", "iso": "406",
+      "name_ru": "цепной стежок / две иглы",
+      "needles": 2, "needle_distance_mm": 3, "density_per_cm": 5, "elastic_required": true,
+      "application_ru": "Подшивка низа, соединение деталей, резинка, окантовывание, распошив, заготовка шлёвок"
+    },
+    "Co2(dn6mm)": {
+      "group": "flatlock", "stitch_type": "Co", "iso": "406",
+      "name_ru": "цепной стежок / две иглы",
+      "needles": 2, "needle_distance_mm": 6, "density_per_cm": 5, "elastic_required": true,
+      "application_ru": "Подшивка низа, соединение деталей, резинка, окантовывание, распошив, заготовка шлёвок"
+    },
+    "Co3(dn6mm)": {
+      "group": "flatlock", "stitch_type": "Co", "iso": "407",
+      "name_ru": "цепной стежок / три иглы",
+      "needles": 3, "needle_distance_mm": 6, "density_per_cm": 5, "elastic_required": true,
+      "notes": "Расстояние 6 мм — между крайними иглами",
+      "application_ru": "Соединение деталей, резинка"
+    },
+    "Co4(dn9mm)": {
+      "group": "flatlock", "stitch_type": "Co", "iso": "410",
+      "name_ru": "цепной стежок / четыре иглы",
+      "needles": 4, "needle_distance_mm": 9, "density_per_cm": 5, "elastic_required": true,
+      "application_ru": "Соединение деталей, резинка"
+    },
+    "Co4(dn6mm)": {
+      "group": "flatlock", "stitch_type": "Co", "iso": "410",
+      "name_ru": "цепной стежок / четыре иглы",
+      "needles": 4, "needle_distance_mm": 6, "density_per_cm": 5, "elastic_required": true,
+      "application_ru": "Соединение деталей, резинка"
+    },
+    "F2(dn3mm)": {
+      "group": "flatlock", "stitch_type": "F", "iso": "602",
+      "name_ru": "распошив / две иглы",
+      "needles": 2, "needle_distance_mm": 3, "density_per_cm": 5,
+      "application_ru": "Окантовывание, детская одежда и т.д."
+    },
+    "F3(dn6mm)": {
+      "group": "flatlock", "stitch_type": "F", "iso": "605",
+      "name_ru": "распошив / три иглы",
+      "needles": 3, "needle_distance_mm": 6, "density_per_cm": 5,
+      "notes": "Расстояние 6 мм — между крайними иглами",
+      "application_ru": "Подшивка низа, распошив, окантовывание в трикотаже"
+    },
+    "F4(dn9mm)": {
+      "group": "flatlock", "stitch_type": "F", "iso": "607",
+      "name_ru": "распошив / четыре иглы",
+      "needles": 4, "needle_distance_mm": 9, "density_per_cm": 5,
+      "notes": "Расстояние 9 мм — между крайними иглами",
+      "application_ru": "Распошив, подшивка низа в трикотажном белье, флисе и т.д."
+    },
+    "F4(dn6mm)": {
+      "group": "flatlock", "stitch_type": "F", "iso": "607",
+      "name_ru": "распошив / четыре иглы",
+      "needles": 4, "needle_distance_mm": 6, "density_per_cm": 5,
+      "notes": "Расстояние 6 мм — между крайними иглами",
+      "application_ru": "Распошив, подшивка низа в трикотажном белье, флисе и т.д."
+    },
+
+    "Bt(7mm)": {
+      "group": "semiautomatic", "stitch_type": "Bt",
+      "name_ru": "закрепка",
+      "seam_width_mm": 2, "tack_length_mm": 7,
+      "application_ru": "Закрепка"
+    },
+    "Bt(10mm)": {
+      "group": "semiautomatic", "stitch_type": "Bt",
+      "name_ru": "закрепка",
+      "seam_width_mm": 2, "tack_length_mm": 10,
+      "application_ru": "Закрепка"
+    },
+    "Bh1": {
+      "group": "semiautomatic", "stitch_type": "Bh",
+      "name_ru": "петля",
+      "spec_ru": "Стандартная петля",
+      "application_ru": "Петля"
+    },
+    "Bh2": {
+      "group": "semiautomatic", "stitch_type": "Bh",
+      "name_ru": "петля",
+      "spec_ru": "Петля с «глазком»",
+      "application_ru": "Петля"
+    },
+    "Bs2": {
+      "group": "semiautomatic", "stitch_type": "Bs",
+      "name_ru": "пришивание пуговицы с 2 отверстиями",
+      "spec_ru": "Пуговица 2 прокола",
+      "application_ru": "Пришивание пуговиц"
+    },
+    "Bs4": {
+      "group": "semiautomatic", "stitch_type": "Bs",
+      "name_ru": "пришивание пуговицы с 4 отверстиями",
+      "spec_ru": "Пуговица 4 прокола",
+      "application_ru": "Пришивание пуговиц"
+    },
+
+    "Bc": {
+      "group": "secure_ends", "stitch_type": "L/Z",
+      "name_ru": "закрепка",
+      "spec_ru": "Длина закрепки 3-4 стежка, прямой-обратной строчкой",
+      "application_ru": "Закрепка на челночной строчке",
+      "notes": "Не путать с Bt: Bt — закрепка на полуавтомате (гребёнка), Bc — закрепка концов прямой-обратной строчкой, рисуется коротким толстым штрихом."
+    }
+  }
+}
