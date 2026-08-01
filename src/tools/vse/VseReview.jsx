@@ -2014,6 +2014,27 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
     setEditorDirty(true);
   }, []);
 
+  // ── History of manual edits ───────────────────────────────────────────────
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const { historyCount, historySummary } = useMemo(() => {
+    const joins = (nodeState?.merge_groups || []).filter(g => g.join_id).length;
+    const merges = (nodeState?.merge_groups || []).filter(g => !g.join_id).length;
+    const points = (nodeState?.geometry_edits || []).filter(ed => !ed.join_id).length;
+    const splits = (nodeState?.splits || []).length;
+    const deleted = (nodeState?.deleted_elements || []).length;
+    const parts = [];
+    if (points) parts.push(`${points} точ.`);
+    if (merges) parts.push(`${merges} объед.`);
+    if (joins) parts.push(`${joins} соед.`);
+    if (splits) parts.push(`${splits} разрез.`);
+    if (deleted) parts.push(`${deleted} удал.`);
+    return {
+      historyCount: joins + merges + points + splits + deleted,
+      historySummary: parts.join(" · "),
+    };
+  }, [nodeState]);
+  useEffect(() => { setHistoryOpen(false); }, [activeId]);
+
   // ── Stitch codes ──────────────────────────────────────────────────────────
   const [stitchCodes, setStitchCodes] = useState([]);
   useEffect(() => {
@@ -2261,9 +2282,17 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                     )}
                   </div>
                 )}
-                {/* Joins (weld + merge together) get one undo button — removing only one
-                    side used to leave the other active, so the lines still looked joined. */}
-                {(nodeState?.merge_groups || []).filter(g => g.join_id).length > 0 && (
+                {/* History of manual edits. Collapsed by default: on a well-worked node
+                    these run to dozens of rows and bury the controls above them. Each
+                    line is only needed when undoing that particular edit. */}
+                {historyCount > 0 && (
+                  <button type="button" onClick={() => setHistoryOpen(v => !v)}
+                    style={{alignSelf:"flex-start",fontSize:11,padding:"2px 8px",borderRadius:4,
+                      border:"1px solid #3a4750",background:"transparent",color:"#7a8794",cursor:"pointer"}}>
+                    {historyOpen ? "▾" : "▸"} ручные правки: {historySummary}
+                  </button>
+                )}
+                {historyOpen && (nodeState?.merge_groups || []).filter(g => g.join_id).length > 0 && (
                   <div style={{display:"flex",flexDirection:"column",gap:3}}>
                     {(nodeState.merge_groups).filter(g => g.join_id).map((g, i) => (
                       <div key={g.join_id || i} style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180"}}>
@@ -2274,7 +2303,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                     ))}
                   </div>
                 )}
-                {(nodeState?.geometry_edits || []).filter(ed => !ed.join_id).length > 0 && (
+                {historyOpen && (nodeState?.geometry_edits || []).filter(ed => !ed.join_id).length > 0 && (
                   <div style={{display:"flex",flexDirection:"column",gap:3}}>
                     {(nodeState.geometry_edits).map((ed, i) => (ed.join_id ? null : (
                       <div key={i} style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180"}}>
@@ -2285,7 +2314,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                     )))}
                   </div>
                 )}
-                {(nodeState?.deleted_elements || []).length > 0 && (
+                {historyOpen && (nodeState?.deleted_elements || []).length > 0 && (
                   <div style={{display:"flex",flexDirection:"column",gap:3}}>
                     {(nodeState.deleted_elements).map((ek, i) => (
                       <div key={i} style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180"}}>
@@ -2315,7 +2344,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                       <span style={{fontSize:11,color:"#7a8794"}}>Ctrl/Shift-клик по фрагментам · Esc — снять</span>
                     </div>
                   )}
-                  {(nodeState?.merge_groups || []).filter(g => !g.join_id).length > 0 && (
+                  {historyOpen && (nodeState?.merge_groups || []).filter(g => !g.join_id).length > 0 && (
                     <div style={{display:"flex",flexDirection:"column",gap:3}}>
                       {(nodeState.merge_groups).map((g, i) => (g.join_id ? null : (
                         <div key={i}
@@ -2329,7 +2358,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                       )))}
                     </div>
                   )}
-                  {(nodeState?.splits || []).length > 0 && (
+                  {historyOpen && (nodeState?.splits || []).length > 0 && (
                     <div style={{display:"flex",flexDirection:"column",gap:3}}>
                       {(nodeState.splits).map((sp, i) => (
                         <div key={i} style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180"}}>
@@ -2340,9 +2369,7 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                       ))}
                     </div>
                   )}
-                  {mergeSelection.length === 0 && (
-                    <span style={{fontSize:11,color:"#7a8794"}}>Правый клик по линии → «Разрезать здесь»</span>
-                  )}
+
                 </div>
               )}
               {groups.length > 0 ? (
