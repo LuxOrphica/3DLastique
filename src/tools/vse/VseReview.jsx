@@ -2016,22 +2016,13 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
 
   // ── History of manual edits ───────────────────────────────────────────────
   const [historyOpen, setHistoryOpen] = useState(false);
-  const { historyCount, historySummary } = useMemo(() => {
+  const historyCount = useMemo(() => {
     const joins = (nodeState?.merge_groups || []).filter(g => g.join_id).length;
     const merges = (nodeState?.merge_groups || []).filter(g => !g.join_id).length;
     const points = (nodeState?.geometry_edits || []).filter(ed => !ed.join_id).length;
     const splits = (nodeState?.splits || []).length;
     const deleted = (nodeState?.deleted_elements || []).length;
-    const parts = [];
-    if (points) parts.push(`${points} точ.`);
-    if (merges) parts.push(`${merges} объед.`);
-    if (joins) parts.push(`${joins} соед.`);
-    if (splits) parts.push(`${splits} разрез.`);
-    if (deleted) parts.push(`${deleted} удал.`);
-    return {
-      historyCount: joins + merges + points + splits + deleted,
-      historySummary: parts.join(" · "),
-    };
+    return joins + merges + points + splits + deleted;
   }, [nodeState]);
   useEffect(() => { setHistoryOpen(false); }, [activeId]);
 
@@ -2216,6 +2207,18 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
       </div>
 
       {contractOpen && <><div className="vse-contract-backdrop" onClick={() => setContractOpen(false)} /><div className="vse-contract-drawer"><ContractMonitorPanel trace={contractTrace} loading={contractLoading} error={contractError} filter={contractFilter} onFilterChange={setContractFilter} onRefresh={refreshContractTrace} onClose={() => setContractOpen(false)} selectedEl={selectedEl} /></div></>}
+      {historyOpen && <><div className="vse-contract-backdrop" onClick={() => setHistoryOpen(false)} /><div className="vse-contract-drawer">
+        <EditHistoryPanel
+          nodeState={nodeState} roleCatalog={roleCatalog} busy={merging}
+          onClose={() => setHistoryOpen(false)}
+          onRemoveJoin={removeJoin}
+          onRemoveGeometryEdit={removeGeometryEdit}
+          onRestoreDeleted={restoreDeletedElement}
+          onRemoveMergeGroup={removeMergeGroup}
+          onRemoveSplit={removeSplit}
+          onHoverKeys={setHoverMergeKeys}
+        />
+      </div></>}
 
       {node && (
         <div className="vse-annotate-wrap">
@@ -2282,49 +2285,6 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                     )}
                   </div>
                 )}
-                {/* History of manual edits. Collapsed by default: on a well-worked node
-                    these run to dozens of rows and bury the controls above them. Each
-                    line is only needed when undoing that particular edit. */}
-                {historyCount > 0 && (
-                  <button type="button" onClick={() => setHistoryOpen(v => !v)}
-                    style={{alignSelf:"flex-start",fontSize:11,padding:"2px 8px",borderRadius:4,
-                      border:"1px solid #3a4750",background:"transparent",color:"#7a8794",cursor:"pointer"}}>
-                    {historyOpen ? "▾" : "▸"} ручные правки: {historySummary}
-                  </button>
-                )}
-                {historyOpen && (nodeState?.merge_groups || []).filter(g => g.join_id).length > 0 && (
-                  <div style={{display:"flex",flexDirection:"column",gap:3}}>
-                    {(nodeState.merge_groups).filter(g => g.join_id).map((g, i) => (
-                      <div key={g.join_id || i} style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180"}}>
-                        <span>🔗 Соединено ({g.elem_keys?.length || 0}) → {roleLabel(roleCatalog, g.role)}</span>
-                        <button type="button" title="Разъединить (снимает и сварку, и объединение)" onClick={() => removeJoin(g.join_id)} disabled={merging}
-                          style={{fontSize:11,padding:"1px 6px",borderRadius:3,border:"1px solid #b06a5a",background:"transparent",color:"#b06a5a",cursor:"pointer"}}>✕ разъединить</button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {historyOpen && (nodeState?.geometry_edits || []).filter(ed => !ed.join_id).length > 0 && (
-                  <div style={{display:"flex",flexDirection:"column",gap:3}}>
-                    {(nodeState.geometry_edits).map((ed, i) => (ed.join_id ? null : (
-                      <div key={i} style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180"}}>
-                        <span>⚬ Точка ({Math.round(ed.from?.[0])}, {Math.round(ed.from?.[1])}) → ({Math.round(ed.to?.[0])}, {Math.round(ed.to?.[1])})</span>
-                        <button type="button" title="Отменить сдвиг" onClick={() => removeGeometryEdit(i)} disabled={merging}
-                          style={{fontSize:11,padding:"1px 6px",borderRadius:3,border:"1px solid #b06a5a",background:"transparent",color:"#b06a5a",cursor:"pointer"}}>✕ снять</button>
-                      </div>
-                    )))}
-                  </div>
-                )}
-                {historyOpen && (nodeState?.deleted_elements || []).length > 0 && (
-                  <div style={{display:"flex",flexDirection:"column",gap:3}}>
-                    {(nodeState.deleted_elements).map((ek, i) => (
-                      <div key={i} style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180"}}>
-                        <span>🗑 Удалён фрагмент {String(ek).slice(0, 10)}…</span>
-                        <button type="button" title="Восстановить" onClick={() => restoreDeletedElement(i)} disabled={merging}
-                          style={{fontSize:11,padding:"1px 6px",borderRadius:3,border:"1px solid #b06a5a",background:"transparent",color:"#b06a5a",cursor:"pointer"}}>✕ восстановить</button>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
               {(mergeSelection.length > 0 || (nodeState?.merge_groups || []).length > 0 || (nodeState?.splits || []).length > 0) && (
                 <div style={{display:"flex",flexDirection:"column",gap:6,padding:"8px 10px",margin:"0 0 8px",background:"rgba(200,168,75,0.14)",border:"1px solid #C8A84B",borderRadius:6}}>
@@ -2342,31 +2302,6 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                       <button type="button" onClick={() => setMergeSelection([])} disabled={merging}
                         style={{fontSize:12,padding:"4px 8px",borderRadius:4,border:"1px solid #5c7180",background:"transparent",color:"#C8A84B",cursor:"pointer"}}>Очистить</button>
                       <span style={{fontSize:11,color:"#7a8794"}}>Ctrl/Shift-клик по фрагментам · Esc — снять</span>
-                    </div>
-                  )}
-                  {historyOpen && (nodeState?.merge_groups || []).filter(g => !g.join_id).length > 0 && (
-                    <div style={{display:"flex",flexDirection:"column",gap:3}}>
-                      {(nodeState.merge_groups).map((g, i) => (g.join_id ? null : (
-                        <div key={i}
-                          onMouseEnter={() => setHoverMergeKeys(g.elem_keys || [])}
-                          onMouseLeave={() => setHoverMergeKeys([])}
-                          style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180",cursor:"default",background:hoverMergeKeys===g.elem_keys?"rgba(200,168,75,0.12)":"transparent",borderRadius:3,padding:"1px 3px"}}>
-                          <span>Объединено {g.elem_keys?.length || 0} → {roleLabel(roleCatalog, g.role)}</span>
-                          <button type="button" title="Снять объединение" onClick={() => removeMergeGroup(i)} disabled={merging}
-                            style={{fontSize:11,padding:"1px 6px",borderRadius:3,border:"1px solid #b06a5a",background:"transparent",color:"#b06a5a",cursor:"pointer"}}>✕ снять</button>
-                        </div>
-                      )))}
-                    </div>
-                  )}
-                  {historyOpen && (nodeState?.splits || []).length > 0 && (
-                    <div style={{display:"flex",flexDirection:"column",gap:3}}>
-                      {(nodeState.splits).map((sp, i) => (
-                        <div key={i} style={{display:"flex",alignItems:"center",gap:8,fontSize:11,color:"#5c7180"}}>
-                          <span>✂ Разрез в ({Math.round(sp.x)}, {Math.round(sp.y)})</span>
-                          <button type="button" title="Снять разрез" onClick={() => removeSplit(i)} disabled={merging}
-                            style={{fontSize:11,padding:"1px 6px",borderRadius:3,border:"1px solid #b06a5a",background:"transparent",color:"#b06a5a",cursor:"pointer"}}>✕ снять</button>
-                        </div>
-                      ))}
                     </div>
                   )}
 
@@ -2560,7 +2495,13 @@ function TabCompare({ manifest, buildTs, onNodeUpdated }) {
                 {saveStatus.state === "ok" && <span className="vse-build-ok">OK: {saveStatus.message}</span>}
                 {saveStatus.state === "error" && <span className="vse-build-error">Ошибка: {saveStatus.message}</span>}
                 {saveStatus.state === "building" && <span className="vse-muted">Генерация: {saveStatus.message}</span>}
-                <div style={{marginTop:8}}><button data-testid="contract-monitor-open" type="button" className="vse-save-btn" onClick={() => { const nextOpen = !contractOpen; setContractOpen(nextOpen); if (nextOpen) refreshContractTrace(); }}>Contract Monitor</button></div>
+                <div style={{marginTop:8, display:"flex", gap:6, flexWrap:"wrap"}}>
+                  <button data-testid="contract-monitor-open" type="button" className="vse-save-btn" onClick={() => { const nextOpen = !contractOpen; setContractOpen(nextOpen); if (nextOpen) refreshContractTrace(); }}>Contract Monitor</button>
+                  <button type="button" className="vse-save-btn" onClick={() => setHistoryOpen(v => !v)}
+                    title="Все ручные правки геометрии этого узла">
+                    История{historyCount ? ` (${historyCount})` : ""}
+                  </button>
+                </div>
                 {activeId && (() => {
                   const isApproved = nodeStatuses.approved?.includes(activeId);
                   const isComplex = nodeStatuses.complex?.includes(activeId);
@@ -2660,6 +2601,89 @@ function StylePreview({ style }) {
       {stroke && <line x1={fill ? 44 : 8} y1="13" x2="110" y2="13" stroke={stroke} strokeWidth={Math.max(width, 0.5)} strokeDasharray={dash} />}
       {!stroke && !fill && <text x="8" y="17" fontSize="10" fill="#9a9a9a">пусто</text>}
     </svg>
+  );
+}
+
+// Every manual geometry edit made to a node, with its own undo. Lives in a drawer
+// rather than the inspector: a well-worked node accumulates dozens of these, and a row
+// is only wanted when undoing that particular edit.
+function EditHistoryPanel({
+  nodeState, roleCatalog, busy, onClose,
+  onRemoveJoin, onRemoveGeometryEdit, onRestoreDeleted, onRemoveMergeGroup, onRemoveSplit,
+  onHoverKeys,
+}) {
+  const joins = (nodeState?.merge_groups || []).filter(g => g.join_id);
+  const merges = (nodeState?.merge_groups || []).map((g, i) => ({ g, i })).filter(x => !x.g.join_id);
+  const points = (nodeState?.geometry_edits || []).map((ed, i) => ({ ed, i })).filter(x => !x.ed.join_id);
+  const splits = nodeState?.splits || [];
+  const deleted = nodeState?.deleted_elements || [];
+  const total = joins.length + merges.length + points.length + splits.length + deleted.length;
+
+  const undoBtn = {
+    fontSize: 11, padding: "1px 6px", borderRadius: 3, border: "1px solid #b06a5a",
+    background: "transparent", color: "#b06a5a", cursor: "pointer", whiteSpace: "nowrap",
+  };
+  const row = { display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: "#5c7180", padding: "2px 0" };
+  const section = (title, count, children) => count > 0 && (
+    <div style={{ marginBottom: 12 }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: "#8a8571", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>
+        {title} <span style={{ color: "#b9b1a0" }}>{count}</span>
+      </div>
+      {children}
+    </div>
+  );
+
+  return (
+    <div style={{ border: "1px solid #d8c08a", borderRadius: 8, background: "#fffdf8", overflow: "hidden", height: "100%", display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", background: "#f7f1df", borderBottom: "1px solid #e3d3aa", flex: "none" }}>
+        <div>
+          <strong>История правок</strong>
+          <div style={{ fontSize: 11, color: "#6f6652" }}>ручные правки геометрии · {total || "пусто"}</div>
+        </div>
+        <button type="button" className="vse-save-btn" style={{ marginLeft: "auto", padding: "6px 10px" }} onClick={onClose}>Закрыть</button>
+      </div>
+      <div style={{ padding: "10px 12px", overflowY: "auto", flex: 1 }}>
+        {!total && <div className="vse-muted" style={{ fontSize: 12 }}>Ручных правок геометрии нет.</div>}
+
+        {section("Сдвиг точек", points.length, points.map(({ ed, i }) => (
+          <div key={`p${i}`} style={row}>
+            <span>⚬ ({Math.round(ed.from?.[0])}, {Math.round(ed.from?.[1])}) → ({Math.round(ed.to?.[0])}, {Math.round(ed.to?.[1])})</span>
+            <button type="button" style={undoBtn} disabled={busy} onClick={() => onRemoveGeometryEdit(i)}>✕ снять</button>
+          </div>
+        )))}
+
+        {section("Объединения", merges.length, merges.map(({ g, i }) => (
+          <div key={`m${i}`} style={row}
+            onMouseEnter={() => onHoverKeys?.(g.elem_keys || [])}
+            onMouseLeave={() => onHoverKeys?.([])}>
+            <span>Объединено {g.elem_keys?.length || 0} → {roleLabel(roleCatalog, g.role)}</span>
+            <button type="button" style={undoBtn} disabled={busy} onClick={() => onRemoveMergeGroup(i)}>✕ снять</button>
+          </div>
+        )))}
+
+        {section("Соединения", joins.length, joins.map((g, i) => (
+          <div key={`j${g.join_id || i}`} style={row}>
+            <span>🔗 Соединено ({g.elem_keys?.length || 0}) → {roleLabel(roleCatalog, g.role)}</span>
+            <button type="button" style={undoBtn} disabled={busy} title="Снимает и сварку, и объединение"
+              onClick={() => onRemoveJoin(g.join_id)}>✕ разъединить</button>
+          </div>
+        )))}
+
+        {section("Разрезы", splits.length, splits.map((sp, i) => (
+          <div key={`s${i}`} style={row}>
+            <span>✂ Разрез в ({Math.round(sp.x)}, {Math.round(sp.y)})</span>
+            <button type="button" style={undoBtn} disabled={busy} onClick={() => onRemoveSplit(i)}>✕ снять</button>
+          </div>
+        )))}
+
+        {section("Удалённые фрагменты", deleted.length, deleted.map((ek, i) => (
+          <div key={`d${i}`} style={row}>
+            <span>🗑 {String(ek).slice(0, 10)}…</span>
+            <button type="button" style={undoBtn} disabled={busy} onClick={() => onRestoreDeleted(i)}>✕ восстановить</button>
+          </div>
+        )))}
+      </div>
+    </div>
   );
 }
 
