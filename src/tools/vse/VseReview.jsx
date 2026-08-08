@@ -2856,6 +2856,37 @@ function TabRoleStyles({ roleCatalog, onStylesChanged }) {
   if (!roles) return <div className="vse-empty-roles"><span>Загрузка стилей…</span></div>;
 
   const cell = { padding: "5px 7px", verticalAlign: "middle" };
+
+  // Limits are enforced here, not left to the input's min/max: those only mark a field
+  // invalid, they do not stop a typed -5 or 99 from being saved. Width starts at 0.1
+  // because a 0-wide stroke draws nothing — "no line" is what the stroke's «нет» is for.
+  const NUM_LIMITS = {
+    "stroke-width": { min: 0.1, max: 20, step: 0.25, fallback: 1 },
+    "opacity": { min: 0, max: 1, step: 0.05, fallback: 1 },
+  };
+
+  const numInput = (role, attr, { disabled = false, title } = {}) => {
+    const lim = NUM_LIMITS[attr];
+    const raw = effective(role)[attr];
+    const value = raw === undefined || raw === "" ? lim.fallback : parseFloat(raw);
+    const commit = (text) => {
+      const n = parseFloat(text);
+      if (!Number.isFinite(n)) return;                       // half-typed input, ignore
+      setAttr(role, attr, String(Math.min(lim.max, Math.max(lim.min, n))));
+    };
+    return (
+      <input type="number" min={lim.min} max={lim.max} step={lim.step}
+        value={Number.isFinite(value) ? value : lim.fallback}
+        disabled={disabled}
+        title={title || `от ${lim.min} до ${lim.max}`}
+        onChange={e => commit(e.target.value)}
+        // Typing can leave the field mid-edit ("0.", "-"); settle it on blur.
+        onBlur={e => commit(e.target.value === "" ? lim.fallback : e.target.value)}
+        style={{ width: 62, fontSize: 12, padding: "3px 5px", border: "1px solid #cfc6ad",
+                 borderRadius: 3, opacity: disabled ? 0.4 : 1,
+                 cursor: disabled ? "not-allowed" : "auto" }} />
+    );
+  };
   const colorInput = (role, attr) => {
     const val = effective(role)[attr] ?? "none";
     const isNone = !val || val === "none";
@@ -2933,6 +2964,9 @@ function TabRoleStyles({ roleCatalog, onStylesChanged }) {
             const dirty = isDirty(role);
             const dash = st["stroke-dasharray"] || "none";
             const known = DASH_PRESETS.some(p => p.value === dash);
+            const noStroke = !st.stroke || st.stroke === "none";
+            const noFill = !st.fill || st.fill === "none";
+            const invisible = noStroke && noFill;   // nothing to be transparent about
             return (
               <tr key={role} style={{ background: dirty ? "rgba(200,168,75,0.12)" : undefined }}>
                 <td style={cell}>
@@ -2946,25 +2980,31 @@ function TabRoleStyles({ roleCatalog, onStylesChanged }) {
                 <td style={cell}><StylePreview style={st} /></td>
                 <td style={cell}>{colorInput(role, "stroke")}</td>
                 <td style={cell}>{colorInput(role, "fill")}</td>
+                {/* Width and dash describe a stroke; with the stroke off they change
+                    nothing, so they are switched off with it. */}
                 <td style={cell}>
-                  <input type="number" min="0" max="20" step="0.25"
-                    value={parseFloat(st["stroke-width"]) || 0}
-                    onChange={e => setAttr(role, "stroke-width", String(e.target.value))}
-                    style={{ width: 62, fontSize: 12, padding: "3px 5px", border: "1px solid #cfc6ad", borderRadius: 3 }} />
+                  {numInput(role, "stroke-width", {
+                    disabled: noStroke,
+                    title: noStroke ? "Нет обводки — толщина ни на что не влияет" : undefined,
+                  })}
                 </td>
                 <td style={cell}>
                   <select value={known ? dash : "__custom"}
+                    disabled={noStroke}
+                    title={noStroke ? "Нет обводки — штрих ни на что не влияет" : undefined}
                     onChange={e => { if (e.target.value !== "__custom") setAttr(role, "stroke-dasharray", e.target.value); }}
-                    style={{ width: 138, fontSize: 12, padding: "3px 4px", border: "1px solid #cfc6ad", borderRadius: 3 }}>
+                    style={{ width: 138, fontSize: 12, padding: "3px 4px", border: "1px solid #cfc6ad",
+                             borderRadius: 3, opacity: noStroke ? 0.4 : 1,
+                             cursor: noStroke ? "not-allowed" : "auto" }}>
                     {DASH_PRESETS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
                     {!known && <option value="__custom">свой: {dash}</option>}
                   </select>
                 </td>
                 <td style={cell}>
-                  <input type="number" min="0" max="1" step="0.05"
-                    value={st.opacity !== undefined ? parseFloat(st.opacity) : 1}
-                    onChange={e => setAttr(role, "opacity", String(e.target.value))}
-                    style={{ width: 62, fontSize: 12, padding: "3px 5px", border: "1px solid #cfc6ad", borderRadius: 3 }} />
+                  {numInput(role, "opacity", {
+                    disabled: invisible,
+                    title: invisible ? "Нет ни обводки, ни заливки — прозрачность ни на что не влияет" : undefined,
+                  })}
                 </td>
                 <td style={cell}>
                   {(info.overridden || dirty) && (

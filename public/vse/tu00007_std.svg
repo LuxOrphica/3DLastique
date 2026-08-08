@@ -1,5 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="2.04 0.00 190.58 124.81">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 22.61 19.16 L 172.62 19.16" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="cbd68b7683003a7c" data-group-key="break_line|#1a1a1a|none|0.8|false"/>
+    <path d="M 22.04 104.40 L 171.94 104.40" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="4daff349f83ef46f" data-group-key="break_line|#1a1a1a|none|0.8|false"/>
+    <path d="M 172.62 19.16 L 172.62 104.81" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="60467764f2a49bdb" data-group-key="break_line|#1a1a1a|none|0.8|false"/>
+  </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 25.86 61.98 L 32.26 61.98" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="236e98212f5a0b7e" data-group-key="contour_outer|#1a1a1a|none|1.7|false"/>
     <path d="M 31.87 48.09 L 31.87 61.98 C 31.37 66.72 23.59 57.63 22.87 68.35 L 22.87 104.19" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="9a71ece2c84885a2" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
@@ -8,19 +13,14 @@
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 25.86 54.84 L 25.86 66.84" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="95fa397cf4c3f4d9" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
-  <g id="role-stitch_Bt" data-role="stitch_Bt">
-    <path d="M 156.32 65.39 L 165.92 65.39" style="stroke:#C8102E;stroke-width:3.0;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_Bt" data-elem-key="3b2dd1dc597085b5" data-group-key="stitch_Bt|#e02020|none|2.5|false"/>
+  <g id="role-stitch_backtack" data-role="stitch_backtack">
+    <path d="M 155.12 65.39 L 167.12 65.39" style="stroke:#C8102E;stroke-width:3;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_backtack" data-elem-key="3b2dd1dc597085b5" data-group-key="stitch_backtack|#e02020|none|2.5|false" data-stitch-code="Bc"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 32.81 65.39 L 167.12 65.39" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="50ed37891924a55d" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-  </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 22.61 19.16 L 172.62 19.16" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="cbd68b7683003a7c" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
-    <path d="M 22.04 104.40 L 171.94 104.40" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="4daff349f83ef46f" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
-    <path d="M 172.62 19.16 L 172.62 104.81" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="60467764f2a49bdb" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 32.81 65.39 L 167.12 65.39" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="50ed37891924a55d" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 153.52 52.47 L 162.52 65.54" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="dccf6a29da1aad1a" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 153.52 52.47 L 162.52 65.54" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="dccf6a29da1aad1a" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="147.7" y="54.8" font-family="Arial, sans-serif" font-size="10.0" fill="#1A1A1A">Bc</text>

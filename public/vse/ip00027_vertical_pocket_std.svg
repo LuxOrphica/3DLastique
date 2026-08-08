@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.65 0.00 245.11 247.18">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 225.76 54.71 L 225.76 226.86 L 20.65 226.86 L 20.65 13.84" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="fe793795b579cab4" data-group-key="break_line|#1a1a1a|none|0.8|false"/>
+  </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 20.83 13.84 L 196.50 13.84 L 196.50 54.05" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="58785d34faf12c73" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 21.21 36.36 L 154.51 36.37 C 175.30 37.55 175.67 46.74 154.51 47.79 L 144.08 47.79 L 144.08 66.88" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="402445199d2b831f" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
@@ -22,16 +25,13 @@
     <path d="M 179.55 46.62 L 179.55 8.81" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="a9e19fc3a61b8e4a" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 150.78 76.61 L 150.78 168.46 L 174.26 168.46" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="c42398d137c573a6" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-  </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 225.76 54.71 L 225.76 226.86 L 20.65 226.86 L 20.65 13.84" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="fe793795b579cab4" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 150.78 76.61 L 150.78 168.46 L 174.26 168.46" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="c42398d137c573a6" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 170.89 168.33 L 182.45 178.39" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="c0edcd91881f21dd" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 170.89 168.33 L 182.45 178.39" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="c0edcd91881f21dd" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
   </g>
-  <g id="role-stitch_symbol" data-role="stitch_symbol" data-trace-ignore="1">
-    <path d="M 148.16 171.29 L 150.27 174.49 L 152.38 171.29 L 154.49 174.49 L 156.60 171.29 L 158.70 174.49 L 160.81 171.29 L 162.92 174.49 L 165.03 171.29 L 167.14 174.49 L 169.25 171.29 L 171.35 174.49 L 173.46 171.29" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:1" data-role="stitch_symbol" data-trace-ignore="1"/>
+  <g id="role-stitch_Bt-symbols" data-role="stitch_Bt" data-trace-ignore="1">
+    <path d="M 148.16 171.29 L 150.27 174.49 L 152.38 171.29 L 154.49 174.49 L 156.60 171.29 L 158.70 174.49 L 160.81 171.29 L 162.92 174.49 L 165.03 171.29 L 167.14 174.49 L 169.25 171.29 L 171.35 174.49 L 173.46 171.29" style="stroke:#C8102E;stroke-width:1.00;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1;stroke-linejoin:round" data-role="stitch_Bt" data-trace-ignore="1"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="183.1" y="189.7" font-family="Arial, sans-serif" font-size="10.0" fill="#1A1A1A">Bt</text>

@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="42.01 10.63 249.64 312.21">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 89.06 302.84 L 271.64 302.84 L 271.64 30.63 L 70.97 30.63" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="aea7c7a0ef82ec43" data-group-key="break_line|#1a1a1a|none|0.8|false"/>
+  </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 127.88 187.27 L 127.88 173.51 C 128.52 160.76 144.51 160.22 145.28 173.51 L 145.28 302.84" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="abdd2b0edd0a2df6" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 103.67 188.05 L 103.67 116.30 C 104.32 103.54 120.30 103.00 121.07 116.30 L 121.08 188.05" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="0d73a0721fe36f18" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
@@ -23,10 +26,7 @@
     <path d="M 84.10 223.82 C 84.10 228.03 79.67 231.45 74.20 231.45 C 68.74 231.45 64.31 228.03 64.31 223.82 C 64.31 219.61 68.74 216.19 74.20 216.19 C 79.67 216.19 84.10 219.61 84.10 223.82" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="6880576ae3b9e3a9" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 157.28 170.05 L 271.64 170.09" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="cd8efd6c8d9adedc" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-  </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 89.06 302.84 L 271.64 302.84 L 271.64 30.63 L 70.97 30.63" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="aea7c7a0ef82ec43" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 157.28 170.05 L 271.64 170.09" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="cd8efd6c8d9adedc" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="101.9" y="262.0" font-family="Arial, sans-serif" font-size="10.0" fill="#1A1A1A">Lining</text>

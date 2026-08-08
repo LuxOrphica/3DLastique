@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 0.00 212.49 192.98">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 155.90 119.14 L 152.17 162.30" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="cc4fd1cd3e638150" data-group-key="break_line|#1a1a1a|none|0.8|false"/>
+  </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 93.56 123.32 L 13.43 123.32" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="85be000e9839d85c" data-group-key="contour_outer|#1a1a1a|none|2.0|false"/>
     <path d="M 13.43 104.41 L 156.40 104.41 C 156.40 104.41 176.11 104.41 176.38 117.12 C 176.55 124.94 167.73 127.86 157.07 127.86 L 144.07 127.86" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="acbf38170d9899e4" data-group-key="contour_outer|#1a1a1a|none|2.0|false"/>
@@ -14,7 +17,7 @@
     <path d="M 77.40 94.74 L 77.40 157.30" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="44f875c895c2bd81" data-group-key="stitch_edge|#e02020|none|1.5|false"/>
   </g>
   <g id="role-fill_elastic" data-role="fill_elastic">
-    <path d="M 169.70 124.27 L 146.12 124.27 L 146.12 104.94 L 160.31 104.94 C 164.73 104.41 169.70 107.39 169.70 107.39 L 169.70 124.27 Z" style="stroke:#666666;stroke-width:0.5;stroke-dasharray:none;fill:#8F9092;opacity:0.75" data-role="fill_elastic" data-elem-key="c23c7b4b95e05648" data-group-key="fill_elastic|#1a1a1a|#27a6de|1.0|false"/>
+    <path d="M 169.70 124.27 L 146.12 124.27 L 146.12 104.94 L 160.31 104.94 C 164.73 104.41 169.70 107.39 169.70 107.39 L 169.70 124.27 Z" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:#8F9092;opacity:1" data-role="fill_elastic" data-elem-key="c23c7b4b95e05648" data-group-key="fill_elastic|#1a1a1a|#27a6de|1.0|false"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 148.73 94.74 L 148.73 157.30" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="1a74223c48a62f0e" data-group-key="stitch_edge|#e02020|none|1.5|false"/>
@@ -24,11 +27,8 @@
     <path d="M 77.40 87.39 L 77.40 12.80" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="e7de17265874f68f" data-group-key="stitch_thru|#e02020|none|1.5|true"/>
     <path d="M 148.73 87.39 L 148.73 13.37" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="89378fcff107df0f" data-group-key="stitch_thru|#e02020|none|1.5|true"/>
   </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 177.11 12.30 L 13.43 12.37 L 13.43 123.32" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="7ee19074b5827372" data-group-key="break_line|#1a1a1a|none|0.62|false"/>
-  </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 155.90 119.14 L 152.17 162.30" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="cc4fd1cd3e638150" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 177.11 12.30 L 13.43 12.37 L 13.43 123.32" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="7ee19074b5827372" data-group-key="callout_line|#1a1a1a|none|0.6|false"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="19.4" y="122.6" font-family="Arial, sans-serif" font-size="10.7" fill="#1A1A1A">Lining</text>

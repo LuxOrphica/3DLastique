@@ -1,11 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="11.10 0.00 194.82 246.18">
   <!-- VSE — Visual Standardization Engine -->
-  <g id="role-fill_shape" data-role="fill_shape">
-    <path d="M 76.76 58.92 H 88.64 V 91.07 H 76.76 Z Z" style="stroke:#CCCCCC;stroke-width:0.5;stroke-dasharray:none;fill:#E8E8E8;opacity:0.7" data-role="fill_shape" data-elem-key="af9975048c0fa966" data-group-key="fill_shape|none|#bd69a3|0|false"/>
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 88.46 15.24 L 185.91 15.24 L 185.91 226.11 L 39.88 226.11" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="964ece067296c347" data-group-key="break_line|#1a1a1a|none|0.8|false"/>
+  </g>
+  <g id="role-fill_glue" data-role="fill_glue">
+    <path d="M 76.76 58.92 H 88.64 V 91.07 H 76.76 Z Z" style="stroke:#7E6A3A;stroke-width:0.5;stroke-dasharray:3 2;fill:#E8DAA8;opacity:0.55" data-role="fill_glue" data-elem-key="af9975048c0fa966" data-group-key="fill_glue|none|#bd69a3|0.0|false"/>
   </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 89.23 14.88 L 89.23 137.74 C 89.23 141.88 85.87 144.60 81.63 144.58 C 76.62 144.58 74.06 140.21 74.06 137.74 L 74.06 124.19 L 89.06 124.19" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="4887c16fc8b7b1f9" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
-    <path d="M 40.54 58.20 L 40.54 226.18" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="8088529c3a8596a6" data-group-key="contour_outer|#1a1a1a|none|1.91|false"/>
+    <path d="M 40.54 58.20 L 40.54 226.18" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="8088529c3a8596a6" data-group-key="contour_outer|#1a1a1a|none|1.9|false"/>
     <path d="M 79.63 144.58 L 185.91 144.58" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="a1e5b9185af8a074" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 52.02 58.30 L 52.02 135.84 C 52.02 139.06 53.75 144.54 58.95 144.52 C 67.29 144.49 66.18 135.84 66.18 135.84 L 66.18 123.93 L 89.49 123.93" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="37acef1541477ffb" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 40.10 58.67 L 89.18 58.67" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="5c27eb59125d3c0c" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
@@ -19,11 +22,8 @@
   <g id="role-stitch_thru" data-role="stitch_thru">
     <path d="M 67.18 74.90 L 80.44 74.90" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="b2de61ec84596a34" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 88.46 15.24 L 185.91 15.24 L 185.91 226.11 L 39.88 226.11" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="964ece067296c347" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
-  </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 83.49 65.25 L 70.02 48.25" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="6949697c159f6188" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 83.49 65.25 L 70.02 48.25" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="6949697c159f6188" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="47.8" y="48.3" font-family="Arial, sans-serif" font-size="10.4" fill="#1A1A1A">Glue</text>

@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="14.08 2.13 222.62 258.35">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 34.50 207.23 L 34.50 22.18 L 216.47 22.18 L 216.47 236.17" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="96f564f8f8429e3e" data-group-key="break_line|#1a1a1a|none|0.8|false"/>
+  </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 34.95 182.73 L 142.88 182.73 C 152.65 185.38 147.76 192.09 142.88 192.09 L 87.06 192.09 L 87.06 183.02" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="d6d27b762190b38f" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 34.08 206.37 L 98.01 206.37 C 107.57 206.37 103.65 197.46 98.01 198.02 L 87.19 198.02 L 87.19 192.09" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="34ef76e84ed48d61" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
@@ -17,17 +20,14 @@
     <path d="M 141.03 197.46 L 141.03 176.97" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="219789732f95dcd7" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 141.03 172.61 L 141.03 22.57" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="33aeca029be69c00" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-    <path d="M 98.10 173.80 L 98.10 86.23 L 141.03 61.14" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="f3d9f1d278e56888" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-  </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 34.50 207.23 L 34.50 22.18 L 216.47 22.18 L 216.47 236.17" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="96f564f8f8429e3e" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 141.03 172.61 L 141.03 22.57" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="33aeca029be69c00" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
+    <path d="M 98.10 173.80 L 98.10 86.23 L 141.03 61.14" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="f3d9f1d278e56888" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 115.71 56.57 L 128.26 69.01" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="0e126e52b848473b" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 115.71 56.57 L 128.26 69.01" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="0e126e52b848473b" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
   </g>
-  <g id="role-stitch_symbol" data-role="stitch_symbol" data-trace-ignore="1">
-    <path d="M 115.47 71.06 L 117.89 76.64 L 120.31 71.06 L 122.73 76.64 L 125.15 71.06 L 127.56 76.64 L 129.98 71.06 L 132.40 76.64 L 134.82 71.06 L 137.24 76.64 L 139.66 71.06 L 142.08 76.64 L 144.50 71.06" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:1" data-role="stitch_symbol" data-trace-ignore="1"/>
+  <g id="role-stitch_Bt-symbols" data-role="stitch_Bt" data-trace-ignore="1">
+    <path d="M 115.47 71.06 L 117.89 76.64 L 120.31 71.06 L 122.73 76.64 L 125.15 71.06 L 127.56 76.64 L 129.98 71.06 L 132.40 76.64 L 134.82 71.06 L 137.24 76.64 L 139.66 71.06 L 142.08 76.64 L 144.50 71.06" style="stroke:#C8102E;stroke-width:1.00;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1;stroke-linejoin:round" data-role="stitch_Bt" data-trace-ignore="1"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="102.2" y="58.1" font-family="Arial, sans-serif" font-size="10.4" fill="#1A1A1A">Bt</text>

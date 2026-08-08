@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 0.00 206.55 150.06">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 77.23 12.35 L 186.28 12.35 L 186.28 130.06" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="075d0f98781acb96" data-group-key="break_line|#1a1a1a|none|1.0|false"/>
+  </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 60.84 99.41 C 60.84 116.34 57.91 130.06 54.30 130.06 C 50.69 130.06 47.76 116.34 47.76 99.41 C 47.76 82.48 50.69 68.76 54.30 68.76 C 57.91 68.76 60.84 82.48 60.84 99.41" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="51633308818422ea" data-group-key="contour_outer|#1a1a1a|none|2.0|false"/>
   </g>
@@ -15,7 +18,6 @@
     <path d="M 76.96 12.06 L 76.96 116.05 C 76.96 116.05 77.38 126.19 73.31 126.19 C 69.23 126.19 69.75 117.10 69.75 117.10 L 69.75 79.22" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="2a3c8e473c1d3ab3" data-group-key="contour_outer|#1a1a1a|none|2.0|false"/>
     <path d="M 53.23 69.17 L 76.96 69.17" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="be0aab5b613f8020" data-group-key="contour_outer|#1a1a1a|none|2.0|false"/>
     <path d="M 54.30 129.79 L 186.55 129.79" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="db73cd0ab43e2b87" data-group-key="contour_outer|#1a1a1a|none|2.0|false"/>
-    <path d="M 77.23 12.35 L 186.28 12.35 L 186.28 130.06" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="075d0f98781acb96" data-group-key="contour_outer|#1a1a1a|none|1.0|false"/>
     <path d="M 72.09 125.73 L 80.12 125.73" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="21819d635047085c" data-group-key="contour_outer|#1a1a1a|none|2.0|false"/>
   </g>
   <g id="role-hw_zipper_tape" data-role="hw_zipper_tape">
@@ -29,8 +31,8 @@
     <path d="M 44.57 121.88 L 93.01 121.92" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="76e2c0c505ae8732" data-group-key="stitch_edge|#e02020|none|1.5|false"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 100.77 74.58 L 184.11 74.58" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="f66c8125df23eef6" data-group-key="boundary_lining|#e02020|none|1.5|true"/>
-    <path d="M 99.14 122.21 L 182.49 122.21" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="c5444403b20877a0" data-group-key="boundary_lining|#e02020|none|1.5|true"/>
+    <path d="M 100.77 74.58 L 184.11 74.58" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="f66c8125df23eef6" data-group-key="stitch_thru|#e02020|none|1.5|true"/>
+    <path d="M 99.14 122.21 L 182.49 122.21" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="c5444403b20877a0" data-group-key="stitch_thru|#e02020|none|1.5|true"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="8.2" y="86.3" font-family="Arial, sans-serif" font-size="10.4" fill="#1A1A1A">Tape</text>

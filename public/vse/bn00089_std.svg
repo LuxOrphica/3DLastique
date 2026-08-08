@@ -1,5 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="4.14 9.99 211.63 252.18">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 34.30 29.99 L 194.70 29.99" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="0a12e6e9a4728df3" data-group-key="break_line|#1a1a1a|none|1.0|false"/>
+    <path d="M 51.43 242.16 C 52.64 242.17 194.43 242.16 194.43 242.16 L 194.43 30.17" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="872d74bb37d0f42f" data-group-key="break_line|#1a1a1a|none|1.0|false"/>
+  </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 64.86 164.57 L 195.02 164.57" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="78de03a4cb69d9cf" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 68.77 30.20 L 68.77 158.53" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="7f419d892be3bd2b" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
@@ -14,15 +18,13 @@
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 51.77 138.86 L 68.82 138.86" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="00668ca2bfb53066" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 34.64 178.86 L 52.21 178.86" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="e9f44231f707ca00" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
-    <path d="M 34.30 29.99 L 194.70 29.99" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="0a12e6e9a4728df3" data-group-key="contour_outer|#1a1a1a|none|1.0|false"/>
-    <path d="M 51.43 242.16 C 52.64 242.17 194.43 242.16 194.43 242.16 L 194.43 30.17" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="872d74bb37d0f42f" data-group-key="contour_outer|#1a1a1a|none|1.0|false"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 47.51 176.86 C 47.51 181.76 43.61 185.74 38.80 185.74 C 33.99 185.74 30.09 181.76 30.09 176.86 C 30.09 171.95 33.99 167.97 38.80 167.97 C 43.61 167.97 47.51 171.95 47.51 176.86" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="108888e637bca7b3" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
     <path d="M 66.76 146.41 C 66.76 152.57 61.66 157.57 55.37 157.57 C 49.07 157.57 43.97 152.57 43.97 146.41 C 43.97 140.25 49.07 135.25 55.37 135.25 C 61.66 135.25 66.76 140.25 66.76 146.41" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="e4a69d7a91db96da" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 74.83 165.62 L 195.77 165.62" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="767b2e9e7fc0fdb0" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
+    <path d="M 74.83 165.62 L 195.77 165.62" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="767b2e9e7fc0fdb0" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="126.2" y="219.2" font-family="Arial, sans-serif" font-size="10.0" fill="#1A1A1A">Top</text>

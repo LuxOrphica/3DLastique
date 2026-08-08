@@ -7,6 +7,11 @@
     <path d="M 410.46 214.80 L 410.50 391.90 C 411.56 406.41 428.87 405.40 429.19 391.90 L 429.19 380.02 L 445.32 377.70" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="ddf475e354780f79" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 438.86 319.45 C 438.86 309.67 438.83 305.64 438.83 300.19 C 439.36 287.22 452.61 286.66 453.24 300.19 L 453.24 392.80 C 452.55 405.52 436.36 405.78 435.83 392.80 L 435.82 379.03" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="8f7b5f79d76b8ed4" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 543.88 388.43 L 444.61 402.44 L 419.72 402.44" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="70662a7d3aa0098b" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
+  </g>
+  <g id="role-construction_line" data-role="construction_line">
+    <path d="M 411.14 214.97 L 543.70 195.88 L 543.88 195.97 L 543.88 388.43" style="stroke:#1A1A1A;stroke-width:0.9;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="construction_line" data-elem-key="07a4472ce040dee8" data-group-key="construction_line|#1a1a1a|none|0.8|false"/>
+  </g>
+  <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 433.89 212.11 L 433.79 320.47 L 445.58 318.69" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="e9c03d54bba30d57" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 445.36 290.25 L 543.82 276.35" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="2d8462530a42c57d" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
   </g>
@@ -17,11 +22,8 @@
     <path d="M 424.55 387.38 C 424.55 393.18 427.88 397.89 431.98 397.89 C 436.09 397.89 439.42 393.18 439.42 387.38 C 439.42 381.58 436.09 376.87 431.98 376.87 C 427.88 376.87 424.55 381.58 424.55 387.38" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="016119d525891679" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 461.68 301.83 L 542.97 290.04" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="688b4f6b29ab96ba" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-    <path d="M 461.85 308.63 L 542.63 296.80" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="c497808278dc5c67" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-  </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 411.14 214.97 L 543.70 195.88 L 543.88 195.97 L 543.88 388.43" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="07a4472ce040dee8" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 461.68 301.83 L 542.97 290.04" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="688b4f6b29ab96ba" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
+    <path d="M 461.85 308.63 L 542.63 296.80" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="c497808278dc5c67" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="500.7" y="236.8" font-family="Arial, sans-serif" font-size="12.0" fill="#1A1A1A">face</text>

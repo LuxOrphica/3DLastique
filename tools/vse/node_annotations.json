@@ -209,7 +209,12 @@
       "identity_version": 1,
       "extraction_version": 1,
       "splits": [],
-      "updated_at": "2026-07-19T19:58:38Z"
+      "updated_at": "2026-07-31T23:27:21Z",
+      "geometry_edits": [],
+      "merge_groups": [],
+      "deleted_elements": [],
+      "geometry_overrides": {},
+      "element_codes": {}
     },
     "ac00003": {
       "group_overrides": {},
@@ -309,7 +314,8 @@
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-06-14T19:12:13Z"
+      "updated_at": "2026-08-03T14:49:56Z",
+      "geometry_overrides": {}
     },
     "ac00301_cap_s_visor": {
       "group_overrides": {
@@ -368,7 +374,7 @@
           "key_strs": [
             "#1a1a1a|none|1.0|false"
           ],
-          "updated_at": "2026-07-12T14:31:31Z"
+          "updated_at": "2026-07-31T12:50:42Z"
         }
       },
       "element_overrides": {},
@@ -376,7 +382,7 @@
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "approved",
-      "updated_at": "2026-07-12T14:31:31Z"
+      "updated_at": "2026-07-31T12:50:42Z"
     },
     "ac00405_gloves_mittens": {
       "group_overrides": {},
@@ -429,58 +435,63 @@
           "key_strs": [
             "#1a1a1a|none|1.0|false"
           ],
-          "updated_at": "2026-07-19T16:13:30Z"
+          "updated_at": "2026-07-28T12:11:41Z"
         },
         "arrow|#1a1a1a|#1a1a1a|0.8|false": {
           "role": "callout_line",
           "key_strs": [
             "#1a1a1a|#1a1a1a|0.75|false"
           ],
-          "updated_at": "2026-07-19T16:13:30Z"
+          "updated_at": "2026-07-28T12:11:41Z"
         }
       },
       "element_overrides": {
         "b23cbf3363e909fd": {
           "role": "fill_velcro_hook",
           "path_d_prefix": "M 121.87 100.96 L 239.54 100.99 L 238.33 76.25 L 121.87 76.29 L 121.87 100.96 Z",
-          "updated_at": "2026-07-19T16:13:30Z"
+          "updated_at": "2026-07-28T12:11:41Z"
         },
         "f13cff75d3570b75": {
           "role": "stitch_thru",
           "path_d_prefix": "M 235.04 78.12 L 238.54 78.12",
-          "updated_at": "2026-07-19T16:13:30Z"
+          "updated_at": "2026-07-28T12:11:41Z"
         },
         "0f4bab0ae1795ddb": {
           "role": "stitch_thru",
           "path_d_prefix": "M 239.54 99.00 L 236.04 99.00",
-          "updated_at": "2026-07-19T16:13:30Z"
+          "updated_at": "2026-07-28T12:11:41Z"
         },
         "059c63da5bc313da": {
           "role": "stitch_thru",
           "path_d_prefix": "M 264.51 181.64 L 268.01 181.63",
-          "updated_at": "2026-07-19T16:13:30Z"
+          "updated_at": "2026-07-28T12:11:41Z"
         },
         "20c7ec92a93b63c8": {
           "role": "stitch_thru",
           "path_d_prefix": "M 203.15 233.44 L 199.65 233.44",
-          "updated_at": "2026-07-19T16:13:30Z"
+          "updated_at": "2026-07-28T12:11:41Z"
         },
         "43095b2df75e6060": {
           "role": "hw_ring",
           "path_d_prefix": "M 119.27 176.79 C 119.24 170.59 124.69 165.55 131.43 165.52 C 138.15 165.49 143.",
-          "updated_at": "2026-07-19T16:13:30Z"
+          "updated_at": "2026-07-28T12:11:41Z"
         },
         "606ce3cca33b2077": {
           "role": "stitch_thru",
           "path_d_prefix": "M 77.40 176.09 L 80.90 176.09",
-          "updated_at": "2026-07-19T16:13:30Z"
+          "updated_at": "2026-07-28T12:11:41Z"
+        },
+        "36d5f20805e84bc0": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 99.91 228.57 L 103.41 228.57",
+          "updated_at": "2026-07-28T12:11:41Z"
         }
       },
       "source_hash": "a1cdb181028b8ca8f0ad966a52255440523d39ff",
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-07-19T16:13:30Z",
+      "updated_at": "2026-07-30T18:30:36Z",
       "merge_groups": [
         {
           "elem_keys": [
@@ -513,8 +524,109 @@
           ],
           "role": "stitch_thru",
           "updated_at": "2026-07-19T16:12:34Z"
+        },
+        {
+          "elem_keys": [
+            "059c63da5bc313da",
+            "91caf04053d714c6"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T23:24:10Z"
+        },
+        {
+          "elem_keys": [
+            "3578073e3bde9a97",
+            "606ce3cca33b2077"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-28T12:09:43Z",
+          "join_id": "j_1785240583553_ei9tay"
+        },
+        {
+          "elem_keys": [
+            "059c63da5bc313da",
+            "91caf04053d714c6"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-28T12:10:04Z",
+          "join_id": "j_1785240603894_xdboy1"
+        },
+        {
+          "elem_keys": [
+            "3109f7992c107d14",
+            "3578073e3bde9a97"
+          ],
+          "role": "stitch_edge",
+          "updated_at": "2026-07-28T12:11:55Z",
+          "join_id": "j_1785240715195_z2ma0e"
         }
-      ]
+      ],
+      "geometry_edits": [
+        {
+          "elem_key": "606ce3cca33b2077",
+          "from": [
+            80.9,
+            176.09
+          ],
+          "to": [
+            87.35,
+            176.09
+          ],
+          "updated_at": "2026-07-28T12:09:43Z",
+          "join_id": "j_1785240583553_ei9tay"
+        },
+        {
+          "elem_key": "059c63da5bc313da",
+          "from": [
+            268.01,
+            181.63
+          ],
+          "to": [
+            260.76,
+            181.64
+          ],
+          "updated_at": "2026-07-28T12:10:04Z",
+          "join_id": "j_1785240603894_xdboy1"
+        },
+        {
+          "elem_key": "20c7ec92a93b63c8",
+          "from": [
+            256.83,
+            233.44
+          ],
+          "to": [
+            244.7580192992772,
+            232.4685811576149
+          ],
+          "updated_at": "2026-07-28T12:10:26Z"
+        },
+        {
+          "elem_key": "3109f7992c107d14",
+          "from": [
+            124.9,
+            178.92
+          ],
+          "to": [
+            121.82,
+            179.88
+          ],
+          "updated_at": "2026-07-28T12:11:55Z",
+          "join_id": "j_1785240715195_z2ma0e"
+        },
+        {
+          "elem_key": "3109f7992c107d14",
+          "from": [
+            121.82,
+            179.88
+          ],
+          "to": [
+            126.55717982252918,
+            179.1482927532646
+          ],
+          "updated_at": "2026-07-28T12:12:11Z"
+        }
+      ],
+      "geometry_overrides": {}
     },
     "dc00015": {
       "group_overrides": {},
@@ -578,24 +690,94 @@
         "6c638d5130202622": {
           "role": "stitch_Bt",
           "path_d_prefix": "M 64.11 114.27 L 64.11 117.27",
-          "updated_at": "2026-06-19T10:33:00Z"
+          "updated_at": "2026-07-27T00:54:53Z"
         },
         "cc63dca665abc792": {
           "role": "stitch_Bt",
           "path_d_prefix": "M 64.11 121.60 L 64.11 141.08",
-          "updated_at": "2026-06-19T10:33:00Z"
+          "updated_at": "2026-07-27T00:54:53Z"
         },
         "eae0083b0208ace2": {
           "role": "stitch_Bt",
           "path_d_prefix": "M 64.11 143.25 L 64.11 146.25",
-          "updated_at": "2026-06-19T10:33:00Z"
+          "updated_at": "2026-07-27T00:54:53Z"
         }
       },
       "source_hash": "956b3fd72fc5f818ef8f1afb151acaa5372e0706",
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-06-19T10:33:00Z"
+      "updated_at": "2026-07-27T00:54:53Z",
+      "splits": [
+        {
+          "elem_key": "cc63dca665abc792",
+          "x": 64.11000061035156,
+          "y": 131.70267945020962,
+          "updated_at": "2026-07-27T00:54:10Z"
+        }
+      ],
+      "geometry_edits": [
+        {
+          "elem_key": "5db367cbc100d43d",
+          "from": [
+            64.11,
+            122.46
+          ],
+          "to": [
+            65.0157875926105,
+            121.19727187201495
+          ],
+          "updated_at": "2026-07-27T00:52:47Z"
+        },
+        {
+          "elem_key": "d6eeffafe9305619",
+          "from": [
+            64.11,
+            131.32
+          ],
+          "to": [
+            64.63174730584748,
+            133.46358026155622
+          ],
+          "updated_at": "2026-07-27T00:53:05Z"
+        },
+        {
+          "elem_key": "d6eeffafe9305619",
+          "from": [
+            64.11,
+            131.32
+          ],
+          "to": [
+            63.93160431072231,
+            136.85780042624117
+          ],
+          "updated_at": "2026-07-27T00:53:17Z"
+        },
+        {
+          "elem_key": "d6eeffafe9305619",
+          "from": [
+            64.11,
+            131.32
+          ],
+          "to": [
+            64.31626351086015,
+            134.54888907071296
+          ],
+          "updated_at": "2026-07-27T00:53:35Z"
+        },
+        {
+          "elem_key": "d6eeffafe9305619",
+          "from": [
+            64.11,
+            131.32
+          ],
+          "to": [
+            64.26865368015449,
+            134.4318343860972
+          ],
+          "updated_at": "2026-07-27T00:53:46Z"
+        }
+      ]
     },
     "ac00402_gloves_mittens": {
       "group_overrides": {
@@ -641,61 +823,66 @@
           "key_strs": [
             "#1a1a1a|#ffffff|1.5|false"
           ],
-          "updated_at": "2026-07-19T00:21:35Z"
+          "updated_at": "2026-07-24T19:45:44Z"
         }
       },
       "element_overrides": {
         "1e98665d4b8b4e19": {
           "role": "component_half_belt",
           "path_d_prefix": "M 197.98 112.85 C 197.98 112.85 117.48 104.91 108.37 103.95 L 110.08 75.38 L 176",
-          "updated_at": "2026-07-19T00:21:35Z"
+          "updated_at": "2026-07-24T19:45:44Z"
         },
         "ec72924eab080923": {
           "role": "component_half_belt",
           "path_d_prefix": "M 209.89 147.82 L 187.66 150.65 C 187.66 150.65 186.73 130.93 187.75 124.09 C 19",
-          "updated_at": "2026-07-19T00:21:35Z"
+          "updated_at": "2026-07-24T19:45:44Z"
+        },
+        "0847015b9dc2a24e": {
+          "role": "stitch_thru",
+          "path_d_prefix": "M 204.71 112.91 L 205.03 116.40",
+          "updated_at": "2026-07-24T19:45:44Z"
         },
         "c3260926e1e86790": {
           "role": "stitch_thru",
           "path_d_prefix": "M 207.36 142.63 L 207.67 146.11 L 204.19 146.50",
-          "updated_at": "2026-07-19T00:21:35Z"
+          "updated_at": "2026-07-24T19:45:44Z"
         },
         "d5bfc38f575e0ac9": {
           "role": "stitch_thru",
           "path_d_prefix": "M 193.16 147.74 L 189.68 148.14 C 189.68 148.14 189.66 146.77 189.65 144.64",
-          "updated_at": "2026-07-19T00:21:35Z"
+          "updated_at": "2026-07-24T19:45:44Z"
         },
         "b34bbf278d3db696": {
           "role": "stitch_thru",
           "path_d_prefix": "M 181.30 85.87 C 180.60 84.73 179.97 83.74 179.44 82.91",
-          "updated_at": "2026-07-19T00:21:35Z"
+          "updated_at": "2026-07-24T19:45:44Z"
         },
         "da86663ff1bf8df6": {
           "role": "component_half_belt",
           "path_d_prefix": "M 221.11 73.24 L 250.68 73.24 C 251.87 80.38 251.81 103.95 251.81 103.95 L 221.1",
-          "updated_at": "2026-07-19T00:21:35Z"
+          "updated_at": "2026-07-24T19:45:44Z"
         },
         "d4802b702cce89df": {
           "role": "stitch_thru",
           "path_d_prefix": "M 281.06 180.71 L 277.56 180.71",
-          "updated_at": "2026-07-19T00:21:35Z"
+          "updated_at": "2026-07-24T19:45:44Z"
         },
         "439748c5af851e39": {
           "role": "stitch_thru",
           "path_d_prefix": "M 260.98 231.00 L 257.48 230.94",
-          "updated_at": "2026-07-19T00:21:35Z"
+          "updated_at": "2026-07-24T19:45:44Z"
         },
         "d6b0d5500736616e": {
           "role": "stitch_thru",
           "path_d_prefix": "M 90.93 179.40 L 94.43 179.40",
-          "updated_at": "2026-07-19T00:21:35Z"
+          "updated_at": "2026-07-24T19:45:44Z"
         }
       },
       "source_hash": "21e0a92248e8b82ccb928c5efdc6ef2d1ae7547c",
       "identity_version": 1,
       "extraction_version": 1,
-      "review_status": "pending",
-      "updated_at": "2026-07-19T00:23:06Z",
+      "review_status": "complex",
+      "updated_at": "2026-08-03T14:53:13Z",
       "merge_groups": [
         {
           "elem_keys": [
@@ -736,8 +923,355 @@
           ],
           "role": "stitch_thru",
           "updated_at": "2026-07-19T00:23:06Z"
+        },
+        {
+          "elem_keys": [
+            "14432f569d76fca6",
+            "165d47b0a6e2df17"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-24T19:45:16Z"
+        },
+        {
+          "elem_keys": [
+            "0847015b9dc2a24e",
+            "54ffa84f5710dcc9"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-24T19:45:29Z"
+        },
+        {
+          "elem_keys": [
+            "0847015b9dc2a24e",
+            "54ffa84f5710dcc9"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-24T19:45:58Z"
+        },
+        {
+          "elem_keys": [
+            "14432f569d76fca6",
+            "54ffa84f5710dcc9"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-24T19:46:13Z"
+        },
+        {
+          "elem_keys": [
+            "01ab04553edd32cd",
+            "d5bfc38f575e0ac9"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-24T19:46:50Z"
+        },
+        {
+          "elem_keys": [
+            "01ab04553edd32cd",
+            "f95a6f50a51a5f24"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-24T19:47:11Z"
+        },
+        {
+          "elem_keys": [
+            "54ffa84f5710dcc9",
+            "f95a6f50a51a5f24"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-24T19:47:27Z"
+        },
+        {
+          "elem_keys": [
+            "0847015b9dc2a24e",
+            "54ffa84f5710dcc9"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-25T14:15:27Z"
+        },
+        {
+          "elem_keys": [
+            "0847015b9dc2a24e",
+            "54ffa84f5710dcc9"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:36:30Z"
+        },
+        {
+          "elem_keys": [
+            "0847015b9dc2a24e",
+            "165d47b0a6e2df17"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:36:45Z"
+        },
+        {
+          "elem_keys": [
+            "165d47b0a6e2df17",
+            "a664dd8fd6966dad"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:37:03Z"
+        },
+        {
+          "elem_keys": [
+            "14432f569d76fca6",
+            "ab1150c4c09b5bc5"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:40:46Z"
+        },
+        {
+          "elem_keys": [
+            "14432f569d76fca6",
+            "ab1150c4c09b5bc5"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:41:04Z"
+        },
+        {
+          "elem_keys": [
+            "14432f569d76fca6",
+            "ab1150c4c09b5bc5"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:41:18Z"
+        },
+        {
+          "elem_keys": [
+            "14432f569d76fca6",
+            "54ffa84f5710dcc9"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:41:32Z"
+        },
+        {
+          "elem_keys": [
+            "54ffa84f5710dcc9",
+            "a664dd8fd6966dad"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:41:48Z"
+        },
+        {
+          "elem_keys": [
+            "54ffa84f5710dcc9",
+            "a664dd8fd6966dad"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:51:47Z"
+        },
+        {
+          "elem_keys": [
+            "54ffa84f5710dcc9",
+            "a664dd8fd6966dad"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:52:02Z",
+          "join_id": "j_1785070321866_v6xai7"
+        },
+        {
+          "elem_keys": [
+            "54ffa84f5710dcc9",
+            "a664dd8fd6966dad"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:52:12Z",
+          "join_id": "j_1785070332146_0b0441"
+        },
+        {
+          "elem_keys": [
+            "54ffa84f5710dcc9",
+            "a664dd8fd6966dad"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:52:41Z",
+          "join_id": "j_1785070361808_m7dk05"
+        },
+        {
+          "elem_keys": [
+            "54ffa84f5710dcc9",
+            "a664dd8fd6966dad"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:52:56Z",
+          "join_id": "j_1785070376399_prhmlt"
+        },
+        {
+          "elem_keys": [
+            "14432f569d76fca6",
+            "ab1150c4c09b5bc5"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:53:10Z",
+          "join_id": "j_1785070390398_htdj7u"
         }
-      ]
+      ],
+      "splits": [
+        {
+          "elem_key": "0847015b9dc2a24e",
+          "x": 189.65,
+          "y": 144.64,
+          "updated_at": "2026-07-26T12:36:47Z"
+        },
+        {
+          "elem_key": "165d47b0a6e2df17",
+          "x": 205.58566546846345,
+          "y": 116.2264926232072,
+          "updated_at": "2026-07-26T12:40:33Z"
+        }
+      ],
+      "geometry_edits": [
+        {
+          "elem_key": "165d47b0a6e2df17",
+          "from": [
+            205.03,
+            116.4
+          ],
+          "to": [
+            189.44715694830091,
+            147.9637439455771
+          ],
+          "updated_at": "2026-07-26T12:40:17Z"
+        },
+        {
+          "elem_key": "165d47b0a6e2df17",
+          "from": [
+            205.03,
+            116.4
+          ],
+          "to": [
+            202.1512994461143,
+            130.3442353509525
+          ],
+          "updated_at": "2026-07-26T12:40:25Z"
+        },
+        {
+          "elem_key": "ab1150c4c09b5bc5",
+          "from": [
+            189.67,
+            137.89
+          ],
+          "to": [
+            189.65,
+            144.64
+          ],
+          "updated_at": "2026-07-26T12:40:46Z"
+        },
+        {
+          "elem_key": "14432f569d76fca6",
+          "from": [
+            189.65,
+            144.64
+          ],
+          "to": [
+            189.67,
+            137.89
+          ],
+          "updated_at": "2026-07-26T12:41:04Z"
+        },
+        {
+          "elem_key": "14432f569d76fca6",
+          "from": [
+            189.65,
+            144.64
+          ],
+          "to": [
+            189.67,
+            137.89
+          ],
+          "updated_at": "2026-07-26T12:41:18Z"
+        },
+        {
+          "elem_key": "54ffa84f5710dcc9",
+          "from": [
+            204.19,
+            146.5
+          ],
+          "to": [
+            200.52,
+            146.92
+          ],
+          "updated_at": "2026-07-26T12:41:32Z"
+        },
+        {
+          "elem_key": "a664dd8fd6966dad",
+          "from": [
+            205.03,
+            116.4
+          ],
+          "to": [
+            205.8,
+            125.14
+          ],
+          "updated_at": "2026-07-26T12:41:48Z"
+        },
+        {
+          "elem_key": "a664dd8fd6966dad",
+          "from": [
+            205.03,
+            116.4
+          ],
+          "to": [
+            205.8,
+            125.14
+          ],
+          "updated_at": "2026-07-26T12:52:02Z",
+          "join_id": "j_1785070321866_v6xai7"
+        },
+        {
+          "elem_key": "a664dd8fd6966dad",
+          "from": [
+            205.03,
+            116.4
+          ],
+          "to": [
+            205.8,
+            125.14
+          ],
+          "updated_at": "2026-07-26T12:52:12Z",
+          "join_id": "j_1785070332146_0b0441"
+        },
+        {
+          "elem_key": "a664dd8fd6966dad",
+          "from": [
+            205.03,
+            116.4
+          ],
+          "to": [
+            205.8,
+            125.14
+          ],
+          "updated_at": "2026-07-26T12:52:41Z",
+          "join_id": "j_1785070361808_m7dk05"
+        },
+        {
+          "elem_key": "a664dd8fd6966dad",
+          "from": [
+            205.03,
+            116.4
+          ],
+          "to": [
+            205.8,
+            125.14
+          ],
+          "updated_at": "2026-07-26T12:52:56Z",
+          "join_id": "j_1785070376399_prhmlt"
+        },
+        {
+          "elem_key": "14432f569d76fca6",
+          "from": [
+            189.65,
+            144.64
+          ],
+          "to": [
+            189.67,
+            137.89
+          ],
+          "updated_at": "2026-07-26T12:53:10Z",
+          "join_id": "j_1785070390398_htdj7u"
+        }
+      ],
+      "geometry_overrides": {}
     },
     "ac00006": {
       "group_overrides": {},
@@ -775,38 +1309,40 @@
           "key_strs": [
             "#1a1a1a|none|1.5|false"
           ],
-          "updated_at": "2026-07-14T21:15:02Z"
+          "updated_at": "2026-08-02T01:07:36Z"
         },
         "fill_interlining|#1a1a1a|#d0d2d2|1.0|false": {
           "role": "component_visor",
           "key_strs": [
             "#1a1a1a|#d0d2d2|1.0|false"
           ],
-          "updated_at": "2026-07-14T21:15:02Z"
+          "updated_at": "2026-08-02T01:07:36Z"
         }
       },
       "element_overrides": {
         "13f18242eb8e4fb5": {
           "role": "component_visor",
           "path_d_prefix": "M 182.45 97.88 L 182.45 111.94 L 16.28 111.94 L 16.28 105.30 L 182.45 105.30 Z",
-          "updated_at": "2026-07-14T21:15:02Z"
+          "updated_at": "2026-08-02T01:07:36Z"
         },
         "d9fb692276d25330": {
           "role": "component_visor",
           "path_d_prefix": "M 16.28 96.34 H 182.45 V 104.84 H 16.28 Z Z",
-          "updated_at": "2026-07-14T21:15:02Z"
+          "updated_at": "2026-08-02T01:07:36Z"
         },
         "0056ea00fd56b1b3": {
           "role": "break_line",
           "path_d_prefix": "M 16.04 136.76 L 16.04 11.92 L 182.89 11.92",
-          "updated_at": "2026-07-14T21:15:02Z"
+          "updated_at": "2026-08-02T01:07:36Z"
         }
       },
       "source_hash": "61bcf9094065febfef1b705364e52ea36a92c07c",
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-07-14T21:15:02Z"
+      "updated_at": "2026-08-02T01:07:36Z",
+      "geometry_edits": [],
+      "merge_groups": []
     },
     "ac00411_gloves_mittens": {
       "group_overrides": {},
@@ -993,15 +1529,26 @@
           "key_strs": [
             "#1a1a1a|#d0d2d2|1.0|false"
           ],
-          "updated_at": "2026-07-14T23:21:46Z"
+          "updated_at": "2026-08-01T23:27:12Z"
         }
       },
-      "element_overrides": {},
+      "element_overrides": {
+        "e77f6875275298ea": {
+          "role": "component_visor",
+          "path_d_prefix": "M 19.77 104.46 H 178.91 V 111.11 H 19.77 Z Z",
+          "updated_at": "2026-08-01T23:27:12Z"
+        },
+        "c65ad725456ff2ed": {
+          "role": "component_visor",
+          "path_d_prefix": "M 178.91 94.65 L 178.91 105.01 L 19.77 105.01 L 19.76 75.25 L 154.67 75.62 L 154",
+          "updated_at": "2026-08-01T23:27:12Z"
+        }
+      },
       "source_hash": "9dd62d19a11fb48744a33aeda5a3de3ec7f618aa",
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-07-14T23:21:46Z"
+      "updated_at": "2026-08-01T23:27:12Z"
     },
     "ac00305_cap_s_visor": {
       "group_overrides": {
@@ -1147,7 +1694,7 @@
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-07-19T00:19:48Z",
+      "updated_at": "2026-07-30T18:30:42Z",
       "merge_groups": [
         {
           "elem_keys": [
@@ -1229,7 +1776,8 @@
           "role": "stitch_thru",
           "updated_at": "2026-07-19T00:19:48Z"
         }
-      ]
+      ],
+      "geometry_overrides": {}
     },
     "fh00001": {
       "group_overrides": {},
@@ -1329,7 +1877,35 @@
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-07-16T22:10:53Z"
+      "updated_at": "2026-07-30T18:40:58Z",
+      "geometry_overrides": {},
+      "merge_groups": [
+        {
+          "elem_keys": [
+            "1141e8062cabce27",
+            "d909fa638d2e72ef",
+            "ff1e975426c21711"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-30T18:39:42Z"
+        },
+        {
+          "elem_keys": [
+            "5ee124e18bd3a11a",
+            "c8268f126bcb3cf9"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-30T18:40:14Z"
+        },
+        {
+          "elem_keys": [
+            "12812244e9b5e28a",
+            "bb5b83b2593c743a"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-30T18:40:58Z"
+        }
+      ]
     },
     "ac00010": {
       "group_overrides": {
@@ -1479,43 +2055,43 @@
             "#d2d2d2|#ffffff|0.5|false",
             "#d2d2d2|#ffffff|0.5|false|D"
           ],
-          "updated_at": "2026-07-17T14:55:09Z"
+          "updated_at": "2026-07-31T16:24:07Z"
         },
         "fill_white_detail|#d2d2d2|#ffffff|0.8|false": {
           "role": "line_gathered_edge",
           "key_strs": [
             "#d2d2d2|#ffffff|0.75|false"
           ],
-          "updated_at": "2026-07-17T14:55:09Z"
+          "updated_at": "2026-07-31T16:24:07Z"
         }
       },
       "element_overrides": {
         "278fbb1338bc4f54": {
-          "role": "stitch_Bt",
+          "role": "stitch_backtack",
           "path_d_prefix": "M 88.97 240.48 C 89.41 236.87 90.02 232.53 90.85 227.54",
-          "updated_at": "2026-07-17T14:55:09Z"
+          "updated_at": "2026-07-31T16:24:07Z"
         },
         "7ee21b623f56b3b2": {
           "role": "stitch_thru",
           "path_d_prefix": "M 89.26 194.97 L 92.76 194.97",
-          "updated_at": "2026-07-17T14:55:09Z"
+          "updated_at": "2026-07-31T16:24:07Z"
         },
         "356c451ee05dad3f": {
           "role": "stitch_thru",
           "path_d_prefix": "M 159.65 249.35 L 163.15 249.35",
-          "updated_at": "2026-07-17T14:55:09Z"
+          "updated_at": "2026-07-31T16:24:07Z"
         },
         "4b4724653d29bf13": {
           "role": "line_gathered_edge",
           "path_d_prefix": "M 301.21 222.24 C 300.10 242.68 303.43 273.06 303.43 222.24 Z",
-          "updated_at": "2026-07-17T14:55:09Z"
+          "updated_at": "2026-07-31T16:24:07Z"
         }
       },
       "source_hash": "d613f05c0a86aa2a2638ca5a8cd47abbead673e8",
       "identity_version": 1,
       "extraction_version": 1,
       "review_status": "pending",
-      "updated_at": "2026-07-17T14:55:09Z",
+      "updated_at": "2026-07-31T16:24:07Z",
       "merge_groups": [
         {
           "elem_keys": [
@@ -1890,9 +2466,17 @@
           ],
           "role": "stitch_thru",
           "updated_at": "2026-07-19T17:27:19Z"
+        },
+        {
+          "elem_keys": [
+            "4192162dbb4c0455",
+            "6ef4a08370a9769e"
+          ],
+          "role": "stitch_thru",
+          "updated_at": "2026-07-26T12:19:57Z"
         }
       ],
-      "updated_at": "2026-07-19T17:27:19Z",
+      "updated_at": "2026-07-26T12:20:53Z",
       "review_status": "pending",
       "splits": [
         {
@@ -1900,6 +2484,62 @@
           "x": 165.71054849487058,
           "y": 105.52623755388205,
           "updated_at": "2026-07-19T17:21:13Z"
+        },
+        {
+          "elem_key": "692569632dffca01",
+          "x": 174.8991204685779,
+          "y": 108.15491881167513,
+          "updated_at": "2026-07-26T12:20:12Z"
+        },
+        {
+          "elem_key": "692569632dffca01",
+          "x": 170.2959575767976,
+          "y": 108.36415345819916,
+          "updated_at": "2026-07-26T12:20:16Z"
+        },
+        {
+          "elem_key": "13af0e53b6bb54c0",
+          "x": 169.743975312595,
+          "y": 108.72734121279169,
+          "updated_at": "2026-07-26T12:20:39Z"
+        }
+      ],
+      "geometry_edits": [
+        {
+          "elem_key": "4192162dbb4c0455",
+          "from": [
+            196.8,
+            132.43
+          ],
+          "to": [
+            198.4,
+            125.28
+          ],
+          "updated_at": "2026-07-26T12:19:57Z"
+        },
+        {
+          "elem_key": "692569632dffca01",
+          "from": [
+            300.82,
+            109.81
+          ],
+          "to": [
+            306.32450888681007,
+            124.48821243179083
+          ],
+          "updated_at": "2026-07-26T12:20:47Z"
+        },
+        {
+          "elem_key": "692569632dffca01",
+          "from": [
+            165.98,
+            105.58
+          ],
+          "to": [
+            130.42488934874046,
+            70.33217764679337
+          ],
+          "updated_at": "2026-07-26T12:20:53Z"
         }
       ]
     },
@@ -1940,6 +2580,68 @@
       "extraction_version": 1,
       "review_status": "pending",
       "updated_at": "2026-07-19T19:36:38Z"
+    },
+    "bi00017": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "77d7184866897277831ba5132aa2b2370ce84958",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "element_codes": {},
+      "updated_at": "2026-07-31T18:10:07Z"
+    },
+    "ed00019_turn_in": {
+      "group_overrides": {},
+      "element_overrides": {
+        "9f9e2f334dc193fd": {
+          "role": "break_line",
+          "path_d_prefix": "M 54.79 15.63 L 169.99 15.63 L 169.99 163.46",
+          "updated_at": "2026-08-03T13:50:11Z"
+        }
+      },
+      "source_hash": "f185567af37558f55171fbdeb1ea91d067f97719",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "review_status": "pending",
+      "updated_at": "2026-08-03T13:50:11Z"
+    },
+    "ed00127_turn_in": {
+      "group_overrides": {},
+      "element_overrides": {},
+      "source_hash": "e42a7e59c50635887209955ea3f19620be1667bd",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "geometry_overrides": {
+        "561d2db7d2636728": [
+          {
+            "d": "M110.37,194.03l-14.643,0.166",
+            "role": "stitch_thru"
+          }
+        ]
+      },
+      "updated_at": "2026-08-03T13:52:48Z"
+    },
+    "ed00022_turn_in": {
+      "group_overrides": {},
+      "element_overrides": {
+        "20ab4a04e41fe835": {
+          "role": "stitch_lockstitch",
+          "path_d_prefix": "M 182.96 100.43 L 78.62 100.43",
+          "updated_at": "2026-08-03T14:45:12Z"
+        }
+      },
+      "source_hash": "cfc9867f5d9eb4f762080ea7cd69d6ecaa862a93",
+      "identity_version": 1,
+      "extraction_version": 1,
+      "element_codes": {
+        "20ab4a04e41fe835": {
+          "code": "L1_1mm",
+          "role": "stitch_lockstitch",
+          "updated_at": "2026-08-03T14:45:06Z"
+        }
+      },
+      "updated_at": "2026-08-03T14:45:12Z",
+      "review_status": "pending"
     }
   }
 }

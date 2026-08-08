@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 3.87 188.59 185.64">
   <!-- VSE — Visual Standardization Engine -->
-  <g id="role-fill_shape" data-role="fill_shape">
-    <path d="M 167.29 53.44 L 58.66 69.32 L 58.65 46.44 L 166.80 29.13 L 167.29 53.44 Z" style="stroke:#CCCCCC;stroke-width:0.5;stroke-dasharray:none;fill:#E8E8E8;opacity:0.7" data-role="fill_shape" data-elem-key="b9ae1b52edc78dfb" data-group-key="fill_shape|none|#f39518|0|false"/>
+  <g id="role-fill_tape" data-role="fill_tape">
+    <path d="M 167.29 53.44 L 58.66 69.32 L 58.65 46.44 L 166.80 29.13 L 167.29 53.44 Z" style="stroke:#777777;stroke-width:0.5;stroke-dasharray:none;fill:#D9D5C8;opacity:0.65" data-role="fill_tape" data-elem-key="b9ae1b52edc78dfb" data-group-key="fill_tape|none|#f39518|0.0|false"/>
+    <path d="M 167.29 53.44 L 166.80 29.13 L 58.65 46.44 L 58.66 69.32 Z" style="stroke:#777777;stroke-width:0.5;stroke-dasharray:none;fill:#D9D5C8;opacity:0.65" data-role="fill_tape" data-elem-key="7ca61714076ee2dc" data-group-key="fill_tape|#f39518|none|1.5|false"/>
   </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 167.94 23.87 L 167.29 145.51" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="68b37680b5e37c60" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
@@ -24,11 +25,8 @@
     <path d="M 65.03 49.01 L 18.96 54.37" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="e2dd374434d275c0" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 70.18 64.21 L 166.80 49.86" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="1c69c12216654c27" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-    <path d="M 70.18 48.39 L 166.90 34.15" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="bb548feb6165bf57" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-  </g>
-  <g id="role-unknown" data-role="unknown">
-    <path d="M 167.29 53.44 L 166.80 29.13 L 58.65 46.44 L 58.66 69.32 Z" style="stroke:#AAAAAA;stroke-width:0.5;stroke-dasharray:none;fill:none;opacity:0.5" data-role="unknown" data-elem-key="7ca61714076ee2dc" data-group-key="unknown|#f39518|none|1.5|false"/>
+    <path d="M 70.18 64.21 L 166.80 49.86" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="1c69c12216654c27" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
+    <path d="M 70.18 48.39 L 166.90 34.15" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="bb548feb6165bf57" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="102.0" y="57.1" font-family="Arial, sans-serif" font-size="12.0" fill="#1A1A1A">tape</text>

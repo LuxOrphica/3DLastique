@@ -2,6 +2,11 @@
   <!-- VSE — Visual Standardization Engine -->
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 34.23 57.12 L 34.23 186.34 C 33.83 198.15 23.60 198.52 23.23 186.34 L 23.23 176.91 L 34.23 176.91" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="80a674e74c406a9d" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
+  </g>
+  <g id="role-construction_line" data-role="construction_line">
+    <path d="M 18.57 308.33 L 268.93 308.33 L 268.93 13.12 L 185.93 13.12" style="stroke:#1A1A1A;stroke-width:0.9;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="construction_line" data-elem-key="5d2117d3df93a2c2" data-group-key="construction_line|#1a1a1a|none|0.8|false"/>
+  </g>
+  <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 86.16 158.76 L 86.16 145.00 C 86.81 132.25 102.80 131.70 103.57 145.00 L 103.57 308.33" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="59bcc18e905926c4" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
   </g>
   <g id="role-boundary_interlining" data-role="boundary_interlining">
@@ -63,24 +68,17 @@
     <path d="M 115.56 141.54 L 125.10 141.54" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="b2e93d96eb5e0678" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
     <path d="M 237.09 141.54 L 241.30 141.54" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="5789733ccfd79721" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
     <path d="M 242.30 140.54 L 242.30 70.95" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="564c6f5cebbc9deb" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
-    <path d="M 231.95 89.17 L 231.95 193.75 L 162.44 193.75" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="6e5bb7e84d5e2e18" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-    <path d="M 219.30 89.17 L 219.30 181.13 L 164.79 181.13" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="472ef19f0daffc79" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-  </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 18.57 308.33 L 268.93 308.33 L 268.93 13.12 L 185.93 13.12" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="5d2117d3df93a2c2" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 231.95 89.17 L 231.95 193.75 L 162.44 193.75" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="6e5bb7e84d5e2e18" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
+    <path d="M 219.30 89.17 L 219.30 181.13 L 164.79 181.13" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="472ef19f0daffc79" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 51.71 250.78 L 53.49 263.49 L 26.98 258.02" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="598bb8228271767f" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
-    <path d="M 65.53 94.75 L 79.37 30.76 L 93.43 137.58" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="6971e117b9e197c7" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 51.71 250.78 L 53.49 263.49 L 26.98 258.02" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="598bb8228271767f" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
+    <path d="M 65.53 94.75 L 79.37 30.76 L 93.43 137.58" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="6971e117b9e197c7" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
+    <path d="M 128.43 105.66 L 79.37 30.76" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="69eae850be995d69" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
+    <path d="M 253.18 60.50 L 237.30 81.54" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="ebf89f5beca5810d" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
   </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 128.43 105.66 L 79.37 30.76" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="69eae850be995d69" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
-  </g>
-  <g id="role-callout_line" data-role="callout_line">
-    <path d="M 253.18 60.50 L 237.30 81.54" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="ebf89f5beca5810d" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
-  </g>
-  <g id="role-stitch_symbol" data-role="stitch_symbol" data-trace-ignore="1">
-    <path d="M 217.35 84.64 L 219.45 87.84 L 221.56 84.64 L 223.67 87.84 L 225.78 84.64 L 227.89 87.84 L 230.00 84.64 L 232.11 87.84 L 234.21 84.64 L 236.32 87.84 L 238.43 84.64 L 240.54 87.84 L 242.65 84.64" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:1" data-role="stitch_symbol" data-trace-ignore="1"/>
+  <g id="role-stitch_Bt-symbols" data-role="stitch_Bt" data-trace-ignore="1">
+    <path d="M 217.35 84.64 L 219.45 87.84 L 221.56 84.64 L 223.67 87.84 L 225.78 84.64 L 227.89 87.84 L 230.00 84.64 L 232.11 87.84 L 234.21 84.64 L 236.32 87.84 L 238.43 84.64 L 240.54 87.84 L 242.65 84.64" style="stroke:#C8102E;stroke-width:1.00;stroke-dasharray:none;fill:none;stroke-linecap:round;opacity:1;stroke-linejoin:round" data-role="stitch_Bt" data-trace-ignore="1"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="58.5" y="267.5" font-family="Arial, sans-serif" font-size="10.0" fill="#1A1A1A">Lining</text>

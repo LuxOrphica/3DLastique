@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 8.25 273.81 254.65">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 14.09 213.41 L 26.23 109.61 L 33.70 70.24 C 33.70 70.24 38.32 32.67 118.32 32.67 L 162.32 32.67 C 162.32 32.67 222.15 28.25 232.81 79.12 L 243.48 121.99 L 253.81 179.50" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="85a8f05dba69d0cc" data-group-key="break_line|#1a1a1a|none|1.0|false"/>
+  </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 99.61 190.82 L 99.61 33.82" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="c15f11124fc7c26b" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 168.54 195.53 L 168.54 178.53" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="3efabfeac193d41d" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
@@ -14,7 +17,6 @@
     <path d="M 163.79 174.05 L 163.79 208.70" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="e25449f7e732586b" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
   <g id="role-contour_outer" data-role="contour_outer">
-    <path d="M 14.09 213.41 L 26.23 109.61 L 33.70 70.24 C 33.70 70.24 38.32 32.67 118.32 32.67 L 162.32 32.67 C 162.32 32.67 222.15 28.25 232.81 79.12 L 243.48 121.99 L 253.81 179.50" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="85a8f05dba69d0cc" data-group-key="contour_outer|#1a1a1a|none|1.0|false"/>
     <path d="M 13.38 213.41 L 158.25 213.41 C 162.61 213.40 167.57 219.02 167.53 225.58 C 167.50 231.17 163.54 237.76 158.25 237.76 L 110.10 237.76 C 107.04 237.76 100.61 236.18 100.61 230.29 C 100.61 225.58 103.91 222.52 110.64 222.34 L 159.53 222.29 L 159.53 214.29" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="7761629246564826" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
   </g>
   <g id="role-boundary_interlining" data-role="boundary_interlining">
@@ -24,10 +26,10 @@
     <path d="M 103.60 207.26 L 103.60 242.90" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="f6c452eb3dcde788" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 163.79 170.07 L 163.79 33.07" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="86b52ea5be217fd6" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
+    <path d="M 163.79 170.07 L 163.79 33.07" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="86b52ea5be217fd6" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 166.51 195.89 L 184.64 208.70 L 149.22 224.55" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="8e3d8328cad958d8" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 166.51 195.89 L 184.64 208.70 L 149.22 224.55" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="8e3d8328cad958d8" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="188.1" y="215.3" font-family="Arial, sans-serif" font-size="11.0" fill="#1A1A1A">Interlining</text>

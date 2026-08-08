@@ -13,7 +13,7 @@
     <path d="M 58.27 180.12 L 58.27 73.75 C 58.27 68.37 61.80 64.02 66.17 64.02 C 70.54 64.02 74.08 68.37 74.08 73.75 L 74.08 85.37 L 101.10 85.37" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="c968581ac8869cd9" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
   </g>
   <g id="role-fill_elastic" data-role="fill_elastic">
-    <path d="M 98.11 198.86 L 95.52 198.86 L 95.52 66.00 L 105.80 66.00 C 109.01 68.71 109.01 75.00 109.01 75.00 L 109.01 178.78 C 109.01 191.91 98.11 198.86 98.11 198.86 Z" style="stroke:#666666;stroke-width:0.5;stroke-dasharray:none;fill:#8F9092;opacity:0.75" data-role="fill_elastic" data-elem-key="7026d3318778c879" data-group-key="fill_elastic|#1a1a1a|#27a6de|1.0|false"/>
+    <path d="M 98.11 198.86 L 95.52 198.86 L 95.52 66.00 L 105.80 66.00 C 109.01 68.71 109.01 75.00 109.01 75.00 L 109.01 178.78 C 109.01 191.91 98.11 198.86 98.11 198.86 Z" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:#8F9092;opacity:1" data-role="fill_elastic" data-elem-key="7026d3318778c879" data-group-key="fill_elastic|#1a1a1a|#27a6de|1.0|false"/>
   </g>
   <g id="role-stitch_edge" data-role="stitch_edge">
     <path d="M 117.10 80.37 L 51.13 80.37" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="12bd1a609e4825fb" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
@@ -21,14 +21,12 @@
     <path d="M 117.10 66.00 L 51.09 66.00" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="d690dba31df4b33e" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 120.68 66.00 L 208.05 66.00" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="94081364dc76d28f" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-    <path d="M 120.68 80.08 L 208.05 80.08" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="a20b5b998628db36" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-  </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 78.50 10.95 L 208.50 10.95 L 208.50 201.87" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="8dce212a06220cd8" data-group-key="break_line|#1a1a1a|none|0.69|false"/>
+    <path d="M 120.68 66.00 L 208.05 66.00" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="94081364dc76d28f" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
+    <path d="M 120.68 80.08 L 208.05 80.08" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="a20b5b998628db36" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 101.06 146.46 L 114.17 134.27" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="bb69ba6a58a7e5b2" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 78.50 10.95 L 208.50 10.95 L 208.50 201.87" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="8dce212a06220cd8" data-group-key="callout_line|#1a1a1a|none|0.7|false"/>
+    <path d="M 101.06 146.46 L 114.17 134.27" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="bb69ba6a58a7e5b2" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="116.8" y="127.5" font-family="Arial, sans-serif" font-size="10.4" fill="#1A1A1A">Elastic</text>

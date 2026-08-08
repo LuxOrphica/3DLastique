@@ -1,7 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="18.77 0.45 294.00 222.57">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 114.25 20.76 L 292.59 20.76 L 292.59 203.03 L 86.67 203.03" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="4711147f101196d7" data-group-key="break_line|#1a1a1a|none|0.8|false"/>
+  </g>
   <g id="role-fill_elastic" data-role="fill_elastic">
-    <path d="M 292.77 149.56 L 118.36 149.48 L 118.36 175.66 L 292.64 175.83 Z" style="stroke:#666666;stroke-width:0.5;stroke-dasharray:none;fill:#8F9092;opacity:0.75" data-role="fill_elastic" data-elem-key="b37ddd5403649c1e" data-group-key="fill_elastic|#1a1a1a|#27a6de|1.0|false"/>
+    <path d="M 292.77 149.56 L 118.36 149.48 L 118.36 175.66 L 292.64 175.83 Z" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:#8F9092;opacity:1" data-role="fill_elastic" data-elem-key="b37ddd5403649c1e" data-group-key="fill_elastic|#1a1a1a|#27a6de|1.0|false"/>
   </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 114.25 20.45 L 114.25 69.22 C 114.25 69.22 114.54 75.86 109.51 75.86 C 106.68 75.86 104.31 73.02 104.31 68.06 L 104.31 61.02" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="b07456b297bf58cb" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
@@ -26,16 +29,13 @@
     <path d="M 91.42 171.99 L 125.61 171.99" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="2a87f6f25a9ef2f5" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 127.45 70.39 L 292.33 70.25" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="ad17bd23181a9142" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-    <path d="M 129.45 153.00 L 291.33 152.86" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="3fc6061bd9a93673" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-    <path d="M 129.45 171.99 L 291.83 171.99" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="c5065498e7f57c0e" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-  </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 114.25 20.76 L 292.59 20.76 L 292.59 203.03 L 86.67 203.03" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="4711147f101196d7" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 127.45 70.39 L 292.33 70.25" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="ad17bd23181a9142" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
+    <path d="M 129.45 153.00 L 291.33 152.86" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="3fc6061bd9a93673" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
+    <path d="M 129.45 171.99 L 291.83 171.99" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="c5065498e7f57c0e" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 99.21 110.84 L 67.22 102.08" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="5999d1253ef582c2" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
-    <path d="M 94.92 137.32 L 62.93 128.56" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="903dbbd2cd8b6fe8" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 99.21 110.84 L 67.22 102.08" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="5999d1253ef582c2" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
+    <path d="M 94.92 137.32 L 62.93 128.56" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="903dbbd2cd8b6fe8" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="180.3" y="119.3" font-family="Arial, sans-serif" font-size="10.0" fill="#1A1A1A">Snowskirt</text>

@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 0.00 188.88 208.40">
   <!-- VSE — Visual Standardization Engine -->
+  <g id="role-break_line" data-role="break_line">
+    <path d="M 56.09 188.40 L 168.88 188.40 L 168.88 6.64 L 56.48 6.64" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="b1724342dfb9a823" data-group-key="break_line|#1a1a1a|none|0.8|false"/>
+  </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 56.06 45.82 L 45.69 45.82 L 45.69 146.80 L 56.06 146.80" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="feed04797671714c" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 56.48 6.64 L 56.09 7.18 L 56.09 188.40" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="bf7b984cf0e0500d" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
@@ -12,17 +15,14 @@
     <path d="M 76.23 58.28 L 36.88 58.28" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="a276c4bb380185e8" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
   <g id="role-fill_elastic" data-role="fill_elastic">
-    <path d="M 71.85 61.56 L 66.93 61.56 L 66.93 128.76 L 71.70 128.76 Z" style="stroke:#666666;stroke-width:0.5;stroke-dasharray:none;fill:#8F9092;opacity:0.75" data-role="fill_elastic" data-elem-key="785007ce886efe0d" data-group-key="fill_elastic|#1a1a1a|#27a6de|1.0|false"/>
+    <path d="M 71.85 61.56 L 66.93 61.56 L 66.93 128.76 L 71.70 128.76 Z" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:#8F9092;opacity:1" data-role="fill_elastic" data-elem-key="785007ce886efe0d" data-group-key="fill_elastic|#1a1a1a|#27a6de|1.0|false"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 81.27 58.28 L 167.30 58.28" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="31a913297b123cd7" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-    <path d="M 82.50 131.53 L 168.53 131.53" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="e68e1d541530115d" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-  </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 56.09 188.40 L 168.88 188.40 L 168.88 6.64 L 56.48 6.64" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="b1724342dfb9a823" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 81.27 58.28 L 167.30 58.28" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="31a913297b123cd7" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
+    <path d="M 82.50 131.53 L 168.53 131.53" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="e68e1d541530115d" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 70.39 87.31 L 36.57 94.80" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="8359c0cb6b831de8" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 70.39 87.31 L 36.57 94.80" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="8359c0cb6b831de8" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="6.6" y="93.6" font-family="Arial, sans-serif" font-size="10.0" fill="#1A1A1A">Elastic</text>

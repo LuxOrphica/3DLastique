@@ -6,6 +6,11 @@
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 46.23 108.37 L 46.23 125.60 C 46.77 138.58 60.01 139.14 60.65 125.60 L 60.65 33.00 C 60.01 19.47 46.77 20.02 46.23 33.00 L 46.23 47.23" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="ad94ac12907a4dd8" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 160.29 6.37 L 33.35 26.17" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="306b017779365486" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
+  </g>
+  <g id="role-construction_line" data-role="construction_line">
+    <path d="M 41.30 230.51 L 160.11 213.92 L 160.29 213.83 L 160.29 6.37" style="stroke:#1A1A1A;stroke-width:0.9;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="construction_line" data-elem-key="857593cbf4ca0f23" data-group-key="construction_line|#1a1a1a|none|0.8|false"/>
+  </g>
+  <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 57.44 106.81 L 41.29 109.18 L 41.29 109.38 L 41.29 230.51" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="eb47598b5c477760" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 52.77 135.55 L 160.29 118.78" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="69c35098f7f074b8" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
     <path d="M 24.30 137.31 L 41.29 134.86" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="b17a14072718c924" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
@@ -19,13 +24,10 @@
     <path d="M 35.85 132.59 C 35.85 136.60 32.60 139.85 28.59 139.85 C 24.58 139.85 21.33 136.60 21.33 132.59 C 21.33 128.58 24.58 125.33 28.59 125.33 C 32.60 125.33 35.85 128.58 35.85 132.59" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_edge" data-elem-key="c95b715fbbbfece0" data-group-key="stitch_edge|#e02020|none|1.0|false"/>
   </g>
   <g id="role-stitch_thru" data-role="stitch_thru">
-    <path d="M 72.23 127.26 L 159.82 114.02" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="60f7ff3a8dfb4ba6" data-group-key="boundary_lining|#e02020|none|1.0|true"/>
-  </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 41.30 230.51 L 160.11 213.92 L 160.29 213.83 L 160.29 6.37" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="857593cbf4ca0f23" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 72.23 127.26 L 159.82 114.02" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="60f7ff3a8dfb4ba6" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 58.37 117.37 L 76.65 105.25" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="5aed850808a665fb" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 58.37 117.37 L 76.65 105.25" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="5aed850808a665fb" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="72.7" y="195.2" font-family="Arial, sans-serif" font-size="12.4" fill="#1A1A1A">Shell fabric</text>

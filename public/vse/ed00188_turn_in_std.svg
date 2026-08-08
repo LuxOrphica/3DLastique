@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 0.00 227.13 194.20">
   <!-- VSE — Visual Standardization Engine -->
   <g id="role-fill_elastic" data-role="fill_elastic">
-    <path d="M 73.11 109.00 C 73.11 104.72 72.98 97.45 72.41 95.44 L 68.28 95.54 L 68.28 162.50 L 77.02 161.38 L 77.19 108.84 L 73.11 109.00 Z" style="stroke:#666666;stroke-width:0.5;stroke-dasharray:none;fill:#8F9092;opacity:0.75" data-role="fill_elastic" data-elem-key="d59d31202790ac29" data-group-key="fill_elastic|#1a1a1a|#6c6966|1.0|false"/>
+    <path d="M 73.11 109.00 C 73.11 104.72 72.98 97.45 72.41 95.44 L 68.28 95.54 L 68.28 162.50 L 77.02 161.38 L 77.19 108.84 L 73.11 109.00 Z" style="stroke:#1A1A1A;stroke-width:1.0;stroke-dasharray:none;fill:#8F9092;opacity:1" data-role="fill_elastic" data-elem-key="d59d31202790ac29" data-group-key="fill_elastic|#1a1a1a|#6c6966|1.0|false"/>
   </g>
   <g id="role-contour_outer" data-role="contour_outer">
     <path d="M 77.19 108.84 L 72.74 108.84" style="stroke:#1A1A1A;stroke-width:1.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;stroke-linejoin:round;opacity:1" data-role="contour_outer" data-elem-key="b2653073bccdd8ab" data-group-key="contour_outer|#1a1a1a|none|1.5|false"/>
@@ -33,13 +33,11 @@
     <path d="M 87.59 116.28 L 103.69 116.28" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="7306797bde1739a1" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
     <path d="M 87.64 137.60 L 103.75 137.60" style="stroke:#C8102E;stroke-width:0.75;stroke-dasharray:3 1.5;fill:none;stroke-linecap:butt;opacity:1" data-role="stitch_thru" data-elem-key="83f56767e9011feb" data-group-key="stitch_thru|#e02020|none|1.0|true"/>
   </g>
-  <g id="role-break_line" data-role="break_line">
-    <path d="M 77.03 19.80 L 207.13 19.80 L 207.13 170.40" style="stroke:#1A1A1A;stroke-width:0.5;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:1" data-role="break_line" data-elem-key="57e91c76853bd7c9" data-group-key="break_line|#1a1a1a|none|0.75|false"/>
-  </g>
   <g id="role-callout_line" data-role="callout_line">
-    <path d="M 51.06 40.32 L 81.99 49.71" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="30e5c48fa867b153" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
-    <path d="M 69.25 61.65 L 76.68 64.37" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="aeb6e5586260aed6" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
-    <path d="M 42.66 138.81 L 73.58 148.21" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="b9626776d6995d3a" data-group-key="callout_line|#1a1a1a|none|0.75|false"/>
+    <path d="M 77.03 19.80 L 207.13 19.80 L 207.13 170.40" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="57e91c76853bd7c9" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
+    <path d="M 51.06 40.32 L 81.99 49.71" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="30e5c48fa867b153" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
+    <path d="M 69.25 61.65 L 76.68 64.37" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="aeb6e5586260aed6" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
+    <path d="M 42.66 138.81 L 73.58 148.21" style="stroke:#333333;stroke-width:0.6;stroke-dasharray:none;fill:none;stroke-linecap:butt;opacity:0.9" data-role="callout_line" data-elem-key="b9626776d6995d3a" data-group-key="callout_line|#1a1a1a|none|0.8|false"/>
   </g>
   <g id="role-label" data-role="label" data-trace-ignore="1">
     <text x="12.4" y="41.6" font-family="Arial, sans-serif" font-size="10.4" fill="#1A1A1A">Padding</text>
