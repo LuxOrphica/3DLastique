@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import nodeLibrary from "./node-library.json";
 import { exportTechPackExcel } from "./exportTechPack";
@@ -21,6 +21,7 @@ import coatSingleDiagram from "./assets/coat-single-diagram.png";
 import coatSingleSketch from "./assets/coat-single-sketch.png";
 import coatDoubleDiagram from "./assets/coat-double-diagram.png";
 import coatDoubleSketch from "./assets/coat-double-sketch.png";
+import LeftNav from "./LeftNav";
 import "./PomBuilder.css";
 
 const REF_CATEGORIES = [
@@ -55,13 +56,13 @@ const GARMENT_DEFAULTS = {
 // A tab is visible when at least one of its sections is "always" or "optional" for the garment
 const TAB_GROUPS = [
   {
-    id: "style",
-    labelRU: "01 Стиль",        labelEN: "01 Style",
+    id: "cover",
+    labelRU: "01 Паспорт",        labelEN: "01 Cover",
     sections: ["style_info"],
   },
   {
-    id: "callouts",
-    labelRU: "02 Выноски",      labelEN: "02 Callouts",
+    id: "sketch",
+    labelRU: "02 Эскиз",      labelEN: "02 Sketch",
     sections: ["callouts"],
   },
   {
@@ -70,44 +71,34 @@ const TAB_GROUPS = [
     sections: ["bom"],
   },
   {
-    id: "construction",
-    labelRU: "04 Конструкция",  labelEN: "04 Construction",
-    sections: ["fusing", "lining", "swimwear_lining", "elastic", "seam_allowances", "stitch_spec", "yarn_spec", "denim_wash", "swimwear_performance"],
-  },
-  {
-    id: "measurements",
-    labelRU: "05 Размерная",    labelEN: "05 Measurements",
+    id: "pom",
+    labelRU: "04 Размерная",    labelEN: "04 POM",
     sections: ["measurements"],
   },
   {
-    id: "patterns",
-    labelRU: "06 Детали кроя",  labelEN: "06 Pattern pieces",
-    sections: ["pattern_pieces"],
+    id: "construction",
+    labelRU: "05 Конструкция",  labelEN: "05 Construction",
+    sections: ["fusing", "lining", "swimwear_lining", "elastic", "seam_allowances", "stitch_spec", "yarn_spec", "denim_wash", "swimwear_performance"],
   },
   {
-    id: "colorway",
-    labelRU: "07 Цветовая карта", labelEN: "07 Colorway",
-    sections: ["colorway"],
-  },
-  {
-    id: "wash_care",
-    labelRU: "08 Уход",         labelEN: "08 Wash & Care",
-    sections: ["wash_care"],
+    id: "stitches",
+    labelRU: "06 Строчки",         labelEN: "06 Stitches",
+    sections: ["stitch_spec"],
   },
   {
     id: "labels",
-    labelRU: "09 Маркировка",   labelEN: "09 Labels & Pack",
+    labelRU: "07 Маркировка",   labelEN: "07 Labels",
     sections: ["labels_packing"],
   },
   {
-    id: "files",
-    labelRU: "10 Файлы",        labelEN: "10 Files",
-    sections: ["file_handoff"],
+    id: "packaging",
+    labelRU: "08 Упаковка",        labelEN: "08 Packaging",
+    sections: ["labels_packing"],
   },
   {
-    id: "nodes",
-    labelRU: "11 Узлы",         labelEN: "11 Details",
-    sections: ["nodes"],
+    id: "testing",
+    labelRU: "09 Тесты",         labelEN: "09 Testing",
+    sections: [],
   },
 ];
 
@@ -169,7 +160,8 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
   const [baseSize,  setBaseSize]  = useState(COAT_BASE_SIZE_DEFAULT);
   const [refCatId,  setRefCatId]  = useState("apparel");
 
-  const [sectionTab, setSectionTab] = useState("style");
+  const [sectionTab, setSectionTab] = useState("cover");
+  const [navCollapsed, setNavCollapsed] = useState(false);
 
   // Track which optional sections are enabled per tab
   const [optionalEnabled, setOptionalEnabled] = useState({});
@@ -181,6 +173,23 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
     if (st === "optional") return !!optionalEnabled[sectionId];
     return false;
   };
+
+  // Aggregate techpack data for LeftNav status dots
+  const techpackData = useMemo(() => ({
+    styleInfo,
+    sketchFront,
+    sketchBack,
+    bomItems,
+    pomMeasurements: [], // Will be populated when POM tab is integrated
+    fusingItems,
+    liningItems,
+    seamItems,
+    stitchItems,
+    selectedNodes,
+    labelItems,
+    packingItems,
+    projectTests: [], // Will be populated when Testing tab is added
+  }), [styleInfo, sketchFront, sketchBack, bomItems, fusingItems, liningItems, seamItems, stitchItems, selectedNodes, labelItems, packingItems]);
 
   const [styleInfo, setStyleInfo] = useState({
     brand:       "3D Lastique",
@@ -301,7 +310,7 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
   }, []);
 
   return (
-    <div className="pom-wrap">
+    <div className="pom-wrap techpack-layout">
       <div className="pom-header">
         <div className="pom-label">3D Lastique · Tech Pack</div>
         <h1 className="pom-title">Tech Pack Builder</h1>
@@ -315,7 +324,7 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
                 const d = GARMENT_DEFAULTS[id] || { sizes: SIZES_DEFAULT, baseSize: BASE_SIZE_DEFAULT };
                 setSizes(d.sizes);
                 setBaseSize(d.baseSize);
-                setSectionTab("style");
+                setSectionTab("cover");
                 setOptionalEnabled({});
               }}>
                 {Object.entries(garmentsByCategory).map(([cat, items]) => (
@@ -378,20 +387,26 @@ export default function TechPackBuilder({ lang: siteLang = "ru" }) {
         </div>
       </div>
 
-      {/* Section tabs */}
-      <div className="section-tabs">
-        {visibleTabs.map(t => (
-          <button
-            key={t.id}
-            className={`section-tab${activeTab === t.id ? " active" : ""}`}
-            onClick={() => setSectionTab(t.id)}
-          >
-            {ru ? t.labelRU : t.labelEN}
-          </button>
-        ))}
-      </div>
+      <div className="techpack-main">
+        <LeftNav
+          activeSection={sectionTab}
+          onSectionChange={setSectionTab}
+          techpackData={techpackData}
+          ru={ru}
+          collapsed={navCollapsed}
+          onToggleCollapse={() => setNavCollapsed(c => !c)}
+        />
 
-      <div className="section-body">
+        <main className="techpack-content" role="main">
+          {visibleTabs.map(t => (
+            <section key={t.id} className={`techpack-section${sectionTab === t.id ? " active" : ""}`} id={t.id}>
+              {sectionTab === t.id && renderSection(t.id)}
+            </section>
+          ))}
+        </main>
+      </div>
+    </div>
+  );
 
         {/* 01 STYLE */}
         {activeTab === "style" && (
